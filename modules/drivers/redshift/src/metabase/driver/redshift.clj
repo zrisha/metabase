@@ -18,7 +18,7 @@
             [metabase.query-processor.util :as qputil]
             [metabase.util.honeysql-extensions :as hx]
             [metabase.util.i18n :refer [trs]])
-  (:import [java.sql ResultSet Types Connection]
+  (:import [java.sql Connection ResultSet Types]
            java.time.OffsetTime))
 
 (driver/register! :redshift, :parent #{:postgres ::legacy/use-legacy-classes-for-read-and-set})
