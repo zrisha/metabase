@@ -148,7 +148,7 @@
 
 (defn- quote-literal-for-connection
   "Quotes a string literal so that it can be safely inserted into Redshift queries, by returning the result of invoking
-   the  Redshift QUOTE_LITERAL function on the given string (which is set in a PreparedStatement as a parameter)."
+  the Redshift QUOTE_LITERAL function on the given string (which is set in a PreparedStatement as a parameter)."
   [^Connection conn ^String s]
   (with-open [stmt (prepare-statement conn "SELECT QUOTE_LITERAL(?);")]
     (.setString stmt 1 s)
@@ -158,7 +158,7 @@
 
 (defn- quote-literal-for-database
   "This function invokes quote-literal-for-connection with a connection for the given database. See its docstring for
-   more detail."
+  more detail."
   [database s]
   (let [jdbc-spec (sql-jdbc.conn/db->pooled-connection-spec database)]
     (with-open [conn (jdbc/get-connection jdbc-spec)]
