@@ -88,7 +88,7 @@
                                     [:replace [:field-id (data/id :venues :name)] "Lawry's" "Larry's"]
                                     [:= [:field-id (data/id :venues :name)] "Lawry's The Prime Rib"])))))
 
-(deftest regex-match-escaping-test
+(deftest regex-match-first-escaping-test
   (mt/test-drivers
     (mt/normal-drivers-with-feature :expressions :regex)
     (mt/with-log-level :trace

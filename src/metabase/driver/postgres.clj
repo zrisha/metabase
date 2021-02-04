@@ -160,11 +160,14 @@
 
 (defmethod sql.qp/->honeysql [:postgres :median]
   [driver [_ arg]]
-  (sql.qp/->honeysql driver [:percentile arg 0.5]))
+  (sql.qp/->honeysql driver [:percentile arg 0.5])
 
-(defmethod sql.qp/->honeysql [:postgres :regex-match-first]
-  [driver [_ arg pattern]]
-  (hsql/call :substring (hsql/raw (str (hformat/to-sql (sql.qp/->honeysql driver arg)) " FROM '" pattern "'"))))
+  (defmethod sql.qp/->honeysql [:postgres :regex-match-first]
+    [driver [_ arg pattern]]
+    (reify
+      hformat/ToSql
+      (to-sql [_]
+        (str "substring(" (hformat/to-sql (sql.qp/->honeysql driver arg)) " FROM " (hformat/to-sql pattern) ")")))))
 
 (defmethod sql.qp/->honeysql [:postgres Time]
   [_ time-value]
