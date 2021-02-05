@@ -104,7 +104,7 @@ describe("scenarios > visualizations > maps", () => {
     });
   });
 
-  it.skip("should not assign the full name of the state as the filter value on a drill-through (metabase#14650)", () => {
+  it.only("should not assign the full name of the state as the filter value on a drill-through (metabase#14650)", () => {
     cy.request("POST", "/api/card", {
       name: "People, Count, Grouped by State",
       dataset_query: {
