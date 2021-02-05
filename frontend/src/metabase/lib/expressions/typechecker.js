@@ -1,4 +1,4 @@
-import { ngettext, msgid } from "ttag";
+import { ngettext, msgid, t } from "ttag";
 import { ExpressionVisitor } from "./visitor";
 import { CLAUSE_TOKENS } from "./lexer";
 
@@ -70,6 +70,20 @@ export function typeCheck(cst, rootType) {
           `Function ${name} expects ${expectedArgsLength} arguments`,
           expectedArgsLength,
         );
+        this.errors.push({ message });
+      }
+      return args.map(arg => {
+        this.typeStack.unshift("expression");
+        const result = this.visit(arg);
+        this.typeStack.unshift();
+        return result;
+      });
+    }
+
+    caseExpression(ctx) {
+      const args = ctx.arguments || [];
+      if (args.length < 2) {
+        const message = t`Case expression expects 2 or more arguments`;
         this.errors.push({ message });
       }
       return args.map(arg => {

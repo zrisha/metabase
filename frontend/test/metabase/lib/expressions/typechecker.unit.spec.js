@@ -134,6 +134,10 @@ describe("type-checker", () => {
       expect(() => validate("CONTAINS([Type],'X','Y')")).toThrow();
       expect(() => validate("CONTAINS([Type],'P','Q','R')")).toThrow();
     });
+
+    it("should catch insufficient number of arguments to a case expression", () => {
+      expect(() => validate("CASE(X)")).toThrow();
+    });
   });
 
   describe("for an aggregation", () => {
