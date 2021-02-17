@@ -22,6 +22,7 @@
     "d3-scale": "^2.1.0",
     "dc": "2.1.9",
     "diff": "^3.2.0",
+    "docz": "^2.3.1",
     "grid-styled": "4.1.0",
     "history": "3",
     "humanize-plus": "^1.8.1",
@@ -196,7 +197,10 @@
     "test-cypress-open": "./bin/build-for-test && yarn test-cypress-no-build --open",
     "test-cypress-open-no-backend": "E2E_HOST='http://localhost:3000' yarn test-cypress-no-build --open",
     "test-cypress-no-build": "yarn && CONFIG_FILE=frontend/test/cypress.json babel-node ./frontend/test/__runner__/run_cypress_tests.js",
-    "test-cypress-smoketest": "yarn test-cypress-no-build --testFiles frontend/test/metabase-smoketest"
+    "test-cypress-smoketest": "yarn test-cypress-no-build --testFiles frontend/test/metabase-smoketest",
+    "docz:dev": "docz dev",
+    "docz:build": "docz build",
+    "docz:serve": "docz build && docz serve"
   },
   "lint-staged": {
     "frontend/**/*.{js,jsx,css}": [
