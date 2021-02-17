@@ -151,6 +151,7 @@
     "promise-loader": "^1.0.0",
     "proxymise": "^1.0.2",
     "raf": "^3.4.0",
+    "react-styleguidist": "^11.1.5",
     "react-test-renderer": "15",
     "style-loader": "^0.19.0",
     "uglifyjs-webpack-plugin": "^1.0.0",
