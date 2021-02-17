@@ -94,6 +94,10 @@
     "@babel/standalone": "^7.4.5",
     "@cypress/webpack-preprocessor": "^4.1.0",
     "@slack/client": "^3.5.4",
+    "@storybook/addon-actions": "^6.1.18",
+    "@storybook/addon-essentials": "^6.1.18",
+    "@storybook/addon-links": "^6.1.18",
+    "@storybook/react": "^6.1.18",
     "@testing-library/cypress": "^5.0.2",
     "@testing-library/dom": "^7.29.0",
     "@testing-library/jest-dom": "^4.0.0",
@@ -196,7 +200,9 @@
     "test-cypress-open": "./bin/build-for-test && yarn test-cypress-no-build --open",
     "test-cypress-open-no-backend": "E2E_HOST='http://localhost:3000' yarn test-cypress-no-build --open",
     "test-cypress-no-build": "yarn && CONFIG_FILE=frontend/test/cypress.json babel-node ./frontend/test/__runner__/run_cypress_tests.js",
-    "test-cypress-smoketest": "yarn test-cypress-no-build --testFiles frontend/test/metabase-smoketest"
+    "test-cypress-smoketest": "yarn test-cypress-no-build --testFiles frontend/test/metabase-smoketest",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "lint-staged": {
     "frontend/**/*.{js,jsx,css}": [
