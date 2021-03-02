@@ -40,6 +40,12 @@
   [[_ name _]]
   name)
 
+(defmethod field-reference->id :joined-field
+  [[_ table id]]
+  (if (sequential? id)
+    (field-reference->id id)
+    id))
+
 (defn collect-field-references
   "Collect all field references (`[:field-id]`, `[:fk->]` or `[:field-literal]` forms) from a given
    form."
