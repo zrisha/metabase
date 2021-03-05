@@ -67,116 +67,123 @@ const ViewFooter = ({
     <ViewSection className={cx(className, "text-medium border-top")} py={1}>
       <ButtonBar
         className="flex-full"
-        left={[
-          QuestionFilterWidget.shouldRender({ question, queryBuilderMode }) && (
-            <QuestionFilterWidget
-              className="sm-hide"
-              mr={1}
-              p={2}
-              isShowingFilterSidebar={isShowingFilterSidebar}
-              onAddFilter={onAddFilter}
-              onCloseFilter={onCloseFilter}
-            />
-          ),
-          QuestionSummarizeWidget.shouldRender({
-            question,
-            queryBuilderMode,
-          }) && (
-            <QuestionSummarizeWidget
-              className="sm-hide"
-              mr={1}
-              p={2}
-              isShowingSummarySidebar={isShowingSummarySidebar}
-              onEditSummary={onEditSummary}
-              onCloseSummary={onCloseSummary}
-            />
-          ),
-          <VizTypeButton
-            key="viz-type"
-            question={question}
-            result={result}
-            active={isShowingChartTypeSidebar}
-            onClick={
-              isShowingChartTypeSidebar ? onCloseChartType : onOpenChartType
-            }
-          />,
-          <VizSettingsButton
-            key="viz-settings"
-            ml={1}
-            mr={[3, 0]}
-            active={isShowingChartSettingsSidebar}
-            onClick={
-              isShowingChartSettingsSidebar
-                ? onCloseChartSettings
-                : onOpenChartSettings
-            }
-          />,
-        ]}
-        center={
-          isVisualized && (
-            <VizTableToggle
-              key="viz-table-toggle"
-              className="mx1"
+        left={
+          <React.Fragment>
+            {QuestionFilterWidget.shouldRender({
+              question,
+              queryBuilderMode,
+            }) && (
+              <QuestionFilterWidget
+                className="sm-hide"
+                mr={1}
+                p={2}
+                isShowingFilterSidebar={isShowingFilterSidebar}
+                onAddFilter={onAddFilter}
+                onCloseFilter={onCloseFilter}
+              />
+            )}
+            {QuestionSummarizeWidget.shouldRender({
+              question,
+              queryBuilderMode,
+            }) && (
+              <QuestionSummarizeWidget
+                className="sm-hide"
+                mr={1}
+                p={2}
+                isShowingSummarySidebar={isShowingSummarySidebar}
+                onEditSummary={onEditSummary}
+                onCloseSummary={onCloseSummary}
+              />
+            )}
+            <VizTypeButton
               question={question}
-              isShowingRawTable={isShowingRawTable}
-              onShowTable={isShowingRawTable => {
-                setUIControls({ isShowingRawTable });
-              }}
+              result={result}
+              active={isShowingChartTypeSidebar}
+              onClick={
+                isShowingChartTypeSidebar ? onCloseChartType : onOpenChartType
+              }
             />
-          )
+            <VizSettingsButton
+              ml={1}
+              mr={[3, 0]}
+              active={isShowingChartSettingsSidebar}
+              onClick={
+                isShowingChartSettingsSidebar
+                  ? onCloseChartSettings
+                  : onOpenChartSettings
+              }
+            />
+          </React.Fragment>
         }
-        right={[
-          QuestionRowCount.shouldRender({ question, result, isObjectDetail }) &&
-            !isPreviewing && (
-              <QuestionRowCount
-                key="row_count"
+        center={
+          <React.Fragment>
+            {isVisualized && (
+              <VizTableToggle
                 className="mx1"
                 question={question}
-                isResultDirty={isResultDirty}
+                isShowingRawTable={isShowingRawTable}
+                onShowTable={isShowingRawTable => {
+                  setUIControls({ isShowingRawTable });
+                }}
+              />
+            )}
+          </React.Fragment>
+        }
+        right={
+          <React.Fragment>
+            {QuestionRowCount.shouldRender({
+              question,
+              result,
+              isObjectDetail,
+            }) &&
+              !isPreviewing && (
+                <QuestionRowCount
+                  className="mx1"
+                  question={question}
+                  isResultDirty={isResultDirty}
+                  result={result}
+                />
+              )}
+            {QuestionLastUpdated.shouldRender({ result }) && (
+              <QuestionLastUpdated
+                className="mx1 hide sm-show"
                 result={result}
               />
-            ),
-          QuestionLastUpdated.shouldRender({ result }) && (
-            <QuestionLastUpdated
-              key="last-updated"
-              className="mx1 hide sm-show"
-              result={result}
-            />
-          ),
-          QueryDownloadWidget.shouldRender({ result, isResultDirty }) && (
-            <QueryDownloadWidget
-              key="download"
-              className="mx1 hide sm-show"
-              card={question.card()}
-              result={result}
-            />
-          ),
-          QuestionAlertWidget.shouldRender({
-            question,
-            visualizationSettings,
-          }) && (
-            <QuestionAlertWidget
-              key="alerts"
-              className="mx1 hide sm-show"
-              question={question}
-              questionAlerts={questionAlerts}
-              onCreateAlert={() =>
-                question.isSaved()
-                  ? onOpenModal("create-alert")
-                  : onOpenModal("save-question-before-alert")
-              }
-            />
-          ),
-          QuestionEmbedWidget.shouldRender({ question, isAdmin }) && (
-            <QuestionEmbedWidgetTrigger
-              onClick={() =>
-                question.isSaved()
-                  ? onOpenModal("embed")
-                  : onOpenModal("save-question-before-embed")
-              }
-            />
-          ),
-        ]}
+            )}
+            {QueryDownloadWidget.shouldRender({ result, isResultDirty }) && (
+              <QueryDownloadWidget
+                key="download"
+                className="mx1 hide sm-show"
+                card={question.card()}
+                result={result}
+              />
+            )}
+            {QuestionAlertWidget.shouldRender({
+              question,
+              visualizationSettings,
+            }) && (
+              <QuestionAlertWidget
+                className="mx1 hide sm-show"
+                question={question}
+                questionAlerts={questionAlerts}
+                onCreateAlert={() =>
+                  question.isSaved()
+                    ? onOpenModal("create-alert")
+                    : onOpenModal("save-question-before-alert")
+                }
+              />
+            )}
+            {QuestionEmbedWidget.shouldRender({ question, isAdmin }) && (
+              <QuestionEmbedWidgetTrigger
+                onClick={() =>
+                  question.isSaved()
+                    ? onOpenModal("embed")
+                    : onOpenModal("save-question-before-embed")
+                }
+              />
+            )}
+          </React.Fragment>
+        }
       />
     </ViewSection>
   );
