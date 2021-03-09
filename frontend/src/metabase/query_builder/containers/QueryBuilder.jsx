@@ -65,6 +65,8 @@ import { push } from "react-router-redux";
 import Collections from "metabase/entities/collections";
 import { MetabaseApi } from "metabase/services";
 
+import { processSource } from "metabase/lib/expressions/process";
+
 function autocompleteResults(card, prefix) {
   const databaseId = card && card.dataset_query && card.dataset_query.database;
   if (!databaseId) {
@@ -181,6 +183,7 @@ export default class QueryBuilder extends Component {
 
   componentDidMount() {
     window.addEventListener("resize", this.handleResize);
+    processSource({ source: "", targetOffset: 0 })
   }
 
   componentWillReceiveProps(nextProps) {
