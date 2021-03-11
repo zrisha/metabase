@@ -35,7 +35,6 @@ export default class TokenizedInput extends Component {
     }
   }
   _setValue(value) {
-    ReactDOM.findDOMNode(this).value = value;
     if (typeof this.props.onChange === "function") {
       this.props.onChange({ target: { value } });
     } else {
@@ -44,7 +43,6 @@ export default class TokenizedInput extends Component {
   }
 
   componentDidMount() {
-    ReactDOM.findDOMNode(this).focus();
     this.componentDidUpdate();
 
     document.addEventListener("selectionchange", this.onSelectionChange, false);
@@ -167,6 +165,7 @@ export default class TokenizedInput extends Component {
     const { className, onFocus, onBlur, style } = this.props;
     return (
       <div
+        autoFocus
         className={className}
         style={{ ...style }}
         contentEditable
