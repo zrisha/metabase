@@ -1,6 +1,10 @@
+/*global ace*/
 import React from "react";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
+import { ResizableBox } from "react-resizable";
+
+import "./ExpressionEditorTextfield.css";
 
 import { t } from "ttag";
 import _ from "underscore";
@@ -12,6 +16,21 @@ import MetabaseSettings from "metabase/lib/settings";
 import colors from "metabase/lib/colors";
 
 import memoize from "lodash.memoize";
+
+import "ace/ace";
+import "ace/ext-language_tools";
+import "ace/mode-sql";
+import "ace/mode-mysql";
+import "ace/mode-pgsql";
+import "ace/mode-sqlserver";
+import "ace/mode-json";
+
+import "ace/snippets/text";
+import "ace/snippets/sql";
+import "ace/snippets/mysql";
+import "ace/snippets/pgsql";
+import "ace/snippets/sqlserver";
+import "ace/snippets/json";
 
 import { setCaretPosition, getSelectionPosition } from "metabase/lib/dom";
 
@@ -153,10 +172,7 @@ export default class ExpressionEditorTextfield extends React.Component {
   }
 
   componentDidMount() {
-    this._setCaretPosition(
-      this.state.source.length,
-      this.state.source.length === 0,
-    );
+    this.loadAceEditor();
   }
 
   onSuggestionSelected = index => {
@@ -267,6 +283,19 @@ export default class ExpressionEditorTextfield extends React.Component {
     }
   };
 
+  loadAceEditor() {
+    const { query } = this.props;
+    const editorElement = ReactDOM.findDOMNode(this.refs.editor);
+    if (typeof ace === "undefined" || !ace || !ace.edit) {
+      // fail gracefully-ish if ace isn't available, e.x. in integration tests
+      return;
+    }
+    this._editor = ace.edit(editorElement);
+    this._editor.setTheme("ace/theme/monokai");
+    this._editor.session.setMode("ace/mode/javascript");
+    this._editor.setValue("bob dobbs is dead lollerskates function()");
+  }
+
   onExpressionChange(source) {
     const inputElement = ReactDOM.findDOMNode(this.refs.input);
     if (!inputElement) {
@@ -355,7 +384,13 @@ export default class ExpressionEditorTextfield extends React.Component {
         >
           {"= "}
         </div>
-        <TokenizedInput
+        <div className="flex-full" id="complex_exp_input" ref="editor"
+          style={{
+            ...inputStyle, paddingLeft: 26
+          }}
+            >
+        </div>
+        {/* <TokenizedInput
           ref="input"
           type="text"
           className={cx(inputClassName, {
@@ -372,7 +407,7 @@ export default class ExpressionEditorTextfield extends React.Component {
           onFocus={e => this._triggerAutosuggest()}
           onClick={this.onInputClick}
           autoFocus
-        />
+        />*/}
         <Errors compileError={displayCompileError} />
         <HelpText helpText={this.state.helpText} width={this.props.width} />
         <ExpressionEditorSuggestions

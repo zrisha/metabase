@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import cx from "classnames";
 import { t } from "ttag";
 import ExpressionEditorTextfield from "./ExpressionEditorTextfield";
+import AceEditor from "metabase/components/TextEditor";
 import { isExpression } from "metabase/lib/expressions";
 import MetabaseSettings from "metabase/lib/settings";
 
@@ -54,14 +55,19 @@ export default class ExpressionWidget extends Component {
         <div className="p2">
           <div className="h5 text-uppercase text-medium text-bold">{t`Field formula`}</div>
           <div>
-            <ExpressionEditorTextfield
+          <AceEditor
+            className="z1"
+            value="function() { console.log('lol'); }"
+            theme="ace/theme/metabase"
+            mode="ace/mode/javascript"
+            sizeToFit
+            readOnly
+          />
+            {/*<ExpressionEditorTextfield
               expression={expression}
               query={query}
-              onChange={parsedExpression =>
-                this.setState({ expression: parsedExpression, error: null })
-              }
               onError={errorMessage => this.setState({ error: errorMessage })}
-            />
+            />*/}
             <p className="h5 text-medium">
               {t`Think of this as being kind of like writing a formula in a spreadsheet program: you can use numbers, fields in this table, mathematical symbols like +, and some functions. So you could type something like Subtotal - Cost.`}
               &nbsp;
