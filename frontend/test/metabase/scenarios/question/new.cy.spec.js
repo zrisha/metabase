@@ -201,14 +201,14 @@ describe("scenarios > question > new", () => {
       cy.contains("37.65");
     });
 
-    it("should allow using `Custom Expression` in orders metrics (metabase#12899)", () => {
+    it.skip("should allow using `Custom Expression` in orders metrics (metabase#12899)", () => {
       openOrdersTable({ mode: "notebook" });
       cy.findByText("Summarize").click();
       popover()
         .contains("Custom Expression")
         .click();
       popover().within(() => {
-        cy.get("[contentEditable=true]").type("2 * Max([Total])");
+        cy.get(".ace_content").type("2 * Max([Total])");
         cy.findByPlaceholderText("Name (required)").type("twice max total");
         cy.findByText("Done").click();
       });
@@ -226,13 +226,13 @@ describe("scenarios > question > new", () => {
         .contains("Custom Expression")
         .click();
       popover().within(() => {
-        cy.get("[contentEditable=true]")
+        cy.get(".ace_content")
           .type(FORMULA)
           .blur();
 
         cy.log("Fails after blur in v0.36.6");
         // Implicit assertion
-        cy.get("[contentEditable=true]").contains(FORMULA);
+        cy.get(".ace_content").contains(FORMULA);
       });
     });
 
@@ -243,7 +243,7 @@ describe("scenarios > question > new", () => {
         .contains("Custom Expression")
         .click();
 
-      cy.get("[contentEditable=true]")
+      cy.get(".ace_content")
         .click()
         .type("Distinct([R");
 

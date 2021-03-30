@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ReactDOM from "react-dom";
 
 import { t } from "ttag";
 import _ from "underscore";
@@ -11,9 +10,10 @@ import { processSource } from "metabase/lib/expressions/process";
 import MetabaseSettings from "metabase/lib/settings";
 import colors from "metabase/lib/colors";
 
-import memoize from "lodash.memoize";
+import AceEditor from "metabase/components/TextEditor";
+import * as ace from "ace-builds/src-noconflict/ace";
 
-import { setCaretPosition, getSelectionPosition } from "metabase/lib/dom";
+import memoize from "lodash.memoize";
 
 import {
   KEYCODE_ENTER,
@@ -28,8 +28,6 @@ import ExternalLink from "metabase/components/ExternalLink";
 import Icon from "metabase/components/Icon";
 import Popover from "metabase/components/Popover";
 import ExplicitSize from "metabase/components/ExplicitSize";
-
-import TokenizedInput from "./TokenizedInput";
 
 import { isExpression } from "metabase/lib/expressions";
 
@@ -96,6 +94,7 @@ const Errors = ({ compileError }) => {
 export default class ExpressionEditorTextfield extends React.Component {
   constructor() {
     super();
+    this.input = React.createRef();
     // memoize processSource for performance when editing previously seen source/targetOffset
     this._processSource = memoize(processSource, ({ source, targetOffset }) =>
       // resovle should include anything that affect the results of processSource
@@ -114,8 +113,19 @@ export default class ExpressionEditorTextfield extends React.Component {
   static defaultProps = {
     expression: [null, ""],
     startRule: "expression",
-    placeholder: "write some math!",
   };
+
+  getAcePosition(editor) {
+    const rng = editor
+      .getSession()
+      .getSelection()
+      .getRange();
+    return [rng.start.column, rng.end.column];
+  }
+
+  setAcePosition(editor, [start, end]) {
+    editor.selection.setRange(new ace.Range(0, start, 0, end));
+  }
 
   _getParserOptions(props = this.props) {
     return {
@@ -134,18 +144,17 @@ export default class ExpressionEditorTextfield extends React.Component {
       const parserOptions = this._getParserOptions(newProps);
       const source = format(newProps.expression, parserOptions);
 
-      const { expression, compileError, syntaxTree } =
+      const { expression, compileError } =
         source && source.length
           ? this._processSource({
               source,
               ...this._getParserOptions(newProps),
             })
-          : { expression: null, compileError: null, syntaxTree: null };
+          : { expression: null, compileError: null };
       this.setState({
         source,
         expression,
         compileError,
-        syntaxTree,
         suggestions: [],
         highlightedSuggestionIndex: 0,
       });
@@ -157,6 +166,9 @@ export default class ExpressionEditorTextfield extends React.Component {
       this.state.source.length,
       this.state.source.length === 0,
     );
+    if (this.input.current && this.input.current._editor) {
+      this.input.current._editor.focus();
+    }
   }
 
   onSuggestionSelected = index => {
@@ -209,6 +221,7 @@ export default class ExpressionEditorTextfield extends React.Component {
     }
     if (e.keyCode === KEYCODE_ENTER) {
       this.onSuggestionSelected(highlightedSuggestionIndex);
+      e.stopPropagation();
       e.preventDefault();
     } else if (e.keyCode === KEYCODE_UP) {
       this.setState({
@@ -261,31 +274,27 @@ export default class ExpressionEditorTextfield extends React.Component {
   };
 
   _setCaretPosition = (position, autosuggest) => {
-    setCaretPosition(ReactDOM.findDOMNode(this.refs.input), position);
-    if (autosuggest) {
-      setTimeout(() => this._triggerAutosuggest());
+    if (this.input.current) {
+      this.setAcePosition(this.input.current._editor, [position, position]);
+      if (autosuggest) {
+        setTimeout(() => this._triggerAutosuggest());
+      }
     }
   };
 
   onExpressionChange(source) {
-    const inputElement = ReactDOM.findDOMNode(this.refs.input);
-    if (!inputElement) {
+    if (!this.input.current || !this.input.current._editor) {
       return;
     }
+    const editor = this.input.current._editor;
 
-    const [selectionStart, selectionEnd] = getSelectionPosition(inputElement);
+    const [selectionStart, selectionEnd] = this.getAcePosition(editor);
     const hasSelection = selectionStart !== selectionEnd;
     const isAtEnd = selectionEnd === source.length;
     const endsWithWhitespace = /\s$/.test(source);
     const targetOffset = !hasSelection ? selectionEnd : null;
 
-    const {
-      expression,
-      compileError,
-      suggestions,
-      helpText,
-      syntaxTree,
-    } = source
+    const { expression, compileError, suggestions, helpText } = source
       ? this._processSource({
           source,
           targetOffset,
@@ -296,7 +305,6 @@ export default class ExpressionEditorTextfield extends React.Component {
           compileError: null,
           suggestions: [],
           helpText: null,
-          syntaxTree: null,
         };
 
     const isValid = expression !== undefined;
@@ -309,7 +317,6 @@ export default class ExpressionEditorTextfield extends React.Component {
     this.setState({
       source,
       expression,
-      syntaxTree,
       compileError,
       displayCompileError: null,
       suggestions: showSuggestions ? suggestions : [],
@@ -328,14 +335,7 @@ export default class ExpressionEditorTextfield extends React.Component {
   }
 
   render() {
-    const { placeholder } = this.props;
-    const {
-      compileError,
-      displayCompileError,
-      source,
-      suggestions,
-      syntaxTree,
-    } = this.state;
+    const { displayCompileError, source, suggestions } = this.state;
 
     const inputClassName = cx("input text-bold text-monospace", {
       "text-dark": source,
@@ -344,7 +344,12 @@ export default class ExpressionEditorTextfield extends React.Component {
     const inputStyle = { fontSize: 12 };
 
     return (
-      <div className={cx("relative my1")}>
+      <div
+        className={cx("relative my1")}
+        onBlur={() => this.onInputBlur()}
+        onClick={() => this.onInputClick()}
+        onKeyDown={e => this.onInputKeyDown(e)}
+      >
         <div
           className={cx(inputClassName, "absolute top left")}
           style={{
@@ -355,23 +360,17 @@ export default class ExpressionEditorTextfield extends React.Component {
         >
           {"= "}
         </div>
-        <TokenizedInput
-          ref="input"
-          type="text"
-          className={cx(inputClassName, {
-            "border-error": compileError,
-          })}
-          style={{ ...inputStyle, paddingLeft: 26 }}
-          placeholder={placeholder}
+        <AceEditor
+          className="z1"
           value={source}
-          syntaxTree={syntaxTree}
-          parserOptions={this._getParserOptions()}
-          onChange={e => this.onExpressionChange(e.target.value)}
-          onKeyDown={this.onInputKeyDown}
-          onBlur={this.onInputBlur}
-          onFocus={e => this._triggerAutosuggest()}
-          onClick={this.onInputClick}
-          autoFocus
+          style={{ ...inputStyle, paddingLeft: 26 }}
+          theme="ace/theme/metabase"
+          mode="ace/mode/text"
+          ref={this.input}
+          onChange={e => this.onExpressionChange(e)}
+          sizeToFit
+          aceAutocomplete={false}
+          gutter={false}
         />
         <Errors compileError={displayCompileError} />
         <HelpText helpText={this.state.helpText} width={this.props.width} />

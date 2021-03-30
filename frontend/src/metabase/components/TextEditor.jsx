@@ -1,13 +1,8 @@
-/*global ace*/
-
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 
-import "ace/ace";
-import "ace/mode-plain_text";
-import "ace/mode-javascript";
-import "ace/mode-json";
+import * as ace from "ace-builds/src-noconflict/ace";
 
 const SCROLL_MARGIN = 8;
 const LINE_HEIGHT = 16;
@@ -19,11 +14,16 @@ export default class TextEditor extends Component {
     value: PropTypes.string,
     defaultValue: PropTypes.string,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
+    aceAutocomplete: PropTypes.bool,
+    gutter: PropTypes.bool,
   };
 
   static defaultProps = {
     mode: "ace/mode/plain_text",
     theme: null,
+    aceAutocomplete: true,
+    gutter: true,
   };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -82,20 +82,18 @@ export default class TextEditor extends Component {
       // fail gracefully-ish if ace isn't available, e.x. in integration tests
       return;
     }
-
     const element = ReactDOM.findDOMNode(this);
     this._editor = ace.edit(element);
 
     window.editor = this._editor;
 
-    // listen to onChange events
     this._editor.getSession().on("change", this.onChange);
 
     // misc options, copied from NativeQueryEditor
     this._editor.setOptions({
-      enableBasicAutocompletion: true,
+      enableBasicAutocompletion: this.props.aceAutocomplete,
       enableSnippets: true,
-      enableLiveAutocompletion: true,
+      enableLiveAutocompletion: this.props.aceAutocomplete,
       showPrintMargin: false,
       highlightActiveLine: false,
       highlightGutterLine: false,
@@ -103,6 +101,7 @@ export default class TextEditor extends Component {
       // wrap: true
     });
     this._editor.renderer.setScrollMargin(SCROLL_MARGIN, SCROLL_MARGIN);
+    this._editor.renderer.setShowGutter(this.props.gutter);
 
     // initialize the content
     this._editor.setValue(
