@@ -41,12 +41,14 @@
   [_]
   :sunday)
 
+(defn- upcase-not-nil [s]
+  (when s (u/upper-case-en s)))
+
 (defmethod sql-jdbc.conn/connection-details->spec :snowflake
   [_ {:keys [account regionid], :as opts}]
   (let [host (if regionid
                (str account "." regionid)
-               account)
-        upcase-not-nil (fn [s] (when s (u/upper-case-en s)))]
+               account)]
     ;; it appears to be the case that their JDBC driver ignores `db` -- see my bug report at
     ;; https://support.snowflake.net/s/question/0D50Z00008WTOMCSA5/
     (-> (merge {:classname                                  "net.snowflake.client.jdbc.SnowflakeDriver"
@@ -240,7 +242,11 @@
   ;; using the JDBC `.getTables` method seems to be pretty buggy -- it works sometimes but other times randomly
   ;; returns nothing
   (let [db-name          (db-name database)
-        excluded-schemas (set (sql-jdbc.sync/excluded-schemas driver))]
+        excluded-schemas (set (sql-jdbc.sync/excluded-schemas driver))
+        only-schema      (-> database
+                             (:details)
+                             (:schema)
+                             (upcase-not-nil))]
     (qp.store/with-store
       (qp.store/fetch-and-store-database! (u/get-id database))
       (let [spec (sql-jdbc.conn/db->pooled-connection-spec database)
@@ -249,7 +255,8 @@
           {:tables (into
                     #{}
                     (comp (filter (fn [{schema :schema_name, table-name :name}]
-                                    (and (not (contains? excluded-schemas schema))
+                                    (and (or (nil? only-schema) (= schema only-schema))
+                                         (not (contains? excluded-schemas schema))
                                          (sql-jdbc.sync/have-select-privilege? driver conn schema table-name))))
                           (map (fn [{schema :schema_name, table-name :name, remark :comment}]
                                  {:name        table-name
