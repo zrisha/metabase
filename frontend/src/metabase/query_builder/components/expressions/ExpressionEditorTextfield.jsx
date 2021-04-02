@@ -290,7 +290,7 @@ export default class ExpressionEditorTextfield extends React.Component {
 
     const [selectionStart, selectionEnd] = this.getAcePosition(editor);
     const hasSelection = selectionStart !== selectionEnd;
-    const isAtEnd = selectionEnd === source.length;
+    const isAtEnd = selectionEnd + 1 === source.length;
     const endsWithWhitespace = /\s$/.test(source);
     const targetOffset = !hasSelection ? selectionEnd : null;
 
