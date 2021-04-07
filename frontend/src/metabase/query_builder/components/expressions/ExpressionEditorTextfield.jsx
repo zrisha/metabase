@@ -123,7 +123,7 @@ export default class ExpressionEditorTextfield extends React.Component {
     return [rng.start.column, rng.end.column];
   }
 
-  setAcePosition(editor, [start, end]) {
+  setAcePosition(editor, start, end) {
     editor.selection.setRange(new ace.Range(0, start, 0, end));
   }
 
@@ -252,8 +252,9 @@ export default class ExpressionEditorTextfield extends React.Component {
     if (this.state.expression) {
       if (!isExpression(this.state.expression)) {
         console.warn("isExpression=false", this.state.expression);
+      } else {
+        this.props.onChange(this.state.expression);
       }
-      this.props.onChange(this.state.expression);
     } else if (this.state.compileError) {
       this.props.onError(this.state.compileError);
     } else {
@@ -272,7 +273,7 @@ export default class ExpressionEditorTextfield extends React.Component {
 
   _setCaretPosition = (position, autosuggest) => {
     if (this.input.current) {
-      this.setAcePosition(this.input.current._editor, [position, position]);
+      this.setAcePosition(this.input.current._editor, position, position);
       if (autosuggest) {
         setTimeout(() => this._triggerAutosuggest());
       }
@@ -284,6 +285,9 @@ export default class ExpressionEditorTextfield extends React.Component {
       return;
     }
     const editor = this.input.current._editor;
+    if (newPosition) {
+      this._setCaretPosition(newPosition, false)
+    }
 
     const [selectionStart, selectionEnd] = this.getAcePosition(editor);
     const hasSelection = selectionStart !== selectionEnd;
@@ -328,9 +332,6 @@ export default class ExpressionEditorTextfield extends React.Component {
         ...this._getParserOptions(),
       });
       this.setState({ suggestions });
-    }
-    if (newPosition) {
-      this._setCaretPosition(newPosition, false)
     }
   }
 
