@@ -188,10 +188,7 @@ export default class ExpressionEditorTextfield extends React.Component {
         postfix = suggestion.postfixText;
       }
 
-      this.onExpressionChange(prefix + suggestion.text + postfix);
-      setTimeout(() =>
-        this._setCaretPosition((prefix + suggestion.text).length, true),
-      );
+      this.onExpressionChange(prefix + suggestion.text + postfix, (prefix + suggestion.text).length);
     }
   };
 
@@ -248,7 +245,6 @@ export default class ExpressionEditorTextfield extends React.Component {
   }
 
   onInputBlur = () => {
-    this.clearSuggestions();
     const { compileError } = this.state;
     this.setState({ displayCompileError: compileError });
 
@@ -263,6 +259,7 @@ export default class ExpressionEditorTextfield extends React.Component {
     } else {
       this.props.onError({ message: t`Invalid expression` });
     }
+    this.clearSuggestions();
   };
 
   onInputClick = () => {
@@ -282,7 +279,7 @@ export default class ExpressionEditorTextfield extends React.Component {
     }
   };
 
-  onExpressionChange(source) {
+  onExpressionChange(source, newPosition=false, suggestionEnabled=true) {
     if (!this.input.current || !this.input.current._editor) {
       return;
     }
@@ -312,7 +309,7 @@ export default class ExpressionEditorTextfield extends React.Component {
     // * there's a selection
     // * we're at the end of a valid expression, unless the user has typed another space
     const showSuggestions =
-      !hasSelection && !(isValid && isAtEnd && !endsWithWhitespace);
+      !hasSelection && !(isValid && isAtEnd && !endsWithWhitespace) && suggestionEnabled;
 
     this.setState({
       source,
@@ -331,6 +328,9 @@ export default class ExpressionEditorTextfield extends React.Component {
         ...this._getParserOptions(),
       });
       this.setState({ suggestions });
+    }
+    if (newPosition) {
+      this._setCaretPosition(newPosition, false)
     }
   }
 
@@ -367,7 +367,7 @@ export default class ExpressionEditorTextfield extends React.Component {
           theme="ace/theme/metabase"
           mode="ace/mode/text"
           ref={this.input}
-          onChange={e => this.onExpressionChange(e)}
+          onChange={e => this.onExpressionChange(e, false, false)}
           sizeToFit
           aceAutocomplete={false}
           gutter={false}

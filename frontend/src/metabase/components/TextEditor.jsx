@@ -77,6 +77,12 @@ export default class TextEditor extends Component {
     }
   };
 
+  onBlur = () => {
+    if (this.props.onBlur) {
+      this.props.onBlur();
+    }
+  }
+
   componentDidMount() {
     if (typeof ace === "undefined" || !ace || !ace.edit) {
       // fail gracefully-ish if ace isn't available, e.x. in integration tests
@@ -88,6 +94,7 @@ export default class TextEditor extends Component {
     window.editor = this._editor;
 
     this._editor.getSession().on("change", this.onChange);
+    this._editor.getSession().on("blur", this.onBlur);
 
     // misc options, copied from NativeQueryEditor
     this._editor.setOptions({
