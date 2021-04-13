@@ -751,8 +751,12 @@ export class FieldDimension extends Dimension {
       dimensions = [...dimensions, ...fkDimensions];
     }
 
+    if (this.isIntegerFieldId()) {
+      return dimensions;
+    }
+
     // Add temporal dimensions
-    if (field.isDate() && !this.isIntegerFieldId()) {
+    if (field.isDate()) {
       const temporalDimensions = DATETIME_UNITS.map(unit =>
         this.withTemporalUnit(unit),
       );
