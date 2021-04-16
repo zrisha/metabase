@@ -19,6 +19,8 @@ import Tables from "metabase/entities/tables";
 
 import { getMetadata } from "metabase/selectors/metadata";
 
+import SavedQuestionPicker from "metabase/query_builder/containers/SavedQuestionPicker";
+
 import _ from "underscore";
 
 // chooses a database
@@ -114,10 +116,11 @@ const FieldTriggerContent = ({ selectedDatabase, selectedField }) => {
       }) ||
       [],
     hasFetchedDatabasesWithTablesSaved: !!Databases.selectors.getList(state, {
-      entityQuery: { include: "tables", saved: true },
+      entityQuery: { include: "tables", saved: false },
     }),
     hasFetchedDatabasesWithSaved: !!Databases.selectors.getList(state, {
-      entityQuery: { saved: true },
+      // what happens if we toggle this off
+      entityQuery: { saved: false },
     }),
     hasFetchedDatabasesWithTables: !!Databases.selectors.getList(state, {
       entityQuery: { include: "tables" },
@@ -556,7 +559,9 @@ export class UnconnectedDataSelector extends Component {
       // data before advancing to the next step.
       await this.previousStep();
     }
-    await this.nextStep({ selectedDatabaseId: database && database.id });
+    if (database) {
+      await this.nextStep({ selectedDatabaseId: database && database.id });
+    }
   };
 
   onChangeSchema = async schema => {
@@ -638,6 +643,21 @@ export class UnconnectedDataSelector extends Component {
       hasNextStep: !!this.getNextStep(),
       onBack: this.getPreviousStep() ? this.previousStep : null,
     };
+
+    const { activeStep, selectedDatabase } = this.state;
+    if (selectedDatabase && selectedDatabase.is_saved_questions) {
+      if (activeStep === SCHEMA_STEP && combineDatabaseSchemaSteps) {
+        const { query } = this.props;
+        return (
+          <SavedQuestionPicker
+            query={query}
+            onChangeSchema={this.onChangeSchema}
+            onChangeTable={this.onChangeTable}
+            {...props}
+          />
+        );
+      }
+    }
 
     switch (this.state.activeStep) {
       case DATABASE_STEP:
@@ -772,6 +792,7 @@ const DatabaseSchemaPicker = ({
             name: schema.displayName(),
           }))
         : [],
+    // TODO - for reference this is where the current option gets its specific styling
     className: database.is_saved_questions ? "bg-light" : null,
     icon: database.is_saved_questions ? "all" : "database",
     loading:
@@ -900,6 +921,7 @@ const TablePicker = ({
           showItemArrows={hasNextStep}
         />
         {isSavedQuestionList && (
+          // TODO - we should remove this once we convert over to the new widget
           <div className="bg-light p2 text-centered border-top">
             {t`Is a question missing?`}
             <ExternalLink
