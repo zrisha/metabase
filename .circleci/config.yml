@@ -18,6 +18,9 @@ executors:
     docker:
       - image: circleci/clojure:lein-2.9.5-node-browsers
       - image: maildev/maildev
+      - image: metabase/qa-databases:mysql-sample-8
+      - image: metabase/qa-databases:mongo-sample-4.0
+      - image: metabase/qa-databases:postgres-sample-12
 
   # Java 11 tests also test Metabase with the at-rest encryption enabled. See
   # https://metabase.com/docs/latest/operations-guide/encrypting-database-details-at-rest.html for an explanation of
@@ -157,24 +160,6 @@ executors:
           ACCEPT_EULA: Y
           SA_PASSWORD: 'P@ssw0rd'
           MSSQL_MEMORY_LIMIT_MB: 1024
-
-  fe-mongo-4:
-    working_directory: /home/circleci/metabase/metabase/
-    docker:
-      - image: circleci/clojure:lein-2.9.5-node-browsers
-      - image: metabase/qa-databases:mongo-sample-4.0
-
-  fe-postgres-12:
-    working_directory: /home/circleci/metabase/metabase/
-    docker:
-      - image: circleci/clojure:lein-2.9.5-node-browsers
-      - image: metabase/qa-databases:postgres-sample-12
-
-  fe-mysql-8:
-    working_directory: /home/circleci/metabase/metabase/
-    docker:
-      - image: circleci/clojure:lein-2.9.5-node-browsers
-      - image: metabase/qa-databases:mysql-sample-8
 
 ########################################################################################################################
 #                                             MAP FRAGMENTS AND CACHE KEYS                                             #
@@ -1182,51 +1167,11 @@ workflows:
       - fe-tests-cypress:
           matrix:
             parameters:
-              node: ["1"]
               edition: ["ee", "oss"]
-          name: fe-tests-cypress-<< matrix.node >>-<< matrix.edition >>
+          name: fe-tests-cypress-<< matrix.edition >>
           requires:
             - build-uberjar-<< matrix.edition >>
           cypress-group: "default-<< matrix.edition >>"
-
-      - fe-tests-cypress:
-          name: fe-tests-cypress-mongo-4-<< matrix.edition >>
-          requires:
-            - build-uberjar-<< matrix.edition >>
-          e: fe-mongo-4
-          cypress-group: "mongo"
-          only-single-database: true
-          test-files-location: frontend/test/metabase-db/mongo
-          before-steps:
-            - wait-for-port:
-                port: 27017
-          <<: *Matrix
-
-      - fe-tests-cypress:
-          name: fe-tests-cypress-postgres-12-<< matrix.edition >>
-          requires:
-            - build-uberjar-<< matrix.edition >>
-          e: fe-postgres-12
-          cypress-group: "postgres"
-          only-single-database: true
-          test-files-location: frontend/test/metabase-db/postgres
-          before-steps:
-            - wait-for-port:
-                port: 5432
-          <<: *Matrix
-
-      - fe-tests-cypress:
-          name: fe-tests-cypress-mysql-8-<< matrix.edition >>
-          requires:
-            - build-uberjar-<< matrix.edition >>
-          e: fe-mysql-8
-          cypress-group: "mysql"
-          only-single-database: true
-          test-files-location: frontend/test/metabase-db/mysql
-          before-steps:
-            - wait-for-port:
-                port: 3306
-          <<: *Matrix
 
   nightly:
     triggers:
