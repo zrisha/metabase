@@ -1172,6 +1172,13 @@ workflows:
           requires:
             - build-uberjar-<< matrix.edition >>
           cypress-group: "default-<< matrix.edition >>"
+          before-steps:
+            - wait-for-port:
+                port: 3306
+            - wait-for-port:
+                port: 27017
+            - wait-for-port:
+                port: 5432
 
   nightly:
     triggers:
