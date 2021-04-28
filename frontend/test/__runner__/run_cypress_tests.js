@@ -16,7 +16,9 @@ const isOpenMode = userArgs.includes("--open");
 const sourceFolder = userArgs.includes("--folder");
 const singleFile = userArgs.includes("--spec");
 const sourceFolderLocation = userArgs[userArgs.indexOf("--folder") + 1];
-const singleFileName = userArgs[userArgs.indexOf("--spec") + 1];
+const specArgs = userArgs[userArgs.indexOf("--spec") + 1];
+const isMultiSpecArgs = specArgs.match(/,/);
+const testFilesArgs = isMultiSpecArgs ? specArgs.split(",") : specArgs;
 
 function readFile(fileName) {
   return new Promise(function(resolve, reject) {
@@ -43,7 +45,7 @@ const init = async () => {
   }
 
   if (singleFile) {
-    console.log(chalk.bold(`Running single spec '${singleFileName}'`));
+    console.log(chalk.bold(`Running single spec '${testFilesArgs}'`));
   }
 
   try {
@@ -77,7 +79,7 @@ const init = async () => {
   const folderConfig = sourceFolder && {
     integrationFolder: sourceFolderLocation,
   };
-  const specsConfig = singleFile && { testFiles: singleFileName };
+  const specsConfig = singleFile && { testFiles: testFilesArgs };
   const ignoreConfig =
     // if we're not running specific tests, avoid including db and smoketests
     folderConfig || specsConfig

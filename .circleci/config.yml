@@ -863,10 +863,7 @@ jobs:
         default: clojure-and-node-and-browsers
       cypress-group:
         type: string
-      only-single-database:
-        type: boolean
-        default: false
-      test-files-location:
+      test-files:
         type: string
         default: ""
       # Node number e.g. 1
@@ -895,7 +892,7 @@ jobs:
                       <<: *CacheKeyUberjar
                   - steps: << parameters.before-steps >>
                 command: |
-                  run test-cypress-no-build <<# parameters.only-single-database >> --folder << parameters.test-files-location >> <</ parameters.only-single-database >>
+                  run test-cypress-no-build --spec << parameters.test-files >>
                 after-steps:
                   - store_artifacts:
                       path: /home/circleci/metabase/metabase/cypress
@@ -1182,12 +1179,59 @@ workflows:
       - fe-tests-cypress:
           matrix:
             parameters:
-              node: ["1"]
               edition: ["ee", "oss"]
-          name: fe-tests-cypress-<< matrix.node >>-<< matrix.edition >>
+          name: fe-tests-cypress-admin-<< matrix.edition >>
           requires:
             - build-uberjar-<< matrix.edition >>
-          cypress-group: "default-<< matrix.edition >>"
+          test-files: "frontend/test/metabase/scenarios/admin/**/*.cy.spec.js,frontend/test/metabase/scenarios/setup/**/*.cy.spec.js"
+          cypress-group: "admin"
+
+      - fe-tests-cypress:
+          matrix:
+            parameters:
+              edition: ["ee", "oss"]
+          name: fe-tests-cypress-visualizations-<< matrix.edition >>
+          requires:
+            - build-uberjar-<< matrix.edition >>
+          test-files: "frontend/test/metabase/scenarios/visualizations/**/*.cy.spec.js"
+          cypress-group: "visualizations"
+          
+      - fe-tests-cypress:
+          matrix:
+            parameters:
+              edition: ["ee", "oss"]
+          name: fe-tests-cypress-main-<< matrix.edition >>
+          requires:
+            - build-uberjar-<< matrix.edition >>
+          test-files: "frontend/test/metabase/scenarios/question/**/*.cy.spec.js,frontend/test/metabase/scenarios/dashboard/**/*.cy.spec.js,frontend/test/metabase/scenarios/public/**/*.cy.spec.js,frontend/test/metabase/scenarios/pulse/**/*.cy.spec.js,frontend/test/metabase/scenarios/reference/**/*.cy.spec.js"
+          cypress-group: "main"
+
+      - fe-tests-cypress:
+          matrix:
+            parameters:
+              edition: ["ee", "oss"]
+          name: fe-tests-cypress-random-<< matrix.edition >>
+          requires:
+            - build-uberjar-<< matrix.edition >>
+          test-files: "frontend/test/metabase/scenarios/collections/**/*.cy.spec.js"
+          cypress-group: "random"
+
+      - fe-tests-cypress:
+          name: fe-tests-cypress-enterprise
+          requires:
+            - build-uberjar-ee
+          test-files: "enterprise/frontend/test/metabase-enterprise/**/*.cy.spec.js"
+          cypress-group: "enterprise"
+
+      - fe-tests-cypress:
+          matrix:
+            parameters:
+              edition: ["ee", "oss"]
+          name: fe-tests-cypress-collections-<< matrix.edition >>
+          requires:
+            - build-uberjar-<< matrix.edition >>
+          test-files: "frontend/test/metabase/scenarios/alert/**/*.cy.spec.js,frontend/test/metabase/scenarios/auth/**/*.cy.spec.js,frontend/test/metabase/scenarios/home/**/*.cy.spec.js,frontend/test/metabase/scenarios/internal/**/*.cy.spec.js"
+          cypress-group: "collections"
 
       - fe-tests-cypress:
           name: fe-tests-cypress-mongo-4-<< matrix.edition >>
@@ -1195,8 +1239,7 @@ workflows:
             - build-uberjar-<< matrix.edition >>
           e: fe-mongo-4
           cypress-group: "mongo"
-          only-single-database: true
-          test-files-location: frontend/test/metabase-db/mongo
+          test-files: "frontend/test/metabase-db/mongo/**/*.cy.spec.js"
           before-steps:
             - wait-for-port:
                 port: 27017
@@ -1208,8 +1251,7 @@ workflows:
             - build-uberjar-<< matrix.edition >>
           e: fe-postgres-12
           cypress-group: "postgres"
-          only-single-database: true
-          test-files-location: frontend/test/metabase-db/postgres
+          test-files: "frontend/test/metabase-db/postgres/**/*.cy.spec.js"
           before-steps:
             - wait-for-port:
                 port: 5432
@@ -1221,8 +1263,7 @@ workflows:
             - build-uberjar-<< matrix.edition >>
           e: fe-mysql-8
           cypress-group: "mysql"
-          only-single-database: true
-          test-files-location: frontend/test/metabase-db/mysql
+          test-files: "frontend/test/metabase-db/mysql/**/*.cy.spec.js"
           before-steps:
             - wait-for-port:
                 port: 3306
