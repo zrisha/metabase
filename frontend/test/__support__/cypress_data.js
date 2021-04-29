@@ -80,3 +80,7 @@ export const USERS = {
     group_ids: [ALL_USERS_GROUP],
   },
 };
+
+export const PG_DB_NAME = "QA Postgres12";
+export const MYSQL_DB_NAME = "QA MySQL8";
+export const MONGO_DB_NAME = "QA Mongo4";
