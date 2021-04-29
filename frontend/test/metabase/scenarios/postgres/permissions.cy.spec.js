@@ -1,19 +1,13 @@
-import {
-  restore,
-  addPostgresDatabase,
-  withDatabase,
-} from "__support__/cypress";
+import { restore, withDatabase } from "__support__/cypress";
 import { USER_GROUPS } from "__support__/cypress_data";
 
 const { ALL_USERS_GROUP } = USER_GROUPS;
-const PG_DB_NAME = "QA Postgres12";
 const PG_DB_ID = 2;
 
 describe("postgres > permissions", () => {
   beforeEach(() => {
-    restore();
+    restore("postgres");
     cy.signInAsAdmin();
-    addPostgresDatabase(PG_DB_NAME);
     cy.server();
   });
 

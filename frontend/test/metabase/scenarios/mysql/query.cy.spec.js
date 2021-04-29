@@ -3,13 +3,10 @@ import { restore, modal, addMySQLDatabase } from "__support__/cypress";
 const MYSQL_DB_NAME = "QA MySQL8";
 
 describe("mysql > user > query", () => {
-  before(() => {
+  beforeEach(() => {
     restore();
     cy.signInAsAdmin();
     addMySQLDatabase(MYSQL_DB_NAME);
-  });
-
-  beforeEach(() => {
     cy.signInAsNormalUser();
   });
 

@@ -6,11 +6,14 @@ import {
   openOrdersTable,
   openPeopleTable,
   visitQuestionAdhoc,
+  addPostgresDatabase,
+  snapshot,
 } from "__support__/cypress";
 
 import { SAMPLE_DATASET } from "__support__/cypress_sample_dataset";
 
 const { ORDERS, ORDERS_ID, PRODUCTS, PRODUCTS_ID } = SAMPLE_DATASET;
+const PG_DB_NAME = "QA Postgres12";
 
 const customFormulas = [
   {
@@ -66,6 +69,30 @@ describe("scenarios > question > custom columns", () => {
       cy.wait("@dataset");
       cy.get(".Visualization").contains(columnName);
     });
+  });
+
+  it.only("dasda", () => {
+    cy.signInAsAdmin();
+    addPostgresDatabase(PG_DB_NAME);
+
+    cy.request("GET", "/api/database").then(({ body }) => {
+      const { id } = body.find(db => {
+        return db.engine === "postgres";
+      });
+
+      cy.request("GET", `/api/database/${id}/metadata`).then(({ body }) => {
+        cy.wrap(body.tables).should("have.length", 4);
+      });
+    });
+    snapshot("postgres");
+    restore("blank");
+    cy.visit("/");
+  });
+
+  it.only("dsadasda", () => {
+    restore("postgres");
+    cy.signInAsAdmin();
+    cy.visit("/");
   });
 
   it("should create custom column with fields from aggregated data (metabase#12762)", () => {

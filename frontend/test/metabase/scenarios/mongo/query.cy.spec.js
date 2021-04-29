@@ -1,12 +1,10 @@
-import { restore, modal, addMongoDatabase } from "__support__/cypress";
-
-const MONGO_DB_NAME = "QA Mongo4";
+import { restore, modal } from "__support__/cypress";
+import { MONGO_DB_NAME } from "__support__/cypress_data";
 
 describe("mongodb > user > query", () => {
   before(() => {
-    restore();
+    restore("mongo");
     cy.signInAsAdmin();
-    addMongoDatabase(MONGO_DB_NAME);
   });
 
   context("as an admin", () => {

@@ -1,12 +1,10 @@
-import { restore, addPostgresDatabase, popover } from "__support__/cypress";
-
-const PG_DB_NAME = "QA Postgres12";
+import { restore, popover } from "__support__/cypress";
+import { PG_DB_NAME } from "__support__/cypress_data";
 
 describe("postgres > question > custom columns", () => {
   beforeEach(() => {
-    restore();
+    restore("postgres");
     cy.signInAsAdmin();
-    addPostgresDatabase(PG_DB_NAME);
   });
 
   it.skip("should allow using strings in filter based on a custom column (metabase#13751)", () => {

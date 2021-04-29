@@ -240,7 +240,6 @@ export function addMySQLDatabase(name = "QA MySQL8") {
 function addQADatabase(engine, db_display_name, port) {
   const PASS_KEY = engine === "mongo" ? "pass" : "password";
   const AUTH_DB = engine === "mongo" ? "admin" : null;
-  const OPTIONS = engine === "mysql" ? "allowPublicKeyRetrieval=true" : null;
 
   cy.log(`**-- Adding ${engine.toUpperCase()} DB --**`);
   cy.request("POST", "/api/database", {
@@ -253,7 +252,6 @@ function addQADatabase(engine, db_display_name, port) {
       user: "metabase",
       [PASS_KEY]: "metasample123", // NOTE: we're inconsistent in where we use `pass` vs `password` as a key
       authdb: AUTH_DB,
-      "additional-options": OPTIONS,
       "use-srv": false,
       "tunnel-enabled": false,
     },

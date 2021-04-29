@@ -1,12 +1,10 @@
-import { restore, addPostgresDatabase, modal } from "__support__/cypress";
-
-const PG_DB_NAME = "QA Postgres12";
+import { restore, modal } from "__support__/cypress";
+import { PG_DB_NAME } from "__support__/cypress_data";
 
 describe("postgres > question > native", () => {
   beforeEach(() => {
-    restore();
+    restore("postgres");
     cy.signInAsAdmin();
-    addPostgresDatabase(PG_DB_NAME);
   });
 
   it.skip("should save a question before query has been executed (metabase#14957)", () => {

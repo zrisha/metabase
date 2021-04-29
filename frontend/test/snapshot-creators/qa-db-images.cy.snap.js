@@ -2,29 +2,19 @@ import {
   restore,
   snapshot,
   addPostgresDatabase,
-  addMySQLDatabase,
   addMongoDatabase,
 } from "__support__/cypress";
-import {
-  PG_DB_NAME,
-  MYSQL_DB_NAME,
-  MONGO_DB_NAME,
-} from "__support__/cypress_data";
+import { PG_DB_NAME, MONGO_DB_NAME } from "__support__/cypress_data";
 
 describe("qa databases", () => {
   beforeEach(() => {
     restore();
-    cy.signInAsadmin();
+    cy.signInAsAdmin();
   });
 
   it("postgres", () => {
     addPostgresDatabase(PG_DB_NAME);
     generateSnapshot("postgres");
-  });
-
-  it("mysql", () => {
-    addMySQLDatabase(MYSQL_DB_NAME);
-    generateSnapshot("mysql");
   });
 
   it("mongo", () => {
@@ -33,13 +23,16 @@ describe("qa databases", () => {
   });
 });
 
-function assertOnDatabase(name) {
+function assertOnDatabase(engine) {
   cy.request("GET", "/api/database").then(({ body }) => {
     const { id } = body.find(db => {
-      return db.engine === name;
+      return db.engine === engine;
     });
 
     cy.request("GET", `/api/database/${id}/metadata`).then(({ body }) => {
+      if (body.tables.length !== 4) {
+        cy.wait(2000);
+      }
       cy.wrap(body.tables).should("have.length", 4);
     });
   });
