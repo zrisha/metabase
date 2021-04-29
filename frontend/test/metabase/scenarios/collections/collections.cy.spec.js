@@ -6,6 +6,7 @@ import {
   openOrdersTable,
 } from "__support__/cypress";
 import { USERS, USER_GROUPS } from "__support__/cypress_data";
+import { getSidebarCollectionChildrenFor } from "./utils";
 
 const { nocollection } = USERS;
 const { DATA_GROUP } = USER_GROUPS;
@@ -582,13 +583,4 @@ function selectItemUsingCheckbox(item, icon = "table") {
         .should("be.visible")
         .click();
     });
-}
-
-function getSidebarCollectionChildrenFor(item) {
-  return cy
-    .findByTestId("sidebar")
-    .findByText(item)
-    .closest("a")
-    .parent()
-    .parent();
 }
