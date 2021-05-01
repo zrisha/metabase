@@ -3,13 +3,23 @@ import {
   snapshot,
   addPostgresDatabase,
   addMongoDatabase,
+  addMySQLDatabase,
 } from "__support__/cypress";
-import { PG_DB_NAME, MONGO_DB_NAME } from "__support__/cypress_data";
+import {
+  PG_DB_NAME,
+  MONGO_DB_NAME,
+  MYSQL_DB_NAME,
+} from "__support__/cypress_data";
 
 describe("qa databases", () => {
   beforeEach(() => {
     restore();
     cy.signInAsAdmin();
+  });
+
+  it("mysql", () => {
+    addMySQLDatabase(MYSQL_DB_NAME);
+    generateSnapshot("mysql");
   });
 
   it("postgres", () => {
@@ -29,10 +39,8 @@ function assertOnDatabase(engine) {
       return db.engine === engine;
     });
 
+    cy.wait(1000);
     cy.request("GET", `/api/database/${id}/metadata`).then(({ body }) => {
-      if (body.tables.length !== 4) {
-        cy.wait(2000);
-      }
       cy.wrap(body.tables).should("have.length", 4);
     });
   });
