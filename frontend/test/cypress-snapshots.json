@@ -1,6 +1,10 @@
 {
-	"testFiles": "**/*.cy.snap.js",
-	"pluginsFile": "frontend/test/cypress-plugins.js",
-	"integrationFolder": "frontend/test",
-	"supportFile": "frontend/test/__support__/cypress.js"
+  "testFiles": "**/*.cy.snap.js",
+  "pluginsFile": "frontend/test/cypress-plugins.js",
+  "integrationFolder": "frontend/test",
+  "supportFile": "frontend/test/__support__/cypress.js",
+  "retries": {
+    "runMode": 2,
+    "openMode": 0
+  }
 }

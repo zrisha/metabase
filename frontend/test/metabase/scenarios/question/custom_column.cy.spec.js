@@ -71,30 +71,6 @@ describe("scenarios > question > custom columns", () => {
     });
   });
 
-  it.only("dasda", () => {
-    cy.signInAsAdmin();
-    addPostgresDatabase(PG_DB_NAME);
-
-    cy.request("GET", "/api/database").then(({ body }) => {
-      const { id } = body.find(db => {
-        return db.engine === "postgres";
-      });
-
-      cy.request("GET", `/api/database/${id}/metadata`).then(({ body }) => {
-        cy.wrap(body.tables).should("have.length", 4);
-      });
-    });
-    snapshot("postgres");
-    restore("blank");
-    cy.visit("/");
-  });
-
-  it.only("dsadasda", () => {
-    restore("postgres");
-    cy.signInAsAdmin();
-    cy.visit("/");
-  });
-
   it("should create custom column with fields from aggregated data (metabase#12762)", () => {
     openOrdersTable({ mode: "notebook" });
 
