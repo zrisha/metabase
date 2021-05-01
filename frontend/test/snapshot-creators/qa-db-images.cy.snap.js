@@ -48,5 +48,5 @@ function generateSnapshot(engine) {
     snapshot(engine);
     cy.request("DELETE", `/api/database/${id}`);
   });
-  restore("blank");
+  restore("default");
 }
