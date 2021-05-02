@@ -17,14 +17,14 @@ describe("qa databases", () => {
     cy.signInAsAdmin();
   });
 
-  it("mysql", () => {
-    addMySQLDatabase(MYSQL_DB_NAME);
-    generateSnapshot("mysql");
-  });
-
   it("postgres", () => {
     addPostgresDatabase(PG_DB_NAME);
     generateSnapshot("postgres");
+  });
+
+  it("mysql", () => {
+    addMySQLDatabase(MYSQL_DB_NAME);
+    generateSnapshot("mysql");
   });
 
   it("mongo", () => {
