@@ -37,7 +37,7 @@ describeWithToken("postgres > user > query", () => {
           expressions: {
             [CC_NAME]: [
               "regex-match-first",
-              ["field-id", PEOPLE.NAME],
+              ["field", PEOPLE.NAME, null],
               "^[A-Za-z]+",
             ],
           },
@@ -50,7 +50,7 @@ describeWithToken("postgres > user > query", () => {
         cy.sandboxTable({
           table_id: PEOPLE_ID,
           attribute_remappings: {
-            attr_uid: ["dimension", ["field-id", PEOPLE.ID]],
+            attr_uid: ["dimension", ["field", PEOPLE.ID, null]],
           },
         });
 
