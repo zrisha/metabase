@@ -1,12 +1,10 @@
-import { restore, modal, addMySQLDatabase } from "__support__/cypress";
-
-const MYSQL_DB_NAME = "QA MySQL8";
+import { restore, modal } from "__support__/cypress";
+import { MYSQL_DB_NAME } from "__support__/cypress_data";
 
 describe("mysql > user > query", () => {
   beforeEach(() => {
-    restore();
-    cy.signInAsAdmin();
-    addMySQLDatabase(MYSQL_DB_NAME);
+    restore("mysql");
+
     cy.signInAsNormalUser();
   });
 

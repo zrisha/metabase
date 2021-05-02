@@ -1,13 +1,10 @@
-import { restore, addMySQLDatabase, withDatabase } from "__support__/cypress";
-
-const MYSQL_DB_NAME = "QA MySQL8";
+import { restore, withDatabase } from "__support__/cypress";
 
 // NOTE: skipping the whole describe block because #12445 is the only test so far
 describe.skip("mysql > user > question > custom column", () => {
   beforeEach(() => {
-    restore();
+    restore("mysql");
     cy.signInAsAdmin();
-    addMySQLDatabase(MYSQL_DB_NAME);
   });
 
   // TODO: When you unskip this test, unskip the describe block as well
