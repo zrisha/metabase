@@ -1,4 +1,5 @@
-import { restore, popover } from "__support__/cypress";
+import { restore, popover, modal } from "__support__/cypress";
+import { PG_DB_NAME } from "__support__/cypress_data";
 
 function typeField(label, value) {
   cy.findByLabelText(label)
@@ -13,6 +14,75 @@ function toggleFieldWithDisplayName(displayName) {
     .find("a")
     .click();
 }
+
+describe.only("postgres snapshot debug", () => {
+  beforeEach(() => {
+    restore("postgres");
+    cy.signInAsAdmin();
+  });
+
+  it("should list postgres in admin/databases", () => {
+    cy.visit("/admin/databases");
+    cy.findByText(PG_DB_NAME).click();
+    cy.visit("/admin/datamodel/database/2");
+    cy.findByText("People");
+    cy.findByText("Products");
+    cy.findByText("Reviews");
+    cy.findByText("Orders").click();
+    cy.location("pathname").should("eq", "/admin/datamodel/database/2/table/5");
+    cy.findByDisplayValue("Orders");
+    cy.findByDisplayValue("Product ID");
+  });
+
+  it("should save 'Orders' question", () => {
+    cy.visit("/question/new");
+    cy.findByText("Simple question").click();
+    cy.findByText(PG_DB_NAME).click();
+    cy.findByText("Orders").click();
+    cy.findByText("Save").click();
+    modal()
+      .findByRole("button", { name: "Save" })
+      .click();
+    cy.findByText("Not now").click();
+    modal().should("not.exist");
+  });
+  it("should save 'Products' question", () => {
+    cy.visit("/question/new");
+    cy.findByText("Simple question").click();
+    cy.findByText(PG_DB_NAME).click();
+    cy.findByText("Products").click();
+    cy.findByText("Save").click();
+    modal()
+      .findByRole("button", { name: "Save" })
+      .click();
+    cy.findByText("Not now").click();
+    modal().should("not.exist");
+  });
+  it("should save 'Reviews' question", () => {
+    cy.visit("/question/new");
+    cy.findByText("Simple question").click();
+    cy.findByText(PG_DB_NAME).click();
+    cy.findByText("Reviews").click();
+    cy.findByText("Save").click();
+    modal()
+      .findByRole("button", { name: "Save" })
+      .click();
+    cy.findByText("Not now").click();
+    modal().should("not.exist");
+  });
+  it("should save 'People' question", () => {
+    cy.visit("/question/new");
+    cy.findByText("Simple question").click();
+    cy.findByText(PG_DB_NAME).click();
+    cy.findByText("People").click();
+    cy.findByText("Save").click();
+    modal()
+      .findByRole("button", { name: "Save" })
+      .click();
+    cy.findByText("Not now").click();
+    modal().should("not.exist");
+  });
+});
 
 describe("scenarios > admin > databases > add", () => {
   beforeEach(() => {
