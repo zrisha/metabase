@@ -276,6 +276,24 @@ function addQADatabase(engine, db_display_name, port) {
   });
 }
 
+export function generateSnapshot(engine) {
+  cy.request("GET", "/api/database").then(({ body }) => {
+    const { id } = body.find(db => {
+      return db.engine === engine;
+    });
+    cy.request("POST", `/api/database/${id}/sync_schema`);
+    cy.request("POST", `/api/database/${id}/rescan_values`);
+
+    cy.wait(1000);
+    cy.request("GET", `/api/database/${id}/metadata`).then(({ body }) => {
+      cy.wrap(body.tables).should("have.length", 4);
+    });
+    snapshot(engine);
+    cy.request("DELETE", `/api/database/${id}`);
+  });
+  restore("blank");
+}
+
 export function adhocQuestionHash(question) {
   if (question.display) {
     // without "locking" the display, the QB will run its picking logic and override the setting
