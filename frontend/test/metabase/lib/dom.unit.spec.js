@@ -1,3 +1,4 @@
+// Comment
 import { getSelectionPosition, setSelectionPosition } from "metabase/lib/dom";
 
 describe("getSelectionPosition/setSelectionPosition", () => {
