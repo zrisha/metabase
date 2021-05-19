@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import ReactGridLayout from "react-grid-layout";
 import _ from "underscore";
 
+import Select from "metabase/components/Select";
 import { color } from "metabase/lib/colors";
 
 import "react-grid-layout/css/styles.css";
@@ -19,6 +20,8 @@ function NewGridLayout({
   isEditing,
   ...props
 }) {
+  const [compactType, setCompactType] = useState("vertical");
+
   const cellSize = useMemo(() => {
     const marginSlotsCount = cols - 1;
     const totalHorizontalMargin = marginSlotsCount * margin;
@@ -82,20 +85,48 @@ function NewGridLayout({
   );
 
   return (
-    <ReactGridLayout
-      cols={cols}
-      layout={layout}
-      width={gridWidth}
-      margin={[margin, margin]}
-      rowHeight={rowHeight}
-      isDraggable={isEditing}
-      isResizable={isEditing}
-      {...props}
-      autoSize={false}
-      style={style}
-    >
-      {items.map(renderItem)}
-    </ReactGridLayout>
+    <React.Fragment>
+      {isEditing && (
+        <div
+          style={{
+            position: "absolute",
+            top: 5,
+            left: 5,
+            padding: "8px",
+            borderRadius: "8px",
+            zIndex: 100,
+          }}
+        >
+          <Select
+            value={compactType}
+            options={[
+              { value: "vertical", name: "Vertical" },
+              { value: "horizontal", name: "Horizontal" },
+              { value: null, name: "None" },
+            ]}
+            onChange={e => {
+              const val = e.target.value;
+              setCompactType(val);
+            }}
+          />
+        </div>
+      )}
+      <ReactGridLayout
+        cols={cols}
+        layout={layout}
+        width={gridWidth}
+        margin={[margin, margin]}
+        rowHeight={rowHeight}
+        isDraggable={isEditing}
+        isResizable={isEditing}
+        {...props}
+        autoSize={false}
+        style={style}
+        compactType={compactType}
+      >
+        {items.map(renderItem)}
+      </ReactGridLayout>
+    </React.Fragment>
   );
 }
 
