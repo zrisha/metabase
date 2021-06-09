@@ -7,7 +7,7 @@
             [metabase.driver :as driver]
             [metabase.driver.util :as driver.u]
             [metabase.mbql.schema :as mbql.s]
-            [metabase.models :refer [Card Collection Database Field FieldValues Table]]
+            [metabase.models :refer [Card Collection Database Field FieldValues Table TaskHistory]]
             [metabase.models.database :as database :refer [protected-password]]
             [metabase.models.permissions :as perms]
             [metabase.models.permissions-group :as perms-group]
@@ -673,10 +673,21 @@
             (is (= true
                    (deref analyze-called? long-timeout :analyze-never-called)))))))))
 
+(deftest get-sync-history-test
+  (testing "Can we view sync history for a DB?"
+    (mt/with-temp* [Database    [db {:engine "h2", :details (:details (mt/db))}]
+                    TaskHistory [th {:db_id (u/the-id db)}]]
+      (pos? (count ((mt/user->client :crowberto) :get 200 (format "database/%d/sync_history" (u/the-id db))))))))
+
 (deftest non-admins-cant-trigger-sync
   (testing "Non-admins should not be allowed to trigger sync"
     (is (= "You don't have permissions to do that."
            ((mt/user->client :rasta) :post 403 (format "database/%d/sync_schema" (mt/id)))))))
+
+(deftest non-admins-cant-view-sync-history
+  (testing "Non-admins should not be allowed to view sync history"
+    (is (= "You don't have permissions to do that."
+           ((mt/user->client :rasta) :get 403 (format "database/%d/sync_history" (mt/id)))))))
 
 (deftest can-rescan-fieldvalues-for-a-db
   (testing "Can we RESCAN all the FieldValues for a DB?"

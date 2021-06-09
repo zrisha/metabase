@@ -20,6 +20,7 @@
             [metabase.models.interface :as mi]
             [metabase.models.permissions :as perms]
             [metabase.models.table :refer [Table]]
+            [metabase.models.task-history :refer [TaskHistory]]
             [metabase.public-settings :as public-settings]
             [metabase.sample-data :as sample-data]
             [metabase.server.middleware.offset-paging :as offset-paging]
@@ -606,6 +607,14 @@
     (events/publish-event! :database-delete db))
   api/generic-204-no-content)
 
+
+;;; --------------------------------------- GET /api/database/:id/sync_history ---------------------------------------
+
+(api/defendpoint GET "/:id/sync_history"
+  "Get the history of syncs performed (from task_history table) on this DB."
+  [id]
+  (api/check-superuser)
+  (db/select TaskHistory :db_id id))
 
 ;;; ------------------------------------------ POST /api/database/:id/sync -------------------------------------------
 
