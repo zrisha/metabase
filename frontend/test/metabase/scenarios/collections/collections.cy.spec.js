@@ -6,6 +6,7 @@ import {
   openOrdersTable,
 } from "__support__/e2e/cypress";
 import { USERS, USER_GROUPS } from "__support__/e2e/cypress_data";
+import "./utils";
 
 const { nocollection } = USERS;
 const { DATA_GROUP } = USER_GROUPS;
@@ -556,14 +557,6 @@ function createPulse() {
   cy.findByText("Robert Tableton").should("not.exist");
   cy.findByText("Bobby Tables");
   cy.findByText("Create pulse").click();
-}
-
-function openDropdownFor(collectionName) {
-  cy.findByText(collectionName)
-    .parent()
-    .find(".Icon-chevronright")
-    .eq(0) // there may be more nested icons, but we need the top level one
-    .click();
 }
 
 function openEllipsisMenuFor(item) {
