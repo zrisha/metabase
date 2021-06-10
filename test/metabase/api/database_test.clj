@@ -92,12 +92,12 @@
         (is (= (-> (db-details)
                    (dissoc :details :schedules))
                (-> ((mt/user->client :rasta) :get 200 (format "database/%d" (mt/id)))
-                   (dissoc :schedules)))))
+                   (dissoc :schedules :last_sync)))))
 
       (testing "Superusers should see DB details"
         (is (= (db-details)
                (-> ((mt/user->client :crowberto) :get 200 (format "database/%d" (mt/id)))
-                   (dissoc :schedules))))))
+                   (dissoc :schedules :last_sync))))))
 
     (mt/with-temp* [Database [db {:name "My DB", :engine ::test-driver}]
                     Table    [t1 {:name "Table 1", :db_id (:id db)}]
