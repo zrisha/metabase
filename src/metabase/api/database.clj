@@ -249,11 +249,10 @@
   "If URL param `?include=` was passed to `GET /api/database/:id`, hydrate the Database appropriately."
   [db include]
   (if-not include
-    (hydrate db :last_sync)
-    (-> (hydrate db :last_sync)
-        (hydrate (case include
-                   "tables"        :tables
-                   "tables.fields" [:tables [:fields [:target :has_field_values] :has_field_values]]))
+    db
+    (-> (hydrate db (case include
+                      "tables"        :tables
+                      "tables.fields" [:tables [:fields [:target :has_field_values] :has_field_values]]))
         (update :tables (fn [tables]
                           (cond->> tables
                             ; filter hidden tables
@@ -268,7 +267,8 @@
   {include (s/maybe (s/enum "tables" "tables.fields"))}
   (-> (api/read-check Database id)
       add-expanded-schedules
-      (get-database-hydrate-include include)))
+      (get-database-hydrate-include include)
+      (hydrate :last_sync)))
 
 
 ;;; ----------------------------------------- GET /api/database/:id/metadata -----------------------------------------
