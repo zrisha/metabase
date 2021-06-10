@@ -221,9 +221,7 @@ export default class DatabaseEditApp extends Component {
                 <div className="Actions-group">
                   <label className="block text-bold">{t`Last successful sync:`}</label>
                   {!!database.last_sync && (
-                    <label className="block">
-                      {database.last_sync.ended_at}
-                    </label>
+                    <label className="block">{database.last_sync}</label>
                   )}
                   {!database.last_sync && (
                     <label className="block">Never</label>

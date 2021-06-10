@@ -128,9 +128,9 @@
   (db/select 'Table, :db_id id, :active true, {:order-by [[:%lower.display_name :asc]]}))
 
 (defn ^:hydrate last_sync
-  "Return the `TaskHistory` associated with the last sync of this `Database`."
+  "Return the date of the `TaskHistory` associated with the last sync of this `Database`."
   [{:keys [id]}]
-  (db/select-one 'TaskHistory, :db_id id, {:order-by [[:ended_at :desc]]}))
+  (:ended_at (db/select-one 'TaskHistory, :db_id id, {:order-by [[:ended_at :desc]]})))
 
 (defn schema-names
   "Return a *sorted set* of schema names (as strings) associated with this `Database`."
