@@ -219,7 +219,7 @@ export default class DatabaseEditApp extends Component {
             <Box ml={[2, 3]} w={420}>
               <div className="Actions bg-light rounded p3">
                 <div className="Actions-group">
-                  <label className="block text-bold">{t`Last sync time:`}</label>
+                  <label className="block text-bold">{t`Last successful sync:`}</label>
                   {!!database.last_sync && (
                     <label className="block">
                       {database.last_sync.ended_at}
