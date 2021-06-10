@@ -6,7 +6,7 @@ import {
   openOrdersTable,
 } from "__support__/e2e/cypress";
 import { USERS, USER_GROUPS } from "__support__/e2e/cypress_data";
-import "./utils";
+import { openDropdownFor } from "./utils";
 
 const { nocollection } = USERS;
 const { DATA_GROUP } = USER_GROUPS;

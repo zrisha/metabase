@@ -1,4 +1,4 @@
-function openDropdownFor(collectionName) {
+export function openDropdownFor(collectionName) {
   cy.findByText(collectionName)
     .parent()
     .find(".Icon-chevronright")
