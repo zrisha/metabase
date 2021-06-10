@@ -1,7 +1,5 @@
 (ns metabase.models.notification
-  (:require [metabase.models.permissions :as perms]
-            [metabase.moderation :as moderation]
-            [metabase.util :as u]
+  (:require [metabase.util :as u]
             [metabase.util.schema :as su]
             [schema.core :as s]
             [toucan.db :as db]
@@ -29,6 +27,7 @@
     [:= 0 1]))
 
 (defn hydrate-notifiers
+  "The comments / moderation reviews associated with these notifications"
   {:batched-hydrate :notifier}
   [notifications]
   (when (seq notifications)
@@ -44,6 +43,7 @@
         (assoc notification :notifier (first (get notifiers [notifier_id notifier_type])))))))
 
 (defn for-user
+  "Seq of notifications for the given user"
   [user-id]
   (db/select Notification :user_id user-id, :read false,
              {:order-by [[:created_at :desc]]}))
