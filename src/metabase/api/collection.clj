@@ -471,16 +471,21 @@
   ;; Return collection contents, including Collections that have an effective location of being in the Root
   ;; Collection for the Current User.
   (let [root-collection (assoc collection/root-collection :namespace namespace)
-        model-kwds      (if (mi/can-read? root-collection)
-                          (set (map keyword (u/one-or-many models)))
-                          #{:collection})]
-    (collection-children
-      root-collection
-      {:models       model-kwds
-       :archived?    (Boolean/parseBoolean archived)
-       :pinned-state (keyword pinned_state)
-       :sort-info    [(or (some-> sort_column normalize-sort-choice) :name)
-                      (or (some-> sort_direction normalize-sort-choice) :asc)]})))
+        model-kwds      (set (map keyword (u/one-or-many models)))]
+    (if (mi/can-read? root-collection)
+      (collection-children
+        root-collection
+        {:models       model-kwds
+         :archived?    (Boolean/parseBoolean archived)
+         :pinned-state (keyword pinned_state)
+         :sort-info    [(or (some-> sort_column normalize-sort-choice) :name)
+                        (or (some-> sort_direction normalize-sort-choice) :asc)]})
+      ;; manually blank out if no permissions because the semantics of blank model kwds passed in is all models
+      {:total  0
+       :data   []
+       :limit  offset-paging/*limit*
+       :offset offset-paging/*offset*
+       :models {}})))
 
 
 ;;; ----------------------------------------- Creating/Editing a Collection ------------------------------------------
