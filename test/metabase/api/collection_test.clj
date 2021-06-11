@@ -681,7 +681,8 @@
         (is (= [(collection-item "Rasta Toucan's Personal Collection")]
                ;; if a User doesn't have perms for the Root Collection then they don't get to see things with no collection_id
                (with-some-children-of-collection nil
-                 (mt/boolean-ids-and-timestamps (:data (mt/user-http-request :rasta :get 200 "collection/root/items"))))))
+                 (mt/boolean-ids-and-timestamps
+                   (:data (mt/user-http-request :rasta :get 200 "collection/root/items" :model "collection"))))))
 
         (testing "...but if they have read perms for the Root Collection they should get to see them"
           (with-some-children-of-collection nil
@@ -748,7 +749,8 @@
 
 (defn- api-get-root-collection-children
   [& additional-get-params]
-  (mt/boolean-ids-and-timestamps (:data (apply mt/user-http-request :rasta :get 200 "collection/root/items" additional-get-params))) )
+  (mt/boolean-ids-and-timestamps (:data (apply mt/user-http-request :rasta :get 200 "collection/root/items" :model "collection" additional-get-params))))
+
 (deftest fetch-root-collection-items-test
   (testing "GET /api/collection/root/items"
     (testing "Do top-level collections show up as children of the Root Collection?"
@@ -798,7 +800,7 @@
           (testing "By passing `:namespace` we should be able to see Collections in that `:namespace`"
             (testing "?namespace=currency"
               (is (= ["Coin Collection"]
-                     (collection-names (mt/user-http-request :rasta :get 200 "collection/root/items?namespace=currency")))))
+                     (collection-names (mt/user-http-request :rasta :get 200 "collection/root/items?namespace=currency&model=collection")))))
             (testing "?namespace=stamps"
               (is (= []
                      (collection-names (mt/user-http-request :rasta :get 200 "collection/root/items?namespace=stamps")))))))))))
