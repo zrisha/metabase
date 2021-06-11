@@ -1,6 +1,5 @@
 import { t, ngettext, msgid } from "ttag";
 import _ from "underscore";
-import { assoc } from "icepick";
 
 import { stripId, FK_SYMBOL } from "metabase/lib/formatting";
 import { TYPE } from "metabase/lib/types";
@@ -817,15 +816,9 @@ export class FieldDimension extends Dimension {
       additionalProperties._subTriggerDisplayName = option.name;
     }
 
-    const { type } = option;
-    const options =
-      type && !dimension.binningOptions()
-        ? assoc(dimension._options || {}, "base-type", type)
-        : dimension._options;
-
     return new FieldDimension(
       dimension._fieldIdOrName,
-      options,
+      dimension._options,
       this._metadata,
       this._query,
       additionalProperties,
