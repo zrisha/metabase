@@ -383,7 +383,7 @@ export default class PieChart extends Component {
 
     const getSliceClickObject = index => {
       const slice = slices[index];
-      const sliceRows = slice.rowIndex && rows[slice.rowIndex];
+      const sliceRows = slice.rowIndex != null && rows[slice.rowIndex];
       const data =
         sliceRows &&
         sliceRows.map((value, index) => ({

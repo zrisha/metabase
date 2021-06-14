@@ -414,7 +414,7 @@ describe("scenarios > visualizations > drillthroughs > chart drill", () => {
     cy.findByText("Showing 85 rows");
   });
 
-  it.skip("should parse value on click through on the first row of pie chart (metabase#15250)", () => {
+  it("should parse value on click through on the first row of pie chart (metabase#15250)", () => {
     cy.createQuestion({
       name: "15250",
       query: {
