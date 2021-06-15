@@ -8,6 +8,7 @@ import { IFRAMED, initializeIframeResizer } from "metabase/lib/dom";
 
 import UndoListing from "metabase/containers/UndoListing";
 import ErrorCard from "metabase/components/ErrorCard";
+import Tour from "reactour";
 
 import {
   Archived,
@@ -47,24 +48,48 @@ const getErrorComponent = ({ status, data, context }) => {
 export default class App extends Component {
   state = {
     errorInfo: undefined,
+    isOpen: true,
   };
 
   constructor(props) {
     super(props);
     initializeIframeResizer();
+    this.relativeDiv = React.createRef();
   }
 
   componentDidCatch(error, errorInfo) {
     this.setState({ errorInfo });
   }
 
+  onRequestClose = () => {
+    this.setState(() => ({ isOpen: false }));
+  };
+
   render() {
     const { children, currentUser, location, errorPage } = this.props;
     const { errorInfo } = this.state;
 
+    const steps = [
+      {
+        content: "Hello World!",
+      },
+      {
+        content: "Hello You!",
+        selector: 'a[href="/question/new"]',
+      },
+      {
+        content: "Bye!",
+      },
+    ];
+
     return (
       <ScrollToTop>
-        <div className="relative">
+        <div className="relative" ref={this.relativeDiv}>
+          <Tour
+            steps={steps}
+            isOpen={this.state.isOpen}
+            onRequestClose={this.onRequestClose}
+          />
           {currentUser && !IFRAMED && <Navbar location={location} />}
           {errorPage ? getErrorComponent(errorPage) : children}
           <UndoListing />
