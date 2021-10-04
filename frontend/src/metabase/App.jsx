@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import ScrollToTop from "metabase/hoc/ScrollToTop";
 import Navbar from "metabase/nav/containers/Navbar";
+import Icon from "metabase/components/Icon";
 
 import { IFRAMED, initializeIframeResizer } from "metabase/lib/dom";
 
@@ -69,128 +70,292 @@ export default class App extends Component {
     const { children, currentUser, location, errorPage } = this.props;
     const { errorInfo } = this.state;
 
-    let steps_old = [
-      {
-        content: "Welcome to metabase",
-      },
-      {
-        content: "Start by clicking on a dataset",
-        selector: 'a[href="/browse/1-sample-dataset"]',
-      },
-      {
-        content: "Pick a table to ask a question about",
-        selector: 'a[data-metabase-event="Data Browse;Table Click"]',
-      },
-      {
-        content: "First lets filter out less relevant data",
-        selector: 'button[data-metabase-event="View Mode; Open Filter Widget"]',
-      },
-      {
-        content: "Lets filter out orders based on their subtotal!",
-        selector:
-          '[data-testid="sidebar-right"] div div div div:nth-child(2) div:nth-child(6)',
-      },
-      {
-        content: "Bye!",
-      },
-    ];
-
-    // {
-    //   content: "There are several ways to ask a question in Metabase, but we'll click on the Simple Question option for now.",
-    // selector: 'a[href="/question#eyJkYXRhc2V0X3F1ZXJ5Ijp7ImRhdGFiYXNlIjpudWxsLCJxdWVyeSI6eyJzb3VyY2UtdGFibGUiOm51bGx9LCJ0eXBlIjoicXVlcnkifSwiZGlzcGxheSI6InRhYmxlIiwidmlzdWFsaXphdGlvbl9zZXR0aW5ncyI6e319"]',
-    // },
-
     const steps = [
       {
-        content: "Welcome to Metabase! Would you like to take a tour?",
+        content: () => (
+          <div>
+            {" "}
+            Welcome to Metabase! <span role="img"> 👋</span> Would you like to
+            take a tour?
+          </div>
+        ),
       },
       {
-        content:
-          "Great! We will start by selecting a dataset to ask a question about",
+        content: () => (
+          <p>
+            {" "}
+            Great! <span role="img"> 👍</span> We will start by selecting a
+            dataset to ask a question about{" "}
+          </p>
+        ),
       },
       {
-        content:
-          "Let's start by clicking the sample dataset provided by Metabase!",
         selector: 'a[href="/browse/1-sample-dataset"]',
+        content: () => (
+          <p>
+            {" "}
+            Lets start by clicking the sample dataset provided by Metabase!{" "}
+          </p>
+        ),
       },
       {
-        content:
-          "The sample dataset contains fake data from a made up company. Take a look at the Orders data",
         selector: 'a[data-metabase-event="Data Browse;Table Click"]',
+        content: () => (
+          <p>
+            {" "}
+            The sample dataset contains fake data from a made up company. Take a
+            look at the{" "}
+            <span style={{ color: "#0F4277" }}>
+              {" "}
+              <b> Orders </b>{" "}
+            </span>{" "}
+            data <span role="img"> 🔍</span>{" "}
+          </p>
+        ),
       },
       {
-        content:
-          "Let’s start with a simple question about these orders: how many orders have been placed with a subtotal (before tax) greater than $30?",
+        content: () => (
+          <p>
+            Lets start with a simple question about these orders: How many
+            orders have been placed with a{" "}
+            <span style={{ backgroundColor: "#F3F68A", font: "verdana" }}>
+              {" "}
+              subtotal (before tax) greater than $30?
+            </span>{" "}
+          </p>
+        ),
       },
       {
-        content:
-          "To find out, we want to filter the data by the field we’re interested in. Click the Filter button",
         selector: 'button[data-metabase-event="View Mode; Open Filter Widget"]',
+        content: () => (
+          <p>
+            To find out, we want to{" "}
+            <span style={{ color: "#8662EC" }}>
+              {" "}
+              <b>filter</b>{" "}
+            </span>{" "}
+            the data by the field we’re interested in. Click the{" "}
+            <span style={{ color: "#8662EC" }}>
+              {" "}
+              <b>Filter</b>{" "}
+            </span>
+            button
+          </p>
+        ),
       },
       {
-        content:
-          "The question we want to answer is: how many orders have been placed with a subtotal (before tax) greater than $30? Filter the data by subtotal",
-
         selector:
           '[data-testid="sidebar-right"] div div div div:nth-child(2) div:nth-child(6)',
+        content: () => (
+          <p>
+            The question we want to answer is: how many orders have been placed
+            with a subtotal (before tax) greater than $30?{" "}
+            <span style={{ color: "#8662EC" }}>
+              {" "}
+              <b>Filter</b>{" "}
+            </span>{" "}
+            the data by{" "}
+            <span style={{ color: "#8662EC" }}>
+              {" "}
+              <b>subtotal</b>{" "}
+            </span>{" "}
+          </p>
+        ),
       },
       {
-        content:
-          "The question we want to answer is: how many orders have been placed with a subtotal (before tax) greater than $30? Choose 'greater than'",
         selector: 'aside[data-testid="sidebar-right"]',
+        content: () => (
+          <p>
+            The question we want to answer is: how many orders have been placed
+            with a subtotal (before tax) greater than $30? Choose{" "}
+            <span style={{ color: "#8662EC" }}>
+              {" "}
+              <b>greater than</b>{" "}
+            </span>{" "}
+          </p>
+        ),
       },
       {
-        content:
-          "The question we want to answer is: how many orders have been placed with a subtotal (before tax) greater than $30? Enter the number 30 and press 'Add filter'",
         selector: 'aside[data-testid="sidebar-right"]',
+        content: () => (
+          <p>
+            The question we want to answer is: how many orders have been placed
+            with a subtotal (before tax) greater than $30? Enter the number 30
+            and press{" "}
+            <span style={{ color: "#8662EC" }}>
+              {" "}
+              <b> Add Filter </b>{" "}
+            </span>{" "}
+          </p>
+        ),
       },
       {
-        content: "Metabase will filter out the data that is greater than $30!",
-      },
-      {
-        content:
-          "To find out how many orders are greater than $30, we have to summarize the data",
-        selector:
-          'button[data-metabase-event="View Mode; Open Summary Widget"]',
-      },
-      {
-        content: "Summarize by Count and press 'Done'",
-        selector: 'aside[data-testid="sidebar-right"]',
-      },
-      {
-        content:
-          "Here's our answer! There are 17,971 orders with a subtotal greater than $30. Okay, so that’s pretty useful, but it would be even more useful if we could know in which months our customers placed these big orders. Let's summarize the data again!",
-        selector:
-          'button[data-metabase-event="View Mode; Open Summary Widget"]',
-      },
-      {
-        content:
-          "Which months did our customers place these orders? Select 'Created At' and press done",
-        selector: 'aside[data-testid="sidebar-right"]',
-      },
-      {
-        content:
-          "Metabase immediately shows us a line chart visualization of the orders over time.",
         selector: ".Visualization",
+        content: () => (
+          <p>
+            {" "}
+            Metabase will filter out the data that is greater than $30! 👏{" "}
+          </p>
+        ),
       },
       {
-        content:
-          "Metabase can present the answers to your questions in a variety of ways. To change the visualization, just select one of the options from the Visualization tab",
+        selector:
+          'button[data-metabase-event="View Mode; Open Summary Widget"]',
+        content: () => (
+          <p>
+            To find out <u> how many </u> orders are greater than $30, we have
+            to{" "}
+            <span style={{ color: "#0A902B" }}>
+              {" "}
+              <b> summarize</b>{" "}
+            </span>{" "}
+            the data{" "}
+          </p>
+        ),
+      },
+      {
+        selector: 'aside[data-testid="sidebar-right"]',
+        content: () => (
+          <p>
+            <span style={{ color: "#0A902B" }}>
+              {" "}
+              <b>Summarize by Count </b>{" "}
+            </span>{" "}
+            and press{" "}
+            <span style={{ color: "#0A902B" }}>
+              <b> Done </b>{" "}
+            </span>
+          </p>
+        ),
+      },
+      {
+        selector: ".Visualization",
+        content: () => (
+          <p>
+            Here is our answer! <span role="img"> 🎉</span>{" "}
+            <span style={{ backgroundColor: "#F3F68A", font: "verdana" }}>
+              There are 17,971 orders with a subtotal greater than $30.{" "}
+            </span>{" "}
+          </p>
+        ),
+      },
+      {
+        selector: ".Visualization",
+        content: () => (
+          <p>
+            {" "}
+            Okay, so thats pretty useful, but it would be even more useful if we
+            could know in <u> which months </u> our customers placed these big
+            orders. <span role="img"> 🤔</span>
+          </p>
+        ),
+      },
+      {
+        selector:
+          'button[data-metabase-event="View Mode; Open Summary Widget"]',
+        content: () => (
+          <p>
+            Lets{" "}
+            <span style={{ color: "#0A902B" }}>
+              {" "}
+              <b> summarize </b>{" "}
+            </span>{" "}
+            the data again!{" "}
+          </p>
+        ),
+      },
+      {
+        selector: 'aside[data-testid="sidebar-right"]',
+        content: () => (
+          <p>
+            Which months did our customers place these orders? Select{" "}
+            <span style={{ color: "#0A902B" }}>
+              {" "}
+              <b> Created At </b>{" "}
+            </span>{" "}
+            and press{" "}
+            <span style={{ color: "#0A902B" }}>
+              {" "}
+              <b>Done </b>{" "}
+            </span>{" "}
+          </p>
+        ),
+      },
+      {
+        selector: ".Visualization",
+        content: () => (
+          <p>
+            Metabase immediately shows us a line chart{" "}
+            <span style={{ color: "#8ABFF6" }}>
+              {" "}
+              <b> visualization </b>{" "}
+            </span>{" "}
+            <span style={{ color: "#8ABFF6" }}>
+              {" "}
+              <Icon name="line"> </Icon>{" "}
+            </span>{" "}
+            of the orders over time.{" "}
+          </p>
+        ),
+      },
+      {
         selector: ".dtAxiM .bDGKmj",
+        content: () => (
+          <p>
+            Metabase can present the answers to your questions in a variety of
+            ways. To change the{" "}
+            <span style={{ color: "#8ABFF6" }}>
+              {" "}
+              <b>visualization, </b>{" "}
+            </span>
+            just select one of the options from the{" "}
+            <span style={{ color: "#8ABFF6" }}>
+              {" "}
+              <b> Visualization </b>{" "}
+            </span>{" "}
+            tab{" "}
+          </p>
+        ),
       },
       {
-        content:
-          "Metabase will allow you to choose a possible visualization based on the data",
         selector: 'aside[data-testid="sidebar-left"]',
+        content: () => (
+          <p>
+            Metabase will allow you to choose a possible{" "}
+            <span style={{ color: "#8ABFF6" }}>
+              {" "}
+              <b>visualization </b>{" "}
+            </span>{" "}
+            based on the data{" "}
+          </p>
+        ),
       },
       {
-        content:
-          "Let's try viewing this data as a bar graph. Click bar graph and Done",
         selector: 'aside[data-testid="sidebar-left"]',
+        content: () => (
+          <p>
+            Lets try viewing this data as a bar graph{" "}
+            <span style={{ color: "#8ABFF6" }}>
+              {" "}
+              <Icon name="bar"> </Icon>{" "}
+            </span>{" "}
+            Click{" "}
+            <span style={{ color: "#8ABFF6" }}>
+              {" "}
+              <b> bar graph </b>{" "}
+            </span>{" "}
+            and Done{" "}
+          </p>
+        ),
       },
       {
-        content: "That's it, now you're ready to start using Metabase!",
         selector: ".Visualization",
+        content: () => (
+          <p>
+            Thats it, now youre ready to start using Metabase!{" "}
+            <span role="img"> 😄 </span>{" "}
+          </p>
+        ),
       },
     ];
 
