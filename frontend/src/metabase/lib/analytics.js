@@ -1,5 +1,6 @@
 import Settings from "metabase/lib/settings";
 import { isProduction } from "metabase/env";
+import { getUser } from "metabase/selectors/user";
 
 export const createTracker = () => {
   if (isTrackingEnabled()) {
@@ -17,6 +18,7 @@ export const trackPageView = url => {
 export const trackStructEvent = (category, action, label, value) => {
   if (isTrackingEnabled() && category && label) {
     trackGoogleAnalyticsStructEvent(category, action, label, value);
+    trackLoggingDBStructEvent(category, action, label, value);
   }
 };
 
@@ -49,6 +51,23 @@ const trackGoogleAnalyticsStructEvent = (category, action, label, value) => {
   window.ga?.("set", "dimension1", version.tag);
   window.ga?.("send", "event", category, action, label, value);
 };
+
+const trackLoggingDBStructEvent = (category, action, label, value) => {
+  const user = getUser(window.Metabase.store.getState());
+  const user_id = user ? user.id : undefined;
+  fetch('/log/activity', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      user_id,
+      activity: {category, action, label, value}
+    })
+  }).catch(error => {
+    console.log(error);
+  });
+}
 
 const handleStructEventClick = event => {
   if (!isTrackingEnabled()) {
