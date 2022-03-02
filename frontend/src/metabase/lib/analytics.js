@@ -16,7 +16,7 @@ export const trackPageView = url => {
 };
 
 export const trackStructEvent = (category, action, label, value) => {
-  if (isTrackingEnabled() && category && label) {
+  if (isTrackingEnabled() && category) {
     trackGoogleAnalyticsStructEvent(category, action, label, value);
     trackLoggingDBStructEvent(category, action, label, value);
   }
