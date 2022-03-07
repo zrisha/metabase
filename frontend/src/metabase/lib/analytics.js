@@ -11,6 +11,7 @@ export const createTracker = () => {
 
 export const trackPageView = url => {
   if (isTrackingEnabled() && url) {
+    trackLoggingDBPageView(url)
     trackGoogleAnalyticsPageView(url);
   }
 };
@@ -27,7 +28,7 @@ export const trackSchemaEvent = () => {
 };
 
 const isTrackingEnabled = () => {
-  return isProduction && Settings.trackingEnabled();
+  return Settings.trackingEnabled();
 };
 
 const createGoogleAnalyticsTracker = () => {
@@ -55,19 +56,36 @@ const trackGoogleAnalyticsStructEvent = (category, action, label, value) => {
 const trackLoggingDBStructEvent = (category, action, label, value) => {
   const user = getUser(window.Metabase.store.getState());
   const user_id = user ? user.id : undefined;
-  fetch('/log/activity', {
-    method: 'POST',
+  fetch("/log/activity", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       user_id,
-      activity: {category, action, label, value}
-    })
+      activity: { category, action, label, value },
+    }),
   }).catch(error => {
     console.log(error);
   });
-}
+};
+
+const trackLoggingDBPageView = (url) => {
+  const user = getUser(window.Metabase.store.getState());
+  const user_id = user ? user.id : undefined;
+  fetch("/log/pageview", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      user_id,
+      url
+    }),
+  }).catch(error => {
+    console.log(error);
+  });
+};
 
 const handleStructEventClick = event => {
   if (!isTrackingEnabled()) {

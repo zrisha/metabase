@@ -47,6 +47,17 @@ pgknex.raw("SELECT 1").then(() => {
       });
     }
   });
+
+  pgknex.schema.hasTable('page_views').then((exists) => {
+    if (!exists) {
+      return pgknex.schema.createTable('page_views', (table) => {
+        table.increments();
+        table.integer('user_id');
+        table.text('url');
+        table.timestamp('created_at', { precision: 3 }).defaultTo(pgknex.fn.now(3));
+      });
+    }
+  });
 })
 .catch((e) => {
   console.log("PostgreSQL not connected");

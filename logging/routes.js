@@ -44,4 +44,23 @@ routes.post('/query', function (req, res) {
   });
 });
 
+routes.post('/pageview', function (req, res) {
+  const { user_id, url } = req.body;
+
+  if(!url) {
+    res.status(400).send("Error no url property found on request");
+    return
+  }
+  //If log passed, insert into database
+  pgknex('page_views').insert({
+    user_id,
+    url
+  })
+  .then(result => res.send({data: result.data, status: result.status}))
+  .catch(err => {
+    console.log(err);
+    res.status(400).send(err)
+  });
+});
+
 module.exports = routes;
