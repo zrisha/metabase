@@ -43,6 +43,7 @@ export default class DashboardHeader extends Component {
 
     addCardToDashboard: PropTypes.func.isRequired,
     addTextDashCardToDashboard: PropTypes.func.isRequired,
+    addMiscDashCardToDashboard: PropTypes.func.isRequired,
     fetchDashboard: PropTypes.func.isRequired,
     saveDashboardAndCards: PropTypes.func.isRequired,
     setDashboardAttribute: PropTypes.func.isRequired,
@@ -61,6 +62,10 @@ export default class DashboardHeader extends Component {
 
   onAddTextBox() {
     this.props.addTextDashCardToDashboard({ dashId: this.props.dashboard.id });
+  }
+
+  onAddMisc() {
+    this.props.addMiscDashCardToDashboard({ dashId: this.props.dashboard.id });
   }
 
   onDoneEditing() {
@@ -172,6 +177,22 @@ export default class DashboardHeader extends Component {
           >
             <DashboardHeaderButton>
               <Icon name="string" size={18} />
+            </DashboardHeaderButton>
+          </a>
+        </Tooltip>,
+      );
+
+      // Add text card button
+      buttons.push(
+        <Tooltip key="add-misc" tooltip={t`Add Misc`}>
+          <a
+            data-metabase-event="Dashboard;Add Misc"
+            key="add-misc"
+            className="text-brand-hover cursor-pointer"
+            onClick={() => this.onAddMisc()}
+          >
+            <DashboardHeaderButton>
+              <Icon name="embed" size={18} />
             </DashboardHeaderButton>
           </a>
         </Tooltip>,

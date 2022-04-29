@@ -286,6 +286,23 @@ export const addTextDashCardToDashboard = function({ dashId }) {
   });
 };
 
+export const addMiscDashCardToDashboard = function({ dashId }) {
+  const virtualTextCard = createCard();
+  virtualTextCard.display = "misc";
+  virtualTextCard.archived = false;
+
+  const dashcardOverrides = {
+    card: virtualTextCard,
+    visualization_settings: {
+      virtual_card: virtualTextCard,
+    },
+  };
+  return addDashCardToDashboard({
+    dashId: dashId,
+    dashcardOverrides: dashcardOverrides,
+  });
+};
+
 export const saveDashboardAndCards = createThunkAction(
   SAVE_DASHBOARD_AND_CARDS,
   function() {

@@ -41,7 +41,7 @@ function buildVariableOption(variable) {
 
 export function getParameterMappingOptions(metadata, parameter = null, card) {
   const options = [];
-  if (card.display === "text") {
+  if (card.display === "text" || card.display === "misc") {
     // text cards don't have parameters
     return [];
   }

@@ -219,6 +219,7 @@ export default class DashCard extends Component {
           dashboard={dashboard}
           parameterValuesBySlug={parameterValuesBySlug}
           isEditing={isEditing}
+          saveDashboardAndCards={this.props.saveDashboardAndCards}
           isPreviewing={this.state.isPreviewingCard}
           gridSize={
             this.props.isMobile

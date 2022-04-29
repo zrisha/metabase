@@ -112,6 +112,17 @@ function GridLayout({
   // https://github.com/react-grid-layout/react-grid-layout#performance
   const children = useMemo(() => items.map(renderItem), [items, renderItem]);
 
+  // const test = <div key="test">test</div>
+  // children.push(test)
+
+  // layouts.desktop.push({
+  //   i: 'test', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4 }
+  // );
+  // console.log(children);
+  console.log(layouts);
+
+  //it seems it reads props from cards on callbacks.
+
   return (
     <ReactGridLayout
       breakpoints={breakpoints}

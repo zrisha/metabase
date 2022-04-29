@@ -298,6 +298,7 @@ export default class DashboardGrid extends Component {
         dashboard={this.props.dashboard}
         showClickBehaviorSidebar={this.props.showClickBehaviorSidebar}
         clickBehaviorSidebarDashcard={this.props.clickBehaviorSidebarDashcard}
+        saveDashboardAndCards={this.props.saveDashboardAndCards}
       />
     );
   }
