@@ -80,3 +80,5 @@ dev/src/dev/nocommit/
 .lsp/*
 !.lsp/config.edn
 .clj-kondo/.cache
+
+node_modules.nosync

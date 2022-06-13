@@ -58,7 +58,7 @@
                                      "https://www.google-analytics.com")
                                    ;; for webpack hot reloading
                                    (when config/is-dev?
-                                     "localhost:8080")
+                                     "localhost:8080 localhost:4987")
                                    ;; for react dev tools to work in Firefox until resolution of
                                    ;; https://github.com/facebook/react/issues/17997
                                    (when config/is-dev?
@@ -72,7 +72,7 @@
                                  "'unsafe-inline'"]
                   :font-src     ["'self'"
                                  (when config/is-dev?
-                                   "localhost:8080")]
+                                   "localhost:8080 localhost:4987")]
                   :img-src      ["*"
                                  "'self' data:"]
                   :connect-src  ["'self'"
@@ -86,7 +86,7 @@
                                    (snowplow/snowplow-url))
                                  ;; Webpack dev server
                                  (when config/is-dev?
-                                   "localhost:8080 ws://localhost:8080")]
+                                   "localhost:8080 ws://localhost:8080 localhost:4987")]
                   :manifest-src ["'self'"]}]
       (format "%s %s; " (name k) (str/join " " vs))))})
 

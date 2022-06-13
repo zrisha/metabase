@@ -2,6 +2,7 @@
   (:require [clojure.tools.logging :as log]
             [compojure.core :refer [GET POST]]
             [metabase.analytics.snowplow :as snowplow]
+            [metabase.analytics.local :as localLogging]
             [metabase.api.common :as api]
             [metabase.api.database :as database-api :refer [DBEngineString]]
             [metabase.config :as config]

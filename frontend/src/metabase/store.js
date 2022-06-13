@@ -6,6 +6,7 @@ import promise from "redux-promise";
 import logger from "redux-logger";
 
 import { DEBUG } from "metabase/lib/debug";
+import { logging } from "metabase/ext/middleware/logging";
 
 /**
  * Provides the same functionality as redux-thunk and augments the dispatch method with
@@ -41,6 +42,7 @@ export function getStore(reducers, history, intialState, enhancer = a => a) {
     promise,
     ...(DEBUG ? [logger] : []),
     ...(history ? [routerMiddleware(history)] : []),
+    logging,
   ];
 
   return createStore(

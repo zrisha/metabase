@@ -1,6 +1,7 @@
 import * as Snowplow from "@snowplow/browser-tracker";
 import Settings from "metabase/lib/settings";
 import { getUserId } from "metabase/selectors/user";
+import { PUT } from "metabase/lib/api";
 
 export const createTracker = store => {
   if (Settings.googleAnalyticsEnabled()) {
@@ -11,15 +12,33 @@ export const createTracker = store => {
     createSnowplowTracker(store);
   }
 
-  if (Settings.googleAnalyticsEnabled() || Settings.snowplowEnabled()) {
+  if (Settings.trackingEnabled()) {
     document.body.addEventListener("click", handleStructEventClick, true);
   }
 };
 
 export const trackPageView = url => {
-  if (!url || !Settings.trackingEnabled()) {
+  if (
+    url === "/auth/login" ||
+    !url ||
+    !Settings.trackingEnabled() ||
+    Settings.hasSetupToken()
+  ) {
     return;
   }
+
+  const res = trackDBPageViews(url);
+  res
+    .then(
+      value => {
+        // fulfillment
+      },
+      reason => {
+        // rejection
+        console.log(reason);
+      },
+    )
+    .catch(err => console.log(err));
 
   if (Settings.googleAnalyticsEnabled()) {
     trackGoogleAnalyticsPageView(getSanitizedUrl(url));
@@ -31,14 +50,51 @@ export const trackPageView = url => {
 };
 
 export const trackStructEvent = (category, action, label, value) => {
-  if (!category || !label || !Settings.trackingEnabled()) {
+  if (
+    !category ||
+    !action ||
+    !Settings.trackingEnabled() ||
+    Settings.hasSetupToken()
+  ) {
     return;
   }
+
+  const res = trackDBStructEvent(category, action, label, value);
+  res
+    .then(
+      val => {
+        // fulfillment
+      },
+      reason => {
+        // rejection
+        console.log(reason);
+      },
+    )
+    .catch(err => console.log(err));
 
   if (Settings.googleAnalyticsEnabled()) {
     trackGoogleAnalyticsStructEvent(category, action, label, value);
   }
 };
+
+async function trackDBStructEvent(category, action, label, value) {
+  const ignoreList = ["Render Card", "Run Query", "Query Loaded"];
+  if (ignoreList.includes(action)) {
+    return;
+  }
+
+  const call = await PUT("/api/user-activity")({
+    activity: { category, action, label, value },
+  });
+  return call;
+}
+
+async function trackDBPageViews(url) {
+  const call = await PUT("/api/page-views")({
+    url: url,
+  });
+  return call;
+}
 
 export const trackSchemaEvent = (schema, version, data) => {
   if (!schema || !Settings.trackingEnabled()) {

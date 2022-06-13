@@ -18,6 +18,7 @@
             [metabase.api.metric :as metric]
             [metabase.api.native-query-snippet :as native-query-snippet]
             [metabase.api.notify :as notify]
+            [metabase.api.page-views :as page-views]
             [metabase.api.permissions :as permissions]
             [metabase.api.premium-features :as premium-features]
             [metabase.api.preview-embed :as preview-embed]
@@ -37,6 +38,8 @@
             [metabase.api.tiles :as tiles]
             [metabase.api.transform :as transform]
             [metabase.api.user :as user]
+            [metabase.api.user-activity :as user-activity]
+            [metabase.api.user-queries :as user-queries]
             [metabase.api.util :as util]
             [metabase.config :as config]
             [metabase.plugins.classloader :as classloader]
@@ -75,6 +78,7 @@
   (context "/metric"               [] (+auth metric/routes))
   (context "/native-query-snippet" [] (+auth native-query-snippet/routes))
   (context "/notify"               [] (+apikey notify/routes))
+  (context "/page-views"           [] (+auth page-views/routes))
   (context "/permissions"          [] (+auth permissions/routes))
   (context "/preview_embed"        [] (+auth preview-embed/routes))
   (context "/public"               [] (+generic-exceptions public/routes))
@@ -95,5 +99,7 @@
   (context "/tiles"                [] (+auth tiles/routes))
   (context "/transform"            [] (+auth transform/routes))
   (context "/user"                 [] (+auth user/routes))
+  (context "/user-activity"        [] (+auth user-activity/routes))
+  (context "/user-queries"        [] (+auth user-queries/routes))
   (context "/util"                 [] util/routes)
   (route/not-found (constantly {:status 404, :body (deferred-tru "API endpoint does not exist.")})))

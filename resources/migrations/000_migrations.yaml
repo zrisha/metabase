@@ -9898,6 +9898,108 @@ databaseChangeLog:
         - sql:
             sql: UPDATE metabase_database SET name='Sample Database' WHERE is_sample=true
 
+  - changeSet:
+      id: v42.41-001
+      author: zrisha
+      comment: Adds local logging table for learning analytics
+      changes:
+        - createTable:
+            tableName: user_activity
+            remarks: "Keeps track of various actions by users already tracked through 3rd party analytics"
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: ${timestamp_type}
+                  remarks: "When this login occurred."
+                  defaultValueComputed: current_timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: int
+                  remarks: "ID of the User that logged in."
+                  constraints:
+                    nullable: false
+              - column:
+                  name: activity
+                  type: text
+                  remarks: "JSON format of activity"
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: page_views
+            remarks: "Keeps track of url changes viewed by user"
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: ${timestamp_type}
+                  remarks: "When this login occurred."
+                  defaultValueComputed: current_timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: int
+                  remarks: "ID of the User that logged in."
+                  constraints:
+                    nullable: false
+              - column:
+                  name: url
+                  type: text
+                  remarks: "URL that was visited"
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: user_queries
+            remarks: "Keeps log of all queries run via user activity"
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: ${timestamp_type}
+                  remarks: "When this login occurred."
+                  defaultValueComputed: current_timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: int
+                  remarks: "ID of the User that logged in."
+                  constraints:
+                    nullable: false
+              - column:
+                  name: query
+                  type: text
+                  remarks: "Query in SQL string format"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: json_query
+                  type: text
+                  remarks: "Query in JSON format"
+                  constraints:
+                    nullable: false
+
 
 # >>>>>>>>>> DO NOT ADD NEW MIGRATIONS BELOW THIS LINE! ADD THEM ABOVE <<<<<<<<<<
 
