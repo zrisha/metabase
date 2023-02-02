@@ -88,6 +88,7 @@ import HomepageApp from "metabase/home/homepage/containers/HomepageApp";
 import ArchiveApp from "metabase/home/containers/ArchiveApp";
 import SearchApp from "metabase/home/containers/SearchApp";
 import { trackPageView } from "metabase/lib/analytics";
+import roleroutes from "./role/roleroutes";
 
 const MetabaseIsSetup = UserAuthWrapper({
   predicate: authData => !authData.hasSetupToken,
@@ -210,7 +211,6 @@ export const getRoutes = store => (
         </Route>
 
         <Route path="activity" component={ActivityApp} />
-
         <Route
           path="dashboard/:slug"
           title={t`Dashboard`}
@@ -251,6 +251,7 @@ export const getRoutes = store => (
           <Route path=":dbId/schema/:schemaName" component={TableBrowser} />
         </Route>
 
+
         {/* INDIVIDUAL DASHBOARDS */}
 
         <Route path="/auto/dashboard/*" component={AutomaticDashboardApp} />
@@ -260,6 +261,10 @@ export const getRoutes = store => (
         <Route path="create" component={CollectionCreate} />
       </Route>
 
+      <Route path="/role">
+        {roleroutes}
+      </Route>
+      
       {/* REFERENCE */}
       <Route path="/reference" title={`Data Reference`}>
         <IndexRedirect to="/reference/databases" />
@@ -321,7 +326,7 @@ export const getRoutes = store => (
           component={TableQuestionsContainer}
         />
       </Route>
-
+      
       {/* PULSE */}
       <Route path="/pulse" title={t`Pulses`}>
         {/* NOTE: legacy route, not linked to in app */}

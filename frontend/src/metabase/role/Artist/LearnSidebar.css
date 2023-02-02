@@ -1,0 +1,36 @@
+
+.role-model{
+  height: 85%; 
+  max-width: 50%;
+  display: inline-block;
+}
+
+
+.role-model img{
+  max-height: 90%;
+  max-width: 95%;
+  border-radius: 100%; 
+  box-sizing: border-box;
+}
+
+
+.role-model-row {
+  height: 50%; 
+  display: flex; 
+  justify-content: space-evenly;
+}
+
+.carousel-img{
+  height: 100%
+}
+
+.carousel-img img{
+  max-height: 45%;
+  max-width: 90%;
+}
+
+.gallery-btn-bar{
+  height: 50px;
+  margin-bottom: 5%;
+}
+
