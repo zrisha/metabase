@@ -32,6 +32,7 @@ import {
   getPlainNativeQuery,
 } from "metabase/new_query/selectors";
 import Database from "metabase/entities/databases";
+import { capitalize } from "metabase/lib/formatting";
 
 
 const mapStateToProps = (state, props) => ({
@@ -142,7 +143,10 @@ export default class Navbar extends Component {
   }
 
   renderMainNav() {
-    const { hasDataAccess, hasNativeWrite } = this.props;
+    const { hasDataAccess, hasNativeWrite, location } = this.props;
+
+    const roleName = capitalize(location.pathname.split("/")[2]);
+
 
     return (
       <Flex
@@ -180,6 +184,11 @@ export default class Navbar extends Component {
               <Icon name="lock"/>
             </Tooltip>
             </Box>
+          </Flex>
+        </Flex>
+        <Flex className="flex-full z1" pr={2} align="center">
+          <Flex align="center" style={{ maxWidth: 500 }}>
+            <h2>{roleName}</h2>
           </Flex>
         </Flex>
         <Flex ml="auto" align="center" pl={[1, 2]} className="relative z2">

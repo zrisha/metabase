@@ -29,6 +29,9 @@ import alert from "metabase/alert/alert";
 /* pulses */
 import * as pulse from "metabase/pulse/reducers";
 
+/* roles */
+import role from "metabase/role/reducers";
+
 export default {
   ...commonReducers,
 
@@ -37,6 +40,7 @@ export default {
   dashboard,
   home: combineReducers(home),
   pulse: combineReducers(pulse),
+  role,
   qb: combineReducers(qb),
   reference,
   revisions,

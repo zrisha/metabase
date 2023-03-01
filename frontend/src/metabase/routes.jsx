@@ -250,6 +250,9 @@ export const getRoutes = store => (
           <Route path=":slug" component={SchemaBrowser} />
           <Route path=":dbId/schema/:schemaName" component={TableBrowser} />
         </Route>
+        <Route path="/role">
+          {roleroutes}
+        </Route>
 
 
         {/* INDIVIDUAL DASHBOARDS */}
@@ -259,10 +262,6 @@ export const getRoutes = store => (
 
       <Route path="/collections">
         <Route path="create" component={CollectionCreate} />
-      </Route>
-
-      <Route path="/role">
-        {roleroutes}
       </Route>
       
       {/* REFERENCE */}

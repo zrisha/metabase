@@ -1,22 +1,21 @@
 import React, { Component } from "react";
 import {connect} from "react-redux";
-import { getUser } from "metabase/selectors/user"
+import { getUser } from "metabase/selectors/user";
+import IconGallery from "./IconGallery";
+import SidebarLayout from "../SidebarLayout";
+import QuestionViewer from './QuestionViewer';
 
 
-class ArtistDoSidebar extends Component {
+const Top = (props) => {
+    return ( 
+            <QuestionViewer />
+    )
+}
 
-
-    render(){
-        return <div className="flex flex-column" style={{width: "100%", height: "100%", justifyContent: "space-evenly", alignItems: "center"}}>
-            <div style={{height: "50%", width: "90%", paddingBottom: "5%"}}>
-                empty
-            </div>
-            <div style={{height: "50%", width: "90%"}}>
-                empty
-            </div>
-        </div>
-    }
-
+const ArtistDoSidebar = (props) => {
+    return <>
+    <SidebarLayout top={<Top/>} bottom = {<IconGallery />} heights={[60,40]}/>
+    </>
 }
 
 const mapStateToProps = (state, props) => ({

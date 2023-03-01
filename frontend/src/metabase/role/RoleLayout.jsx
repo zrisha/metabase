@@ -17,7 +17,6 @@ export const Layout = fitViewport(({ main, sidebar }) => {
 
 
 const RoleLayout = (props) => {
-  console.log(props);
   return(
     <>
     <Navbar location={props.location}/>
