@@ -152,9 +152,9 @@ export default class Navbar extends Component {
       <Flex
         // NOTE: DO NOT REMOVE `Nav` CLASS FOR NOW, USED BY MODALS, FULLSCREEN DASHBOARD, ETC
         // TODO: hide nav using state in redux instead?
-        className="Nav relative bg-brand text-white z3 flex-no-shrink"
+        className="Nav relative bg-brand text-white z3 flex-no-shrink rr-block"
         align="center"
-        style={{ backgroundColor: color("nav") }}
+        style={{ backgroundColor: color("nav"), position: this.props.position }}
         py={1}
         pr={2}
       >
@@ -192,79 +192,6 @@ export default class Navbar extends Component {
           </Flex>
         </Flex>
         <Flex ml="auto" align="center" pl={[1, 2]} className="relative z2">
-          <EntityMenu
-            className="hide sm-show mr1"
-            trigger={
-              <Link
-                mr={1}
-                p={1}
-                hover={{
-                  backgroundColor: darken(color("brand")),
-                }}
-                className="flex align-center rounded transition-background"
-                data-metabase-event={`NavBar;Create Menu Click`}
-              >
-                <Icon name="add" size={14} />
-                <h4 className="hide sm-show ml1 text-nowrap">{t`New`}</h4>
-              </Link>
-            }
-            items={[
-              ...(hasDataAccess
-                ? [
-                    {
-                      title: t`Question`,
-                      icon: `insight`,
-                      link: Urls.newQuestion({
-                        mode: "notebook",
-                        creationType: "custom_question",
-                      }),
-                      event: `NavBar;New Question Click;`,
-                    },
-                  ]
-                : []),
-              ...(hasNativeWrite
-                ? [
-                    {
-                      title: t`SQL query`,
-                      icon: `sql`,
-                      link: Urls.newQuestion({
-                        type: "native",
-                        creationType: "native_question",
-                      }),
-                      event: `NavBar;New SQL Query Click;`,
-                    },
-                  ]
-                : []),
-              {
-                title: t`Dashboard`,
-                icon: `dashboard`,
-                action: () => this.setModal(MODAL_NEW_DASHBOARD),
-                event: `NavBar;New Dashboard Click;`,
-              },
-              {
-                title: t`Collection`,
-                icon: `folder`,
-                action: () => this.setModal(MODAL_NEW_COLLECTION),
-                event: `NavBar;New Collection Click;`,
-              },
-            ]}
-          />
-
-          {hasDataAccess && (
-            <Link
-              mr={[1, 2]}
-              to="browse"
-              p={1}
-              hover={{
-                backgroundColor: darken(color("brand")),
-              }}
-              className="flex align-center rounded transition-background"
-              data-metabase-event={`NavBar;Data Browse`}
-            >
-              <Icon name="table_spaced" size={14} />
-              <h4 className="hide sm-show ml1 text-nowrap">{t`Browse data`}</h4>
-            </Link>
-          )}
           <ProfileLink {...this.props} />
         </Flex>
         {this.renderModal()}

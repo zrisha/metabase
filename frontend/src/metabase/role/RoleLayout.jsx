@@ -1,8 +1,13 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import fitViewport from "metabase/hoc/FitViewPort";
+import { getUser } from "metabase/selectors/user";
 import Navbar from "./Navbar";
 import "./RoleLayout.css";
+import {connect} from "react-redux";
+import RPlayer from "./RPlayer";
+import './animation.css';
+import IsDriver from "./IsDriver";
 
 
 export const Layout = fitViewport(({ main, sidebar }) => {
@@ -15,14 +20,23 @@ export const Layout = fitViewport(({ main, sidebar }) => {
 });
 
 
+class RoleLayout extends React.Component{
+  render(){
+    const roleName = this.props.location.pathname.split("/")[2];
 
-const RoleLayout = (props) => {
-  return(
-    <>
-    <Navbar location={props.location}/>
-    <Layout sidebar = {props.sidebar} main={props.main} />
-    </>
-  )
+    if(this.props.user.id == 1){
+      return <IsDriver user={this.props.user} role={roleName} >
+        <Navbar location={this.props.location}/>
+          <Layout sidebar = {this.props.sidebar} main={this.props.main} />
+        </IsDriver>
+     }else{
+      return <RPlayer room={this.props.room} user={this.props.user} role={roleName}  />
+     }
+  }
 }
 
-export default RoleLayout;
+const mapStateToProps = (state, props) => ({
+  user: getUser(state)
+});
+
+export default connect(mapStateToProps)(RoleLayout);

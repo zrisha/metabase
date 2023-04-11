@@ -1,0 +1,25 @@
+{
+  "name": "websocket",
+  "version": "1.0.0",
+  "description": "Provides RTC services using websocket",
+  "main": "socket.js",
+  "bin": "socket.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zak Risha",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.22",
+    "socket.io": "^4.5.4",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "@webpack-cli/generators": "^3.0.1",
+    "babel-loader": "^9.1.2",
+    "webpack": "^5.76.1",
+    "webpack-cli": "^5.0.1"
+  }
+}
