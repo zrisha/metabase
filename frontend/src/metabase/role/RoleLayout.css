@@ -16,3 +16,14 @@
   padding-bottom: 3%;
 }
 
+.driver-modal{
+  width: unset;
+}
+
+.driver-modal::after{
+  content: "Waiting for Response from Driver";
+  color:white;
+  position: absolute;
+  top: 35%;
+  left: 2rem;
+}

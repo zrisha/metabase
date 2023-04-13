@@ -1,96 +1,119 @@
 /* eslint-disable react/prop-types */
 import React, {useEffect} from "react";
-import { io } from "socket.io-client";
-import {connect} from "react-redux";
 import Utils from "metabase/lib/utils";
 import { CSSTransitionGroup } from 'react-transition-group';
 import Ping from "./Ping";
-import { joinRoom, leaveRoom, changeDriver} from "./actions";
+import Modal from "metabase/components/Modal";
+import ModalContent from "metabase/components/ModalContent";
+import Button from "metabase/core/components/Button";
 
 class IsDriver extends React.Component{
 
   constructor(props){
     super(props);
     this.state = {
-      pings: {}
+      pings: {},
+      modal: null
     }
   }
 
-  componentDidMount(){
-    const roomName = this.props.role;
-    this.socket = io("http://localhost:4987", {auth: {user: this.props.user, room:roomName}})
-    this.socket.on("connect", () => {
-      // instruct a room name to be joined by server
-      this.socket.emit("new-user", roomName);
+  renderModal() {
+    const { modal } = this.state;
 
+    const Buttons = <div>
+      <Button style={{marginRight: '20px'}}onClick={() => this.setState({ modal: null })} danger>No</Button>
+      <Button onClick={() => this.props.socket.emit("change-driver", {user:{id:modal.userId}})}>Yes</Button>
+    </div>
+
+    if (modal) {
+      return (
+        <Modal className="driver-modal" small onClose={() => this.setState({ modal: null })}>
+          <ModalContent
+            title={`Allow User ${modal.userId} to take control?`}
+            footer={Buttons}
+            className="rr-block"
+          >
+            {`User ${modal.userId} is requesting control`}
+          </ModalContent>
+        </Modal>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  newViewer = (data) => {
+    setTimeout(() =>{
+      this.stop();
       this.stop = rrweb.record({
         emit: (event) => {
           // sent to room for agent
-          this.socket.emit("send-event", { event: event, room: roomName });
+          this.props.socket.emit("send-event", { event: event, room: this.props.role });
         },
         recordCanvas: true,
         sampling: {
           canvas: 5,
         }
       });
-      
-      this.socket.on("user-join", (roomState) => {
-        this.props.joinRoom({role: roomName, room: roomState})
-      });
+    }, 1000)
 
-      this.socket.on("user-leave", (roomState) => {
-        this.props.leaveRoom({role: roomName, room: roomState})
-      });
+  }
 
-      this.socket.on("change-driver", (roomState) => {
-        this.props.changeDriver({role: roomName, room: roomState})
-      });
+  handleRequestDriving = (data) => {
+    this.setState({modal: {userId: data.user.id}})
+  }
 
-      this.socket.on("agent-click", (data) => {
-        const key = Utils.uuid();
-        this.setState(prevState => ({
-          pings: {
-              ...prevState.pings,
-              [key]: data
-          }
-        }));
+  agentClick = (data) => {
+    const key = Utils.uuid();
+    this.setState(prevState => ({
+      pings: {
+          ...prevState.pings,
+          [key]: data
+      }
+    }));
 
-        setTimeout(() => {
-          this.setState(prevState => {
-            delete prevState.pings[key];
-            return {
-              pings: prevState.pings
-            }
-          });
-        }, 700)
+    setTimeout(() => {
+      this.setState(prevState => {
+        delete prevState.pings[key];
+        return {
+          pings: prevState.pings
+        }
       });
+    }, 700)
+  }
 
-      //recevied from agent side
-      this.socket.on("new-viewer", (data) => {
-        this.stop();
-        this.stop = rrweb.record({
-          emit: (event) => {
-            console.log(event);
-            // sent to room for agent
-            this.socket.emit("send-event", { event: event, room: roomName });
-          },
-          recordCanvas: true,
-          sampling: {
-            canvas: 5,
-          }
-        });
-      });
+  componentDidMount(){
+    this.stop = rrweb.record({
+      emit: (event) => {
+        // sent to room for agent
+        this.props.socket.emit("send-event", { event: event, room: this.props.role });
+      },
+      recordCanvas: true,
+      sampling: {
+        canvas: 5,
+      }
     });
+
+    this.props.socket.on("agent-click", this.agentClick);
+
+    this.props.socket.on("request-driving", this.handleRequestDriving);
+
+    //recevied from agent side
+    this.props.socket.on("new-viewer", this.newViewer);
   }
 
   componentWillUnmount(){
     this.stop();
+    this.props.socket.removeListener("request-driving", this.handleRequestDriving);
+    this.props.socket.removeListener("new-viewer", this.newViewer);
+    this.props.socket.removeListener("agent-click", this.agentClick);
   }
 
   render(){
     return (
       <>
         {this.props.children}
+        {this.renderModal()}
         <CSSTransitionGroup
           transitionName="example"
           transitionEnterTimeout={400}
@@ -103,9 +126,4 @@ class IsDriver extends React.Component{
   }
 }
 
-
-const mapDispatchToProps = {
-  joinRoom, leaveRoom, changeDriver
-}
-
-export default connect(null, mapDispatchToProps)(IsDriver);
+export default IsDriver;
