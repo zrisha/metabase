@@ -13,6 +13,7 @@ class RPlayer extends React.Component{
     }
   }
 
+  //Client side ping and socket emit
   handleClick = (e) => {
     const key = Utils.uuid();
     this.setState(prevState => ({
@@ -21,7 +22,7 @@ class RPlayer extends React.Component{
           [key]: e
       }
     }));
-    this.props.socket.emit("agent-event", { x: e.clientX, y: e.clientY, event: 'agent-click', room: this.props.role});
+    this.props.socket.emit("agent-event", { x: e.clientX, y: e.clientY, event: 'agent-click'});
     setTimeout(() => {
       this.setState(prevState => {
         delete prevState.pings[key];
@@ -37,7 +38,7 @@ class RPlayer extends React.Component{
   }
 
   componentDidMount() {
-    //Catching missing node requires overriding console.warn or changing source code.
+    //Catching missing node error for rrweb requires overriding console.warn or changing source code.
     //console.oldWarn = console.warn;
     // console.warn = (...args) => {
     //   var messages = args.filter(e => typeof e == 'string');
@@ -60,10 +61,8 @@ class RPlayer extends React.Component{
 
     this.replayerDOM = document.querySelector('.replayer-wrapper')
 
-    const roomName = this.props.role;
-
     setTimeout(() => {
-      this.props.socket.emit("agent-event", { event: 'new-viewer', room: roomName});
+      this.props.socket.emit("agent-event", { event: 'new-viewer'});
     },1000)
 
     this.replayerDOM.addEventListener("click", this.handleClick);
@@ -76,7 +75,11 @@ class RPlayer extends React.Component{
   }
 
   requestDriving = () => {
-    this.props.socket.emit("agent-event", { event: 'request-driving'});
+    if(this.props.room.driver){
+      this.props.socket.emit("agent-event", { event: 'request-driving'});
+    }else{
+      this.props.socket.emit("claim-driver")
+    }
   }
 
   render() {

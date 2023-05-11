@@ -25,6 +25,7 @@ class IsDriver extends React.Component{
       <Button onClick={() => this.props.socket.emit("change-driver", {user:{id:modal.userId}})}>Yes</Button>
     </div>
 
+    //Modal for requesting driving
     if (modal) {
       return (
         <Modal className="driver-modal" small onClose={() => this.setState({ modal: null })}>
@@ -42,13 +43,14 @@ class IsDriver extends React.Component{
     }
   }
 
+  //Restarts rrweb streaming when a new user joins (otherwise won't update properly)
   newViewer = (data) => {
     setTimeout(() =>{
       this.stop();
       this.stop = rrweb.record({
         emit: (event) => {
           // sent to room for agent
-          this.props.socket.emit("send-event", { event: event, room: this.props.role });
+          this.props.socket.emit("send-event", { event: event });
         },
         recordCanvas: true,
         sampling: {
@@ -63,6 +65,7 @@ class IsDriver extends React.Component{
     this.setState({modal: {userId: data.user.id}})
   }
 
+  //For pings from viewer
   agentClick = (data) => {
     const key = Utils.uuid();
     this.setState(prevState => ({
@@ -86,7 +89,7 @@ class IsDriver extends React.Component{
     this.stop = rrweb.record({
       emit: (event) => {
         // sent to room for agent
-        this.props.socket.emit("send-event", { event: event, room: this.props.role });
+        this.props.socket.emit("send-event", { event: event });
       },
       recordCanvas: true,
       sampling: {

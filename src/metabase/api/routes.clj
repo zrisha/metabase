@@ -25,6 +25,7 @@
             [metabase.api.public :as public]
             [metabase.api.pulse :as pulse]
             [metabase.api.revision :as revision]
+            [metabase.api.role :as role]
             [metabase.api.routes.common :refer [+apikey +auth +generic-exceptions +message-only-exceptions]]
             [metabase.api.search :as search]
             [metabase.api.segment :as segment]
@@ -84,6 +85,7 @@
   (context "/public"               [] (+generic-exceptions public/routes))
   (context "/pulse"                [] (+auth pulse/routes))
   (context "/revision"             [] (+auth revision/routes))
+  (context "/role"                 [] (+auth role/routes))
   (context "/search"               [] (+auth search/routes))
   (context "/segment"              [] (+auth segment/routes))
   (context "/session"              [] session/routes)

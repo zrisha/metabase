@@ -25,7 +25,7 @@ export default class QuestionApp extends React.Component {
     }
     render() {
         return <div style={{height: "100%"}}>
-          <EntityListLoader entityType="questions" entityQuery="d">
+          <EntityListLoader entityType="questions">
             {({ list }) =>
                 <>
                 <Select

@@ -9999,6 +9999,49 @@ databaseChangeLog:
                   remarks: "Query in JSON format"
                   constraints:
                     nullable: false
+  
+  - changeSet:
+      id: v42.41-002
+      author: zrisha
+      comment: Adds storage for role interfaces
+      changes:
+        - createTable:
+            tableName: role
+            remarks: "Storage for role interfaces"
+            columns:
+              - column:
+                  name: index
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: false
+                    nullable: false
+              - column:
+                  name: id
+                  type: varchar(254)
+                  remarks: "ID of the room"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(254)
+                  remarks: "Role of the room"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: data
+                  type: text
+                  remarks: "JSON format of data"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: ${timestamp_type}
+                  remarks: "When this login occurred."
+                  defaultValueComputed: current_timestamp
+                  constraints:
+                    nullable: false
 
 
 # >>>>>>>>>> DO NOT ADD NEW MIGRATIONS BELOW THIS LINE! ADD THEM ABOVE <<<<<<<<<<

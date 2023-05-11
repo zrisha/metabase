@@ -9,67 +9,89 @@ const io = new Server(httpServer, {
 });
 
 const socketState = {}
-
 io.on("connection", (socket) => {
-  if(!socketState[socket.handshake.auth.room]){
-    socketState[socket.handshake.auth.room] = {
+  //Initialize state of the room
+  if(!socketState[socket.handshake.auth.roomID]){
+    socketState[socket.handshake.auth.roomID] = {
       'driver': socket.handshake.auth.user.id,
       'navigators': new Set()
     }
   }else{
-    if(socketState[socket.handshake.auth.room]['driver']){
-      socketState[socket.handshake.auth.room]['navigators'].add(socket.handshake.auth.user.id)
+    if(socketState[socket.handshake.auth.roomID]['driver']){
+      socketState[socket.handshake.auth.roomID]['navigators'].add(socket.handshake.auth.user.id)
     } else{
-      socketState[socket.handshake.auth.room]['driver'] = socket.handshake.auth.user.id
+      socketState[socket.handshake.auth.roomID]['driver'] = socket.handshake.auth.user.id
     }
   }
 
   //join a room instructed by client
-  socket.on("new-user", function (room) {
-    console.log(`new user joining${room}`)
-    socket.join(room);
-    io.to(room).emit("user-join", {
-      driver: socketState[room]['driver'],
-      navigators: Array.from(socketState[room]['navigators'])
+  socket.on("new-user", function () {
+    const {roomID, user } = socket.handshake.auth;
+    console.log(`new user ${user.id} joining ${roomID}`)
+    socket.join(roomID);
+    io.to(roomID).emit("user-join", {
+      roomID,
+      driver: socketState[roomID]['driver'],
+      navigators: Array.from(socketState[roomID]['navigators'])
     });
   });
 
-  //emit recevied message to specified room
+  //emit event from the host/driver
   socket.on("send-event", function (data) {
-    io.to(data.room).emit("user-event", data.event);
+    const {roomID } = socket.handshake.auth;
+    io.to(roomID).emit("user-event", data.event);
   });
 
+  //emit event from the viewer/navigator
   socket.on("agent-event", function (data) {
-    const {room, user } = socket.handshake.auth;
-    data.room = room;
+    const {roomID, user } = socket.handshake.auth;
+    data.roomID = roomID;
     data.user = user;
-    io.to(data.room).emit(data.event, data);
+    io.to(data.roomID).emit(data.event, data);
   });
 
+  //Fufill request to change the driver
   socket.on("change-driver", function (data) {
-    const {room} = socket.handshake.auth;
-    console.log(`driving requested by ${data.user.id} in ${room}`);
-    if(socketState[room]['driver']){
-      socketState[room]['navigators'].add(socketState[room]['driver']);
-      socketState[room]['navigators'].delete(data.user.id);
+    const {roomID} = socket.handshake.auth;
+    console.log(`driving requested by ${data.user.id} in ${roomID}`);
+    if(socketState[roomID]['driver']){
+      socketState[roomID]['navigators'].add(socketState[roomID]['driver']);
+      socketState[roomID]['navigators'].delete(data.user.id);
     }
-    socketState[room]['driver'] = data.user.id
-    io.to(room).emit("change-driver", {
-      driver: socketState[room]['driver'],
-      navigators: Array.from(socketState[room]['navigators'])
+    socketState[roomID]['driver'] = data.user.id
+    io.to(roomID).emit("change-driver", {
+      roomID,
+      driver: socketState[roomID]['driver'],
+      navigators: Array.from(socketState[roomID]['navigators'])
     });
   });
 
-  socket.on('disconnect', function() {
-    const {room, user } = socket.handshake.auth;
-    if(socketState[room]['driver'] == user.id){
-      socketState[room]['driver'] = false
-    } else{
-      socketState[room]['navigators'].delete(user.id);
+  //Claim driver if none present
+  socket.on("claim-driver", function(data) {
+    const {roomID, user} = socket.handshake.auth;
+    if(!socketState[roomID]['driver']){
+      socketState[roomID]['navigators'].delete(user.id);
+      socketState[roomID]['driver'] = user.id
+      io.to(roomID).emit("change-driver", {
+        roomID,
+        driver: socketState[roomID]['driver'],
+        navigators: Array.from(socketState[roomID]['navigators'])
+      });
     }
-    io.to(room).emit("user-leave", {
-      driver: socketState[room]['driver'],
-      navigators: Array.from(socketState[room]['navigators'])
+  });
+
+  //Remove users on disconnect
+  socket.on('disconnect', function() {
+    const {roomID, user } = socket.handshake.auth;
+    if(socketState[roomID]['driver'] == user.id){
+      socketState[roomID]['driver'] = false
+    } else{
+      socketState[roomID]['navigators'].delete(user.id);
+    }
+    io.to(roomID).emit("user-leave", {
+      roomID,
+      driver: socketState[roomID]['driver'],
+      navigators: Array.from(socketState[roomID]['navigators'])
     });
  });
 });

@@ -31,42 +31,46 @@ class RoleLayout extends React.Component{
   }
 
   componentDidMount(){
-    const roomName = this.props.location.pathname.split("/")[2];
-    this.socket = io("http://localhost:4987", {auth: {user: this.props.user, room:roomName}})
+    const group = this.props.user.group_ids.find(id => id != 1 && id !=2);
+    this.role = this.props.location.pathname.split("/")[2];
+
+    this.roomID = group ? this.role + group : this.role;
+  
+    this.socket = io("http://localhost:4987", {auth: {user: this.props.user, roomID :this.roomID}})
     this.socket.on("connect", () => {
       this.setState({socketRendered: true});
-
-      this.socket.emit("new-user", roomName);
+      //Update room with new user
+      this.socket.emit("new-user");
     });
 
+    //State updates for changes in room
     this.socket.on("user-join", (roomState) => {
-      this.props.joinRoom({role: roomName, room: roomState})
+      this.props.joinRoom({role: this.role, room: roomState})
     });
 
     this.socket.on("user-leave", (roomState) => {
-      this.props.leaveRoom({role: roomName, room: roomState})
+      this.props.leaveRoom({role: this.role, room: roomState})
     });
 
     this.socket.on("change-driver", (roomState) => {
-      this.props.changeDriver({role: roomName, room: roomState})
+      this.props.changeDriver({role: this.role, room: roomState})
     });
 
   }
 
   render(){
-    const roleName = this.props.location.pathname.split("/")[2];
 
     if(this.state.socketRendered == false || this.props.room.driver == undefined){
       return <></>
     }
     
     if(this.props.user.id == this.props.room.driver){
-      return <IsDriver user={this.props.user} role={roleName}  socket={this.socket}>
+      return <IsDriver user={this.props.user} roomID={this.roomID}  socket={this.socket}>
         <Navbar location={this.props.location}/>
           <Layout sidebar = {this.props.sidebar} main={this.props.main} />
         </IsDriver>
      }else{
-      return <RPlayer room={this.props.room} user={this.props.user} role={roleName} socket={this.socket}/>
+      return <RPlayer room={this.props.room} user={this.props.user} roomID={this.roomID} socket={this.socket}/>
      }
   }
 }
