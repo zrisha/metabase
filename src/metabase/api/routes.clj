@@ -5,6 +5,7 @@
             [metabase.api.alert :as alert]
             [metabase.api.automagic-dashboards :as magic]
             [metabase.api.card :as card]
+            [metabase.api.card-favorite-grp :as card-favorite-grp]
             [metabase.api.collection :as collection]
             [metabase.api.dashboard :as dashboard]
             [metabase.api.database :as database]
@@ -65,6 +66,7 @@
   (context "/alert"                [] (+auth alert/routes))
   (context "/automagic-dashboards" [] (+auth magic/routes))
   (context "/card"                 [] (+auth card/routes))
+  (context "/card-favorite-grp"    [] (+auth card-favorite-grp/routes))
   (context "/collection"           [] (+auth collection/routes))
   (context "/dashboard"            [] (+auth dashboard/routes))
   (context "/database"             [] (+auth database/routes))

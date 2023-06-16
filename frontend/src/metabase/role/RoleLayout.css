@@ -4,6 +4,10 @@
   margin-top: -64px;
 }
 
+.role-main-layout{
+  overflow-y: scroll;
+}
+
 .role-sidebar-layout{
   width: 100%;
   height: 100%;

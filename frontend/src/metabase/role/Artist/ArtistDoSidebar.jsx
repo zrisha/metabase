@@ -8,18 +8,19 @@ import QuestionViewer from './QuestionViewer';
 
 const Top = (props) => {
     return ( 
-            <QuestionViewer />
+            <QuestionViewer favoriteCards={props.favoriteCards} />
     )
 }
 
 const ArtistDoSidebar = (props) => {
     return <>
-    <SidebarLayout top={<Top/>} bottom = {<IconGallery />} heights={[60,40]}/>
+    <SidebarLayout top={<Top favoriteCards={props.favoriteCards} />} bottom = {<IconGallery />} heights={[60,40]}/>
     </>
 }
 
 const mapStateToProps = (state, props) => ({
-    user: getUser(state)
+    user: getUser(state),
+    favoriteCards: state.role ? state.role.favorites.cards : []
   });
   
 export default connect(mapStateToProps)(ArtistDoSidebar);

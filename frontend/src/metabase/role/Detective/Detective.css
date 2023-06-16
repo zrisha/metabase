@@ -1,0 +1,13 @@
+
+.filter-row:hover {
+    color: #509ee3;
+}
+
+.DashCard .Card{
+    border: 2px solid transparent;
+    transition: border 1s;
+}
+
+.DashCard .card-favorited{
+    border: 2px solid #f9d45c;
+}

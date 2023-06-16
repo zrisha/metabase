@@ -13,7 +13,7 @@ const Ping = (props) => {
     }
   
     return <div key={props.key} style={style} className="rr-block">
-      <Icon name="star_outline" size={20} />
+      <Icon name={props.icon} size={20} />
     </div>
   }
 

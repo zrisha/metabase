@@ -10042,7 +10042,75 @@ databaseChangeLog:
                   defaultValueComputed: current_timestamp
                   constraints:
                     nullable: false
-
+  - changeSet:
+      id: v42.41-003
+      author: zrisha
+      comment: Add support for group favoriting 
+      changes:             
+      - createTable:
+          columns:
+          - column:
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+              name: id
+              type: int
+          - column:
+              constraints:
+                nullable: false
+              name: created_at
+              type: DATETIME
+          - column:
+              constraints:
+                nullable: false
+              name: updated_at
+              type: DATETIME
+          - column:
+              constraints:
+                deferrable: false
+                foreignKeyName: fk_cardfavorite_grp_ref_card_id
+                initiallyDeferred: false
+                nullable: false
+                references: report_card(id)
+                deleteCascade: true
+              name: card_id
+              type: int
+          - column:
+              constraints:
+                deferrable: false
+                foreignKeyName: fk_cardfavorite_grp_ref_group_id
+                initiallyDeferred: false
+                nullable: false
+                references: permissions_group(id)
+                deleteCascade: true
+              name: group_id
+              type: int
+          tableName: report_cardfavorite_grp
+      - addUniqueConstraint:
+          columnNames: card_id, group_id
+          constraintName: idx_unique_cardfavorite_grp_card_id_group_id
+          tableName: report_cardfavorite_grp
+      - createIndex:
+          columns:
+          - column:
+              name: card_id
+          indexName: idx_cardfavorite_grp_card_id
+          tableName: report_cardfavorite_grp
+      - createIndex:
+          columns:
+          - column:
+              name: group_id
+          indexName: idx_cardfavorite_grp_group_id
+          tableName: report_cardfavorite_grp
+      - createIndex:
+          columns:
+          - column:
+              name: card_id
+          - column:
+              name: group_id
+          indexName: idx_cardfavoritegrp_card_id_group_id
+          tableName: report_cardfavorite_grp
 
 # >>>>>>>>>> DO NOT ADD NEW MIGRATIONS BELOW THIS LINE! ADD THEM ABOVE <<<<<<<<<<
 

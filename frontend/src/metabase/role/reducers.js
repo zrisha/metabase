@@ -5,10 +5,29 @@ import {
   JOIN_ROOM,
   LEAVE_ROOM,
   RENDER_DRAWING_TOOL,
+  GET_FAVORITES_GRP,
+  FAVORITE_GRP,
+  UNFAVORITE_GRP,
+  GET_DETECTIVE_DATA,
+  SAVE_FILTER,
+  DELETE_FILTER,
+  LOAD_FILTER
 } from "./actions";
 
 const DEFAULT_ARTIST = { drawingTool: false };
+const DEFAULT_DETECTIVE = { savedFilters: []};
 const DEFAULT_ROOM = {artist: {}, detective: {}};
+const DEFAULT_FAVORITES = {cards: []};
+
+
+const favorites = handleActions(
+  {
+    [GET_FAVORITES_GRP]: (state, { payload }) => ({...state, cards: payload.favorites.map(x => x.card_id)}),
+    [FAVORITE_GRP]: (state, { payload }) => ({...state, cards: [...state.cards, payload.cardId]}),
+    [UNFAVORITE_GRP]: (state, { payload }) => ({...state, cards: state.cards.filter(item => item !== payload.cardId)})
+  },
+  DEFAULT_FAVORITES,
+)
 
 const artist = handleActions(
   {
@@ -21,16 +40,28 @@ const artist = handleActions(
   DEFAULT_ARTIST,
 );
 
+const detective = handleActions(
+  {
+    [GET_DETECTIVE_DATA]: (state, { payload }) => ({...state, savedFilters: payload.data.savedFilters}),
+    [SAVE_FILTER]: (state, { payload }) => ({...state, savedFilters: [...state.savedFilters, payload.newFilter]}),
+    [DELETE_FILTER]: (state, { payload }) => ({...state, savedFilters: payload.savedFilters}),
+    [LOAD_FILTER]: (state, { payload }) => ({...state, loadQuery: payload.loadQuery}),
+  },
+  DEFAULT_DETECTIVE,
+);
+
 const room = handleActions(
   {
-    [JOIN_ROOM]: (state, { payload }) => ({...state, [payload.role]: payload.room}),
-    [LEAVE_ROOM]: (state, { payload }) => ({...state, [payload.role]: payload.room}),
-    [CHANGE_DRIVER]: (state, { payload }) => ({...state, [payload.role]: payload.room}),
+    [JOIN_ROOM]: (state, { payload }) => ({...state, [payload.role]: payload.room, group: payload.group}),
+    [LEAVE_ROOM]: (state, { payload }) => ({...state, [payload.role]: payload.room, group: payload.group}),
+    [CHANGE_DRIVER]: (state, { payload }) => ({...state, [payload.role]: payload.room, group: payload.group}),
   },
   DEFAULT_ROOM,
 );
 
 export default combineReducers({
   artist,
-  room
+  room,
+  favorites,
+  detective
 });

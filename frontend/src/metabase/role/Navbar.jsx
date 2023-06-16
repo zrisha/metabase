@@ -5,19 +5,14 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { push } from "react-router-redux";
 
-import { t } from "ttag";
 import { Flex, Box } from "grid-styled";
 
 import * as Urls from "metabase/lib/urls";
 import { color, darken } from "metabase/lib/colors";
 
-import EntityMenu from "metabase/components/EntityMenu";
-import Icon from "metabase/components/Icon";
-import Tooltip from "metabase/components/Tooltip";
 import Link from "metabase/components/Link";
 import LogoIcon from "metabase/components/LogoIcon";
 import Modal from "metabase/components/Modal";
-import Radio from "metabase/components/Radio";
 
 import ProfileLink from "metabase/nav/components/ProfileLink";
 
@@ -53,25 +48,6 @@ const mapDispatchToProps = {
 const MODAL_NEW_DASHBOARD = "MODAL_NEW_DASHBOARD";
 const MODAL_NEW_COLLECTION = "MODAL_NEW_COLLECTION";
 
-const ModeToggle = (props) => {
-  const OPTIONS = [
-    { name: "Learn", value: "learn" },
-    { name: "Do", value: "do" },
-  ];
-
-  const value = props.location.pathname.includes("do") ? "do" : 
-  props.location.pathname.includes("learn") ? "learn" : false;
-
-  return (
-    <Radio
-      {...props}
-      options={OPTIONS}
-      value={value}
-      onChange={props.onChange}
-    />
-  );
-}
-
 @Database.loadList({
   // set this to false to prevent a potential spinner on the main nav
   loadingAndErrorWrapper: false,
@@ -80,7 +56,6 @@ const ModeToggle = (props) => {
 export default class Navbar extends Component {
   state = {
     modal: null,
-    mode: 0
   };
 
   static propTypes = {
@@ -97,18 +72,6 @@ export default class Navbar extends Component {
     this.setState({ modal });
     if (this._newPopover) {
       this._newPopover.close();
-    }
-  }
-
-  toggleMode = () => {
-    const path = this.props.location.pathname.split("/");
-    const ind = path.findIndex(elem => elem == "role")
-    const role = path[ind + 1];
-    if(this.props.location.pathname.includes("learn")){
-      this.props.onChangeLocation(`/role/${role}/do`);
-    }
-    else if(this.props.location.pathname.includes("do")){
-      this.props.onChangeLocation(`/role/${role}/learn`);
     }
   }
 
@@ -178,12 +141,7 @@ export default class Navbar extends Component {
         </Flex>
         <Flex className="flex-full z1" pr={2} align="center">
           <Flex align="center" style={{ maxWidth: 500 }}>
-            <ModeToggle location={this.props.location} variant="bubble" onChange={this.toggleMode}/>
-            <Box px={1}>
-            <Tooltip tooltip="This action is locked until reaching Level 3">
-              <Icon name="lock"/>
-            </Tooltip>
-            </Box>
+            {/* left menu */}
           </Flex>
         </Flex>
         <Flex className="flex-full z1" pr={2} align="center">

@@ -5,9 +5,7 @@ import Card from "metabase/components/Card";
 import Select from "metabase/components/Select";
 import { Flex } from "grid-styled";
 import EmptyState from "metabase/components/EmptyState";
-import EntityListLoader, {
-    entityListLoader,
-  } from "metabase/entities/containers/EntityListLoader";
+import EntityListLoader from "metabase/entities/containers/EntityListLoader";
   import {
     getIconForVisualizationType,
   } from "metabase/visualizations";
@@ -26,19 +24,19 @@ export default class QuestionApp extends React.Component {
     render() {
         return <div style={{height: "100%"}}>
           <EntityListLoader entityType="questions">
-            {({ list }) =>
-                <>
+            {({ list }) => {
+                const cards = list.filter(x=> this.props.favoriteCards.includes(x.id))
+                return <>
                 <Select
                     placeholder="Select one of your team's visualizations to view"
                     value={this.state.selectedQuestion}
                     onChange={e => this.onChange(e.target.value)}
-                    options={list.map(question => ({
+                    options={cards.map(question => ({
                         name: question.name, 
                         icon: getIconForVisualizationType(question.display), 
                         value: question.id
-                        
                     }))}/>
-            {list && <Card style={{height: "90%"}}>
+            {cards && <Card style={{height: "90%"}}>
                 {this.state.selectedQuestion ? 
                 <QuestionAndResultLoader
                     questionId={this.state.selectedQuestion}
@@ -57,6 +55,7 @@ export default class QuestionApp extends React.Component {
                 </Flex>}
             </Card>}
             </>}
+            }
           </EntityListLoader>
         </div>
   }

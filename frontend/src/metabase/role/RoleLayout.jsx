@@ -10,13 +10,13 @@ import { io } from "socket.io-client";
 import RPlayer from "./RPlayer";
 import './animation.css';
 import IsDriver from "./IsDriver";
+import { GenericError } from "metabase/containers/ErrorPages";
 
-
-export const Layout = fitViewport(({ main, sidebar }) => {
+export const Layout = fitViewport(({ main, sidebar, widths}) => {
   return (
     <div className="flex flex-row role-layout">
-      <div style = {{width: "35%"}} className="bg-white border-right">{sidebar}</div>
-      <div style = {{width: "65%"}}>{main}</div>
+      <div style = {{width: widths.left}} className="bg-white border-right">{sidebar}</div>
+      <div style = {{width: widths.right}} className="role-main-layout">{main}</div>
     </div>
   );
 });
@@ -28,13 +28,17 @@ class RoleLayout extends React.Component{
     this.state = {
       socketRendered: false
     }
+
+    this.roleWidths = {
+      detective: {left: '25%', right: '75%'}
+    }
   }
 
   componentDidMount(){
-    const group = this.props.user.group_ids.find(id => id != 1 && id !=2);
+    this.group = this.props.user.group_ids.find(id => id != 1 && id !=2);
     this.role = this.props.location.pathname.split("/")[2];
 
-    this.roomID = group ? this.role + group : this.role;
+    this.roomID = this.group ? this.role + this.group : this.role;
   
     this.socket = io("http://localhost:4987", {auth: {user: this.props.user, roomID :this.roomID}})
     this.socket.on("connect", () => {
@@ -45,29 +49,30 @@ class RoleLayout extends React.Component{
 
     //State updates for changes in room
     this.socket.on("user-join", (roomState) => {
-      this.props.joinRoom({role: this.role, room: roomState})
+      this.props.joinRoom({role: this.role, room: roomState, group: this.group})
     });
 
     this.socket.on("user-leave", (roomState) => {
-      this.props.leaveRoom({role: this.role, room: roomState})
+      this.props.leaveRoom({role: this.role, room: roomState, group: this.group})
     });
 
     this.socket.on("change-driver", (roomState) => {
-      this.props.changeDriver({role: this.role, room: roomState})
+      this.props.changeDriver({role: this.role, room: roomState, group: this.group})
     });
 
   }
 
   render(){
+    const widths = this.roleWidths[this.role] ? this.roleWidths[this.role] : {left: '35%', right: '65%'};
 
     if(this.state.socketRendered == false || this.props.room.driver == undefined){
-      return <></>
+      return <GenericError details="Failure to connect to the websocket server" />
     }
     
     if(this.props.user.id == this.props.room.driver){
       return <IsDriver user={this.props.user} roomID={this.roomID}  socket={this.socket}>
         <Navbar location={this.props.location}/>
-          <Layout sidebar = {this.props.sidebar} main={this.props.main} />
+          <Layout sidebar = {this.props.sidebar} main={this.props.main} widths = { widths}/>
         </IsDriver>
      }else{
       return <RPlayer room={this.props.room} user={this.props.user} roomID={this.roomID} socket={this.socket}/>

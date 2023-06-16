@@ -121,7 +121,7 @@ class IsDriver extends React.Component{
           transitionName="example"
           transitionEnterTimeout={400}
           transitionLeaveTimeout={300}>
-            {Object.entries(this.state.pings).map(([key,entry]) => <Ping key={key} x={entry.x} y={entry.y} />)}
+            {Object.entries(this.state.pings).map(([key,entry]) => <Ping key={key} x={entry.x} y={entry.y} icon={entry.icon} />)}
         </CSSTransitionGroup>
       </>
     )

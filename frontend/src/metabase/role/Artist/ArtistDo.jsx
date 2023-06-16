@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {connect} from "react-redux";
 import { getUser } from "metabase/selectors/user";
-import "./Do.css";
+import "./ArtistDo.css";
 import { Absolute } from "metabase/components/Position";
 import DrawingTool from './drawing-tool.js';
 import './drawing-tool.css';
@@ -10,6 +10,7 @@ import { renderDrawingTool } from "../actions";
 import Button from "metabase/core/components/Button";
 import ButtonBar from "metabase/components/ButtonBar";
 import withToast from "metabase/hoc/Toast";
+import { getFavoritesGrp } from "../actions";
 
 
 @withToast
@@ -50,6 +51,10 @@ class ArtistDo extends Component {
     async componentDidMount(){
         this.roomID = this.props.room && this.props.room.roomID ? this.props.room.roomID : false;
 
+        if(this.props.groupId){
+            this.props.getFavoritesGrp({groupId: this.props.groupId});
+        }
+
         try{
             const icon_filenames = await GET("/app/assets/fa-icons/index.json")();
             const stamp_paths = icon_filenames.map(x => `/app/assets/fa-icons/${x}`);
@@ -81,6 +86,7 @@ class ArtistDo extends Component {
         this.setState({render:true});
 
         try{
+            //TODO: Make into action
             const getData = await GET(`/api/role/${this.roomID}`)();
             if(getData.status && getData.status == 202){
                 const res = await POST("/api/role")({id: this.roomID, role: 'artist', data: {}});
@@ -104,7 +110,7 @@ class ArtistDo extends Component {
 
     componentWillUnmount() {
         window.removeEventListener("resize", this.resizeWindow);
-        PUT('/api/role')({id: this.roomID, data: window.drawingTool.save()})
+        //PUT('/api/role')({id: this.roomID, data: window.drawingTool.save()})
     }
 
     render(){
@@ -123,11 +129,13 @@ class ArtistDo extends Component {
 
 const mapStateToProps = (state, props) => ({
     room: state.role.room['artist'],
+    groupId: state.role.room.group,
     user: getUser(state)
   });
 
 const mapDispatchToProps = {
-    renderDrawingTool
+    renderDrawingTool,
+    getFavoritesGrp
 }
   
 export default connect(mapStateToProps, mapDispatchToProps)(ArtistDo);
