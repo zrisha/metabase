@@ -1,0 +1,195 @@
+{
+    "main_insights": {
+        "type": "main_insights",
+        "name": "Main Insights",
+        "icon": "lightbulb",
+        "tooltip": "Your main insight is the top finding from the data to highlight.",
+        "description": [
+            "The top finding in the data from your team that you wish to highlight. Similar to the climax, it is the height of your story. Main insights often have the following characteristics:",
+            ["Shocking or Interesting", 
+             "Clear and Direct",
+             "Inspires Action"]
+        ],
+        "example": "36% of students in the county are ethnic minorities but only 5% of teachers in the county are ethnic minorities.",
+        "fields": [
+            {
+            "name": "user_insight",
+            "title": "Insight",
+            "type": "textarea",
+            "placeholder": "Write your top finding here",
+            "info": "The top finding in the data you want to highlight"
+            },
+            {
+            "name": "user_explanation",
+            "title": "Explanation",
+            "type": "textarea",
+            "placeholder": "Write why you chose this to highlight",
+            "info": "Why you are highlighting this finding"
+            } 
+        ]
+    },
+    "background": {
+        "type": "background",
+        "name": "Background",
+        "icon": "earth",
+        "example": "Women have long suffered pay discrimation due to gender discrimination, societal norms, and maternity leave (otherwise known as the motherhood penalty). Anti-discrimination legislation is only effective if it can be enforce. Despite prior efforts, women still are experiencing unequal wages in the workforce.",
+        "description": ["Researching the details of your issue is essential for conveying credibiltiy to the audience. Likewise people may not know the details or background of the issue. Consider the following goals:",
+            ["Demonstrate you know your issue",
+            "Catch audiences up with important facts",
+            "Add important context of what causes  the issue"]
+        ],
+        "tooltip": "Details for your audience who might not know much about your isssue.",
+        "fields": [
+            {
+                "name": "user_importance",
+                "title": "Importance",
+                "type": "textarea",
+                "placeholder": "Write why this issue deserves attention",
+                "info": "Why this issue deserves the audience's attention"
+            },
+            {
+                "name": "user_rightness",
+                "title": "Rightness",
+                "type": "textarea",
+                "placeholder": "Write why your stance is just or fair",
+                "info": "Why this a just cause or explain why your stance is fair"
+            },
+            {
+                "name": "user_history",
+                "title": "History",
+                "type": "textarea",
+                "placeholder": "Write important historical information here",
+                "info": "What has happened over time with this issue that an audience should know?"
+            } 
+        ]
+    },
+    "personal_story": {
+        "type": "personal_story",
+        "name": "Personal Story",
+        "icon": "person",
+        "description": [
+            "Personal stories about individuals affected by your issue can help audiences visualize the problem. Stories help elicit powerful emotions that resonate with audiences and motivate them to pay attention and act. Consider the following for a personal story:",
+            ["Humanizes the issue and adds additional details",
+            "Elicits emotional reactions such as sympathy or outrage",
+            "Brief but with a powerful message",
+            "Story or quotes of real people"
+        ]
+        ],
+        "example": "Vivianne Castillo described how many women don’t know they are being discriminated against. A manager said her position in the company couldn’t receive a type of pay. She later found her white colleages in the same position were receiving the payment.",
+        "tooltip": "A compelling story about specific individuals affected by this issue to motivate audiences",
+        "fields": [
+            {
+                "name": "user_individual",
+                "title": "Individual",
+                "type": "textarea",
+                "placeholder": "Whose story is this?",
+                "info": "Write about the individual whose story you want to tell"
+            },
+            {
+                "name": "user_story",
+                "title": "Story",
+                "type": "textarea",
+                "placeholder": "What happened to this individual?",
+                "info": "Write about the event related to your issue and how it impacted the individual"
+            }
+        ]
+    },
+    "call_to_action": {
+        "type": "call_to_action",
+        "name": "Call to Action",
+        "icon": "hand_fist",
+        "description": [
+            "The goal of an advocacy campaign is to enact real change! To do that, you want to motivate your audience to act. This is your chance to call upon those listening to create change. Consider the following suggestions:",
+            ["Be specific, make it clear how to help",
+            "Explain how this helps your cause",
+            "Be persuasive, motivate the audience"]
+        ],
+        "tooltip": "A response you hope your audience might take towards the cause",
+        "example": "We can't fix the gap we don't know about! Support legislation to force companies to disclose their gender pay gap!",
+        "fields": [
+            {
+                "name": "user_action",
+                "title": "Action",
+                "type": "textarea",
+                "placeholder": "Write the desired action here",
+                "info": "What action do you want your audience to take? Be specific!"
+            },
+            {
+                "name": "user_explanation",
+                "title": "Explanation",
+                "type": "textarea",
+                "placeholder": "Write how this action will help",
+                "info": "How will this particular action help improve/solve your issue?"
+            }
+        ]
+    },
+    "supporting_insights": {
+        "type": "supporting_insights",
+        "name": "Supporting Insights",
+        "icon": "line",
+        "tooltip": "Other findings that support your stance on the issue",
+        "example": "The gender pay gap hardly improved in 20 years. In 2022 women earned an average of 82% of what men earned, which is more or less the same as 2002 where they earned 80% as much as men.",
+        "description": [
+        "Having other facts shows that you've done your research and also may help audiences who are still undecided on the issue. Other facts and findings from your data can support the main insight and bolster confidence that they are accurate. Consider the following for your supporting insights:",
+            [
+                "Alternative evidence that help confirm your main insight",
+                "Data findings that describe more specific scenarios or cases",
+                "Other facts that are related to your main insight or issue"
+            ]
+        ],
+        "fields": [
+            {
+                "name": "user_support",
+                "title": "Supporting Insight",
+                "type": "textarea",
+                "placeholder": "Write your supporting finding here",
+                "info": "What finding from the data or relevant fact do you want to include?"
+            },
+            {
+                "name": "user_connection",
+                "title": "Connection",
+                "type": "textarea",
+                "placeholder": "Write how this supports your main insight and campaign",
+                "info": "How will this particular finding or fact help support your campaign story or main insight?"
+            }
+        ]
+    },
+    "audience": {
+        "type": "audience",
+        "name": "Audience",
+        "icon": "group",
+        "tooltip": "Who is the intended target of your story?",
+        "example": "Our audience is adults over the age of 18 who can vote and support legislation to combat gender pay gap. Our audience may think that the gender pay gap has already been resolved and is no longer a major issue. Similatly, some of our audience may subscribe to cultural gender role of the past. Many of our audience believe in equality and fairness and can relate to being lied to, uncompensated, or unappreciated.",
+        "description": [
+            "Knowing your intended audience will help you customize your message. Your audiences existing beliefs, habits, and experiences can all impact the story you tell.  Consider the following:",
+            [
+                "Who might listen and also be able to create change?",
+                "What are some alternative stances your audience might hold?",
+                "What experiences or beliefs might your audience relate to?"
+            ]
+        ],
+        "fields": [
+            {
+                "name": "user_audience",
+                "title": "Audience",
+                "type": "textarea",
+                "placeholder": "Write who your intended audience is here",
+                "info": "Whose is the specific target of your message. What are there characteristics? "
+            },
+            {
+                "name": "user_change",
+                "title": "Change",
+                "type": "textarea",
+                "placeholder": "Write why this audience can create change",
+                "info": "Why are you targeitng this particular group? What power do they have to create change?"
+            },
+            {
+                "name": "user_beliefs",
+                "title": "Beliefs",
+                "type": "textarea",
+                "placeholder": "Write your audiences existing beliefs",
+                "info": "What existing beliefs might your audience hold that relate to your story and issue?"
+            }
+        ]
+    }
+}

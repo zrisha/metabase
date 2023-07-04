@@ -30,7 +30,8 @@ class RoleLayout extends React.Component{
     }
 
     this.roleWidths = {
-      detective: {left: '25%', right: '75%'}
+      detective: {left: '25%', right: '75%'},
+      journalist: {left: '30%', right: '70%'},
     }
   }
 

@@ -10111,6 +10111,59 @@ databaseChangeLog:
               name: group_id
           indexName: idx_cardfavoritegrp_card_id_group_id
           tableName: report_cardfavorite_grp
+  - changeSet:
+      id: v42.41-000
+      author: zrisha
+      comment: Add table for Journalist story elements
+      changes:             
+      - createTable:
+          columns:
+          - column:
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+              name: id
+              type: int
+          - column:
+              constraints:
+                nullable: false
+              name: created_at
+              type: DATETIME
+          - column:
+              constraints:
+                nullable: false
+              name: updated_at
+              type: DATETIME
+          - column:
+              constraints:
+                deferrable: false
+                foreignKeyName: fk_story_element_group_id
+                initiallyDeferred: false
+                nullable: false
+                references: permissions_group(id)
+                deleteCascade: true
+              name: group_id
+              type: int
+          - column:
+              name: type
+              type: varchar(254)
+              remarks: "Type of element"
+              constraints:
+                nullable: false
+          - column:
+              name: data
+              type: text
+              remarks: "JSON format of story element data"
+              constraints:
+                nullable: false
+          tableName: story_element
+      - createIndex:
+          columns:
+          - column:
+              name: group_id
+          indexName: idx_story_element_group_id
+          tableName: story_element
 
 # >>>>>>>>>> DO NOT ADD NEW MIGRATIONS BELOW THIS LINE! ADD THEM ABOVE <<<<<<<<<<
 

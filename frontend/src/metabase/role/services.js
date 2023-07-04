@@ -11,3 +11,11 @@ export const RoleApi = {
   updateRoleData: PUT("/api/role"),
   getRoleData: GET("/api/role/:roomID")
 };
+
+export const StoryApi = {
+  addStoryElement: POST("/api/story-element"),
+  updateStoryElement: PUT("/api/story-element/:storyId"),
+  updateStoryElementPos: PUT("/api/story-element/:storyId"),
+  getStoryElements: GET("/api/story-element/:groupId"),
+  deleteStoryElement: DELETE("/api/story-element/:storyId")
+}

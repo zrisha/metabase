@@ -1,11 +1,10 @@
 /* eslint-disable react/prop-types */
 import { createAction } from "metabase/lib/redux";
-import { FavoriteApi, RoleApi } from "./services";
+import { FavoriteApi, RoleApi, StoryApi } from "./services";
 import _ from "underscore";
 
 
 // action constants
-
 export const RENDER_DRAWING_TOOL = "metabase/role/RENDER_DRAWING_TOOL";
 export const renderDrawingTool = createAction(RENDER_DRAWING_TOOL);
 
@@ -17,6 +16,14 @@ export const SAVE_FILTER = "metabase/role/SAVE_FILTER";
 export const DELETE_FILTER = "metabase/role/DELETE_FILTER";
 export const LOAD_FILTER = "metabase/role/LOAD_FILTER";
 export const loadFilter= createAction(LOAD_FILTER);
+
+export const ADD_STORY_ELEMENT = "metabase/role/ADD_STORY_ELEMENT";
+export const SELECT_STORY_ELEMENT = "metabase/role/SELECT_STORY_ELEMENT";
+export const GET_STORY_ELEMENTS = "metabase/role/GET_STORY_ELEMENTS";
+export const UPDATE_STORY_ELEMENT = "metabase/role/UPDATE_STORY_ELEMENT";
+export const UPDATE_STORY_ELEMENT_POS = "metabase/role/UPDATE_STORY_ELEMENT_POS";
+export const DELETE_STORY_ELEMENT = "metabase/role/DELETE_STORY_ELEMENT";
+
 
 export const ROLE_DATA_ERROR = "metabase/role/ROLE_DATA_ERROR";
 
@@ -125,3 +132,92 @@ export const deleteFilter= ({deletedFilter, roomID}) => {
     }
   }
 }
+
+
+export const addStoryElement= ({data, type, group_id}) => {
+  return async function(dispatch, getState) {
+    try{
+      const res = await StoryApi.addStoryElement({data: data, type, group_id});
+      dispatch(createAction(ADD_STORY_ELEMENT)({...data, type, id: res.id}));
+    }catch(error){
+      console.log(error);
+      return {error}
+    }
+  }
+}
+
+export const updateStoryElementPos = createAction(
+  UPDATE_STORY_ELEMENT_POS,
+  async ({storyId, data}) => {
+    if(storyId){
+      const res = await StoryApi.updateStoryElementPos({storyId, data});
+      return {storyId, x:data.x, y:data.y}
+    } else {
+      return {error: "no story element id"};
+    }
+  }
+)
+
+export const updateStoryElement = createAction(
+  UPDATE_STORY_ELEMENT,
+  async ({storyId, data}) => {
+    if(storyId){
+      const res = await StoryApi.updateStoryElement({storyId, data});
+      return {storyId, data}
+    } else {
+      return {error: "no story element id"};
+    }
+  }
+)
+
+export const deleteStoryElement = createAction(
+  DELETE_STORY_ELEMENT,
+  async ({storyId, data}) => {
+    if(storyId){
+      const res = await StoryApi.deleteStoryElement({storyId});
+      return {storyId}
+    } else {
+      return {error: "no story element id"};
+    }
+  }
+)
+
+export const getStoryElements = createAction(
+  GET_STORY_ELEMENTS,
+  async ({ groupId }) => {
+    if(groupId){
+      const res = await StoryApi.getStoryElements({groupId});
+      console.log(res);
+      const storyElements = formatStoryElement(res);
+      return { storyElements };
+    }else{
+      return { error: "no group id"};
+    }
+  },
+);
+
+const formatStoryElement = (res) => {
+  const storyElements = {}
+  for(let ele of res){
+    if(ele.id){
+      storyElements[ele.id] = {...ele.data, type: ele.type}
+    }
+  }
+  return storyElements
+}
+
+
+
+// export const getStoryElements = (group_id) => {
+//   return async function(dispatch, getState) {
+//     try{
+//       const res = await StoryApi.getStoryElements(group_id)
+//       dispatch(createAction(ADD_STORY_ELEMENT)({...data, type, id: res.id}));
+//     }catch(error){
+//       console.log(error);
+//       return {error}
+//     }
+//   }
+//export const addStoryElement= createAction(ADD_STORY_ELEMENT);
+
+export const selectStoryElement= createAction(SELECT_STORY_ELEMENT);

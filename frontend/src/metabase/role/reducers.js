@@ -11,12 +11,19 @@ import {
   GET_DETECTIVE_DATA,
   SAVE_FILTER,
   DELETE_FILTER,
-  LOAD_FILTER
+  LOAD_FILTER,
+  ADD_STORY_ELEMENT,
+  SELECT_STORY_ELEMENT,
+  GET_STORY_ELEMENTS,
+  UPDATE_STORY_ELEMENT_POS,
+  UPDATE_STORY_ELEMENT,
+  DELETE_STORY_ELEMENT
 } from "./actions";
 
 const DEFAULT_ARTIST = { drawingTool: false };
 const DEFAULT_DETECTIVE = { savedFilters: []};
-const DEFAULT_ROOM = {artist: {}, detective: {}};
+const DEFAULT_JOURNALIST = { storyElements: {}, selectedElement: null};
+const DEFAULT_ROOM = {artist: {}, detective: {}, journalist: {}};
 const DEFAULT_FAVORITES = {cards: []};
 
 
@@ -50,6 +57,33 @@ const detective = handleActions(
   DEFAULT_DETECTIVE,
 );
 
+const journalist = handleActions(
+  {
+    [ADD_STORY_ELEMENT]: (state, { payload }) => ({...state, storyElements: {...state.storyElements, [payload.id]: payload}, selectedElement: null}),
+    [UPDATE_STORY_ELEMENT_POS]: (state, { payload }) => {
+      const update = {...state.storyElements[payload.storyId], x: payload.x, y:payload.y};
+      if(payload.status){
+        return state
+      }
+      return ({...state, storyElements: {...state.storyElements, [payload.storyId]: update}})
+    },
+    [UPDATE_STORY_ELEMENT]: (state, { payload }) => {
+      const update = {...state.storyElements[payload.storyId], ...payload.data};
+      if(payload.status){
+        return state
+      }
+      return ({...state, storyElements: {...state.storyElements, [payload.storyId]: update}})
+    },
+    [SELECT_STORY_ELEMENT]: (state, { payload }) => ({...state, selectedElement: payload.selectedElement}),
+    [GET_STORY_ELEMENTS]: (state, { payload }) => ({...state, storyElements: payload.storyElements}),
+    [DELETE_STORY_ELEMENT]: (state, { payload }) => {
+      const { [payload.storyId]: value, ...update } = state.storyElements;
+      return ({...state, storyElements: update, selectedElement: null})
+    }
+  },
+  DEFAULT_JOURNALIST,
+);
+
 const room = handleActions(
   {
     [JOIN_ROOM]: (state, { payload }) => ({...state, [payload.role]: payload.room, group: payload.group}),
@@ -61,7 +95,8 @@ const room = handleActions(
 
 export default combineReducers({
   artist,
+  detective,
+  journalist,
   room,
   favorites,
-  detective
 });
