@@ -3,7 +3,7 @@ import { Absolute } from "metabase/components/Position";
 import Tooltip from "metabase/components/Tooltip";
 import Icon from "metabase/components/Icon";
 import Draggable from "react-draggable";
-import { Flex, Box } from 'grid-styled';
+import { Flex } from 'grid-styled';
 import Popover from "metabase/components/Popover";
 import cx from "classnames";
 
@@ -38,7 +38,7 @@ function StoryElement(props) {
     onStop={handleStop}
     scale={props.scale}
     >
-    <div className="story-element" style={{display: 'inline-block'}}>
+    <div className="story-element">
     <div className="drag cursor-grab flex align-center justify-center py1">
       <Icon  name="drag"/>
     </div>

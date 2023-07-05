@@ -2,19 +2,18 @@ import React from "react";
 import { Flex, Box } from 'grid-styled';
 import { Absolute } from "metabase/components/Position";
 import Tooltip from "metabase/components/Tooltip";
-import "./StoryElements.css";
 import Card from 'metabase/components/Card';
 import Icon from "metabase/components/Icon";
 
-function StoryElements(props) {
+function StoryElementPicker(props) {
     const onClick = (ele) => {
       props.selectStoryElement({selectedElement: ele});
     };
 
 
-    return <>
-    <h3 style={{textAlign: 'center', paddingBottom:'5px'}}>Story Elements</h3>
-    <Card className="bg-medium" style={{width: "100%", height: "95%", padding: "6px 12px 6px 12px", textAlign: "center", overflowX: 'scroll'}}>
+    return <div className="story-element-picker">
+    <h3>Story Elements</h3>
+    <Card className="Card bg-medium">
         <Flex flexWrap="wrap">
           {Object.values(props.storyData).map(ele => {
             return (
@@ -24,7 +23,7 @@ function StoryElements(props) {
                   <Icon name="info"/>
                   </Tooltip>
                 </Absolute>
-                <div className="story-element-picker bg-light flex flex-column justify-center align-center cursor-pointer">
+                <div className="element-list bg-light flex flex-column justify-center align-center cursor-pointer">
                 <Icon name={ele.icon} />
                 <h4>{ele.name}</h4>
                 </div>
@@ -33,7 +32,7 @@ function StoryElements(props) {
           })}
         </Flex>
     </Card>
-    </>;
+    </div>;
   }
 
-export default StoryElements;
+export default StoryElementPicker;

@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { Absolute } from "metabase/components/Position";
-import "./StoryElements.css";
 import Icon from "metabase/components/Icon";
 import validate from "metabase/lib/validate";
 import Form, {
@@ -10,6 +9,7 @@ import Form, {
 import AutosizeTextarea from "react-textarea-autosize";
 import { formDomOnlyProps } from "metabase/lib/redux";
 import Button from "metabase/core/components/Button";
+import Card from 'metabase/components/Card';
 
 const handleSubmit = ({values, props, exists}) => {
   if(exists){
@@ -33,29 +33,40 @@ function StoryElementForm(props) {
 
   if(!props.selectedElement || !props.selectedElement.type)
     return <></>
-
-  return <>
+  
+  console.log(props.selectedElement);
+  return <Card className='story-form-wrapper'>
         <div className="text-left p1 story-element-detail relative">
-        <Absolute top={5} right={5}>
-          <Icon name="close" className="text-light text-medium-hover cursor-pointer" onClick = {onExit}/>
-        </Absolute>
-        <h3>{props.selectedElement.name}</h3>
-        {props.selectedElement.description.map(ele => {
-          if(Array.isArray(ele)){
-            return <ul>
-              {ele.map(li => <li>{li}</li>)}
-            </ul>
-          }else{
-            return ele
-          }
-        })}
-        <br />
-        {props.selectedElement.example && <h4>Example</h4>}
-        {props.selectedElement.example}
+          <Absolute top={5} right={5}>
+            <Icon name="close" className="text-light text-medium-hover cursor-pointer" onClick = {onExit}/>
+          </Absolute>
+          <h3>{props.selectedElement.name}</h3>
+          {props.selectedElement.description.map(ele => {
+            if(Array.isArray(ele)){
+              return <ul>
+                {ele.map(li => <li>{li}</li>)}
+              </ul>
+            }else{
+              return ele
+            }
+          })}
+          <br />
+          {props.selectedElement.example && <h4>Example</h4>}
+          {props.selectedElement.example}
         </div>
 
-        <Form className="story-element-form" formName={props.selectedElement.type} initialValues={props.selectedElement.data} onSubmit={(values) => handleSubmit({values, props, exists})}>
-        <FormField name="user_title"   title="Title" info="A brief description for displaying" placeholder="Enter title to display" validate={validate.required()} />
+        <Form 
+          className="story-element-form" 
+          overwriteOnInitialValuesChange={true}
+          formName={props.selectedElement.type} 
+          initialValues={props.selectedElement.data ? props.selectedElement.data : false} 
+          onSubmit={(values) => handleSubmit({values, props, exists})} >
+        <FormField 
+          name="user_title" 
+          title="Title" 
+          info="A brief description displayed on your story map. 55 letters max" 
+          placeholder="Enter title to display" 
+          validate={validate.required().maxLength(55)} />
         {props.selectedElement.fields.map((ele) => {
             if(ele.type == "textarea"){
               return (
@@ -80,7 +91,7 @@ function StoryElementForm(props) {
             {exists && <Button type="button" warning className="mx1" onClick = {onDelete} >Delete</Button>}
           </div>
         </Form>
-    </>
+    </Card>
 }
 
 export default StoryElementForm;

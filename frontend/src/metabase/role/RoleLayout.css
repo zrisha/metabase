@@ -5,7 +5,7 @@
 }
 
 .role-main-layout{
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .role-sidebar-layout{

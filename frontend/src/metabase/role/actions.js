@@ -5,42 +5,46 @@ import _ from "underscore";
 
 
 // action constants
+
+/* Artist */
 export const RENDER_DRAWING_TOOL = "metabase/role/RENDER_DRAWING_TOOL";
 export const renderDrawingTool = createAction(RENDER_DRAWING_TOOL);
-
 export const GET_ARTIST_DATA = "metabase/role/GET_ARTIST_DATA";
 
+/* Detective */
 export const GET_DETECTIVE_DATA = "metabase/role/GET_DETECTIVE_DATA";
 export const SAVE_DETECTIVE_DATA = "metabase/role/SAVE_DETECTIVE_DATA";
 export const SAVE_FILTER = "metabase/role/SAVE_FILTER";
 export const DELETE_FILTER = "metabase/role/DELETE_FILTER";
 export const LOAD_FILTER = "metabase/role/LOAD_FILTER";
 export const loadFilter= createAction(LOAD_FILTER);
+export const FAVORITE_GRP = `metabase/entities/questions/FAVORITE_GRP`;
+export const UNFAVORITE_GRP = `metabase/entities/questions/UNFAVORITE_GRP`;
+export const GET_FAVORITES_GRP = `metabase/entities/questions/GET_FAVORITES_GRP`;
 
+/* Journalist */
 export const ADD_STORY_ELEMENT = "metabase/role/ADD_STORY_ELEMENT";
 export const SELECT_STORY_ELEMENT = "metabase/role/SELECT_STORY_ELEMENT";
+export const selectStoryElement= createAction(SELECT_STORY_ELEMENT);
 export const GET_STORY_ELEMENTS = "metabase/role/GET_STORY_ELEMENTS";
 export const UPDATE_STORY_ELEMENT = "metabase/role/UPDATE_STORY_ELEMENT";
 export const UPDATE_STORY_ELEMENT_POS = "metabase/role/UPDATE_STORY_ELEMENT_POS";
 export const DELETE_STORY_ELEMENT = "metabase/role/DELETE_STORY_ELEMENT";
 
 
-export const ROLE_DATA_ERROR = "metabase/role/ROLE_DATA_ERROR";
-
+/* RRWeb */
 export const JOIN_ROOM = "metabase/role/JOIN_ROOM";
 export const joinRoom= createAction(JOIN_ROOM);
-
 export const LEAVE_ROOM = "metabase/role/LEAVE_ROOM";
 export const leaveRoom= createAction(LEAVE_ROOM);
-
 export const CHANGE_DRIVER = "metabase/role/CHANGE_DRIVER";
 export const changeDriver= createAction(CHANGE_DRIVER);
 
-export const FAVORITE_GRP = `metabase/entities/questions/FAVORITE_GRP`;
+/* Misc */
+export const ROLE_DATA_ERROR = "metabase/role/ROLE_DATA_ERROR";
 
-export const UNFAVORITE_GRP = `metabase/entities/questions/UNFAVORITE_GRP`;
 
-export const GET_FAVORITES_GRP = `metabase/entities/questions/GET_FAVORITES_GRP`;
+/* Detective */
 
 export const getFavoritesGrp = createAction(
     GET_FAVORITES_GRP,
@@ -65,32 +69,6 @@ export const unfavoriteGrp = createAction(
     return { cardId, res };
   },
 );
-
-export const getRoleData = ({roomID, role}) => {
-  return async function(dispatch, getState) {
-    const getResponse = await RoleApi.getRoleData({roomID, role});
-    let payload = {}
-    if(getResponse.status && getResponse.status == 202){
-      try{
-        const res = await RoleApi.addRoleData({id: roomID, role, data: {}});
-          payload = {id: roomID, role, data: {}, res}
-      }catch(error){
-        payload = {error}
-      }
-    }else{
-      payload = getResponse
-    }
-    switch(role){
-      case 'artist':
-        dispatch(createAction(GET_ARTIST_DATA)(payload));
-      case 'detective':
-        dispatch(createAction(GET_DETECTIVE_DATA)(payload));
-      default:
-        dispatch(createAction(ROLE_DATA_ERROR)(payload));
-    }
-  }
-}
-
 
 export const saveDetectiveData = createAction(
   SAVE_DETECTIVE_DATA,
@@ -133,6 +111,34 @@ export const deleteFilter= ({deletedFilter, roomID}) => {
   }
 }
 
+/* Misc */
+
+export const getRoleData = ({roomID, role}) => {
+  return async function(dispatch, getState) {
+    const getResponse = await RoleApi.getRoleData({roomID, role});
+    let payload = {}
+    if(getResponse.status && getResponse.status == 202){
+      try{
+        const res = await RoleApi.addRoleData({id: roomID, role, data: {}});
+          payload = {id: roomID, role, data: {}, res}
+      }catch(error){
+        payload = {error}
+      }
+    }else{
+      payload = getResponse
+    }
+    switch(role){
+      case 'artist':
+        dispatch(createAction(GET_ARTIST_DATA)(payload));
+      case 'detective':
+        dispatch(createAction(GET_DETECTIVE_DATA)(payload));
+      default:
+        dispatch(createAction(ROLE_DATA_ERROR)(payload));
+    }
+  }
+}
+
+/* Journalist */
 
 export const addStoryElement= ({data, type, group_id}) => {
   return async function(dispatch, getState) {
@@ -206,18 +212,3 @@ const formatStoryElement = (res) => {
   return storyElements
 }
 
-
-
-// export const getStoryElements = (group_id) => {
-//   return async function(dispatch, getState) {
-//     try{
-//       const res = await StoryApi.getStoryElements(group_id)
-//       dispatch(createAction(ADD_STORY_ELEMENT)({...data, type, id: res.id}));
-//     }catch(error){
-//       console.log(error);
-//       return {error}
-//     }
-//   }
-//export const addStoryElement= createAction(ADD_STORY_ELEMENT);
-
-export const selectStoryElement= createAction(SELECT_STORY_ELEMENT);

@@ -6,6 +6,7 @@ import withToast from "metabase/hoc/Toast";
 import storyData from "./story-elements.json";
 import StoryElement from "./StoryElement";
 import { selectStoryElement, getStoryElements, updateStoryElementPos } from '../actions';
+import storyOutline from './story_outline.json';
 
 
 @withToast
@@ -24,32 +25,32 @@ class JournalistDo extends Component {
 
   render(){
     const {storyElements} = this.props.journalist;
-    const width = this.dragCanvas.current ? this.dragCanvas.current.offsetWidth : false;
-    const height = this.dragCanvas.current ? this.dragCanvas.current.offsetHeight : false;
-    console.log({width, height});
+    const containerWidth = this.dragCanvas.current ? this.dragCanvas.current.offsetWidth : false;
+    const containerHeight = this.dragCanvas.current ? this.dragCanvas.current.offsetHeight : false;
 
-    const imgHeight = 487 * (width/1051);
-    console.log(height)
+    const {width, height, filepath} = storyOutline[0]
 
-    const padding = (height - (637 * (width/1051))) /2;
+    const scale = containerWidth / width;
+
+    const padding = (containerHeight - (height * (containerWidth/width))) /2;
 
 
     return <>
-    <div ref={this.dragCanvas} style={{width: "100%", height: "100%", paddingTop: padding}}>
-    <img src='/app/assets/story_outlines/story_outline_1.svg' style={{position: 'absolute', width: 1051, transform: `scale(${width/1051}`, transformOrigin: "0 0"}}/>
-    <div style={{transform: `scale(${width/1051}`, transformOrigin: "0 0", width: 1051, height: 637, position: 'relative'}}>
-      {width && Object.entries(storyElements).map(([storyId, ele]) => {
-        const {type, ...data} = ele;
-        return <StoryElement {...storyData[ele.type]} 
-          storyId={storyId} 
-          type={type} 
-          data={data} 
-          selectStoryElement={this.props.selectStoryElement} 
-          updateStoryElementPos={this.props.updateStoryElementPos} 
-          scale={width/1051}
-          dims={{width, height}}/>
-      })}
-    </div>
+    <div className="journalist-do-wrapper" ref={this.dragCanvas} style={{paddingTop: padding}}>
+      <img className="story-outline" src={filepath} style={{ width, transform: `scale(${scale}`}}/>
+      <div style={{transform: `scale(${scale}`, transformOrigin: "0 0", width, height, position: 'relative'}}>
+        {containerWidth && Object.entries(storyElements).map(([storyId, ele]) => {
+          const {type, ...data} = ele;
+          return <StoryElement {...storyData[ele.type]} 
+            storyId={storyId} 
+            type={type} 
+            data={data} 
+            selectStoryElement={this.props.selectStoryElement} 
+            updateStoryElementPos={this.props.updateStoryElementPos} 
+            scale={scale}
+            dims={{containerWidth, containerHeight}}/>
+        })}
+      </div>
     </div>
     </>
   }

@@ -5,12 +5,6 @@ import SidebarLayout from "../SidebarLayout";
 import StoryElementSidebar from "./StoryElementSidebar";
 
 
-const Top = (props) => {
-    return ( 
-            <div>Top</div>
-    )
-}
-
 const JournalistDoSidebar = (props) => {
     return <>
     <SidebarLayout top={<StoryElementSidebar />} bottom = {<div>bottom</div>} heights={[60,40]}/>

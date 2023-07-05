@@ -1,8 +1,112 @@
-
-.artist-do-wrapper{
+.journalist-do-wrapper{
     width: 100%;
     height: 100%;
-    text-align: center; 
-    padding-top: 2.5%;
-    justify-content: center;
 }
+
+.story-outline{
+    position: absolute;
+    transform-origin: 0 0;
+}
+
+.story-element-picker h3{
+    text-align: center; 
+    padding: 10px 0px;
+}
+
+.story-element-picker .Card{
+    height: 90%;
+    height: -webkit-calc(100% - 40px);
+    height: -moz-calc(100% - 40px);
+    height: calc(100% - 40px);
+}
+
+
+.story-element-picker{
+    height: 100%;
+  }
+  .story-element-picker .element-list{
+    width: 100%; 
+    height: 100px; 
+    padding: 10px; 
+    box-sizing: border-box;
+    word-wrap: break-word;
+  }
+  
+  .story-element-picker .element-list .Icon {
+    width: 45%;
+    height: 45%;
+  }
+  
+  .icon-ref{
+    position: absolute;
+    z-index: -100;
+    top: 50%;
+    left: 50%;
+  }
+  
+  .role-textarea{
+    min-height:unset;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #4C5773;
+    background-color: #FFFFFF;
+    padding: 0.75rem;
+    border: 1px solid hsl(0,0%,84.7%);
+    border-radius: 4px;
+    outline: none;
+    width: 100%;
+    resize: none;
+  }
+  
+  .story-element-detail ul{
+    list-style: square;
+    margin: 0;
+    padding-left: 30px;
+  }
+
+  .story-element{
+    display: inline-block;
+  }
+  
+  .story-element .element .Icon{
+    height: 40px;
+    width: 40px;
+    margin-right: 5px;
+  }
+  
+  .story-element .element{
+    max-width: 250px; 
+    height: 80px;
+    padding: 5px;
+    box-shadow: 0px 0px 0px transparent;
+    transition: .5s;
+  }
+  
+  .story-element .element h4{
+    word-wrap: break-word;
+    padding-right: 25px;
+  }
+  
+  .story-element:hover .drag{
+    opacity: 1;
+  }
+  .story-element .drag{
+    transition: .3s;
+    opacity: 0;
+  }
+  
+  .story-element .clicked{
+    box-shadow: 0px 0px 5px var(--color-success);
+  }
+  
+  .story-form-wrapper{
+    width: 100%;
+    height: 95%;
+    padding: 6px 12px 6px 12px;
+    margin-top: 10px;
+    text-align: center;
+    overflow-x: scroll;
+  }
+
+  
