@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { createAction } from "metabase/lib/redux";
-import { FavoriteApi, RoleApi, StoryApi } from "./services";
+import { FavoriteApi, FilterApi, RoleApi, StoryApi } from "./services";
 import _ from "underscore";
 
 
@@ -14,6 +14,7 @@ export const GET_ARTIST_DATA = "metabase/role/GET_ARTIST_DATA";
 /* Detective */
 export const GET_DETECTIVE_DATA = "metabase/role/GET_DETECTIVE_DATA";
 export const SAVE_DETECTIVE_DATA = "metabase/role/SAVE_DETECTIVE_DATA";
+export const GET_FILTERS = "metabase/role/GET_FILTERS";
 export const SAVE_FILTER = "metabase/role/SAVE_FILTER";
 export const DELETE_FILTER = "metabase/role/DELETE_FILTER";
 export const LOAD_FILTER = "metabase/role/LOAD_FILTER";
@@ -82,38 +83,46 @@ export const saveDetectiveData = createAction(
   },
 );
 
-export const saveFilter= ({newFilter, roomID}) => {
-  return async function(dispatch, getState) {
-    const {detective} = getState().role
-    const data = {...detective}
-    data.savedFilters = [...data.savedFilters, newFilter]
+export const getFilters = createAction(
+  GET_FILTERS,
+  async ({ groupId, dashboardId }) => {
     try{
-      const res = await RoleApi.updateRoleData({id: roomID, data});
-      dispatch(createAction(SAVE_FILTER)({newFilter, res}));
+      const res = await FilterApi.getFilters({groupId, dashboardId});
+      return {res}
     }catch(error){
       return {error}
     }
-  }
-}
+  },
+);
 
-export const deleteFilter= ({deletedFilter, roomID}) => {
-  return async function(dispatch, getState) {
-    const {detective} = getState().role;
-    const savedFilters = detective.savedFilters.filter(filter => _.isEqual(filter, deletedFilter) == false)
-    const data = {...detective, savedFilters};
-
+export const saveFilter = createAction(
+  SAVE_FILTER,
+  async ({ groupId, filter, dashboardId }) => {
     try{
-      const res = await RoleApi.updateRoleData({id: roomID, data});
-      dispatch(createAction(DELETE_FILTER)({savedFilters, res}));
+      console.log({groupId, filter, dashboardId})
+      const res = await FilterApi.saveFilter({groupId, filter, dashboardId});
+      return {filter: res.filter, id: res.id}
     }catch(error){
       return {error}
     }
-  }
-}
+  },
+);
+
+export const deleteFilter = createAction(
+  DELETE_FILTER,
+  async ({ filterId}) => {
+    try{
+      const res = await FilterApi.deleteFilter({filterId});
+      return {filterId}
+    }catch(error){
+      return {error}
+    }
+  },
+);
 
 /* Misc */
 
-export const getRoleData = ({roomID, role}) => {
+export const getRoleData = ({roomID, role, dashboardId = false}) => {
   return async function(dispatch, getState) {
     const getResponse = await RoleApi.getRoleData({roomID, role});
     let payload = {}
@@ -125,7 +134,7 @@ export const getRoleData = ({roomID, role}) => {
         payload = {error}
       }
     }else{
-      payload = getResponse
+      payload = {data: getResponse.data, dashboardId}
     }
     switch(role){
       case 'artist':

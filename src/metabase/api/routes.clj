@@ -13,6 +13,7 @@
             [metabase.api.email :as email]
             [metabase.api.embed :as embed]
             [metabase.api.field :as field]
+            [metabase.api.filter-grp :as filter-grp]
             [metabase.api.geojson :as geojson]
             [metabase.api.ldap :as ldap]
             [metabase.api.login-history :as login-history]
@@ -75,6 +76,7 @@
   (context "/email"                [] (+auth email/routes))
   (context "/embed"                [] (+message-only-exceptions embed/routes))
   (context "/field"                [] (+auth field/routes))
+  (context "/filter"               [] (+auth filter-grp/routes))
   (context "/geojson"              [] geojson/routes)
   (context "/ldap"                 [] (+auth ldap/routes))
   (context "/login-history"        [] (+auth login-history/routes))

@@ -8,7 +8,7 @@ import {
   GET_FAVORITES_GRP,
   FAVORITE_GRP,
   UNFAVORITE_GRP,
-  GET_DETECTIVE_DATA,
+  GET_FILTERS,
   SAVE_FILTER,
   DELETE_FILTER,
   LOAD_FILTER,
@@ -49,9 +49,9 @@ const artist = handleActions(
 
 const detective = handleActions(
   {
-    [GET_DETECTIVE_DATA]: (state, { payload }) => ({...state, savedFilters: payload.data.savedFilters}),
-    [SAVE_FILTER]: (state, { payload }) => ({...state, savedFilters: [...state.savedFilters, payload.newFilter]}),
-    [DELETE_FILTER]: (state, { payload }) => ({...state, savedFilters: payload.savedFilters}),
+    [GET_FILTERS]: (state, { payload }) => ({...state, savedFilters: payload.res, dashboardId: payload.dashboardId}),
+    [SAVE_FILTER]: (state, { payload }) => ({...state, savedFilters: [...state.savedFilters, payload ]}),
+    [DELETE_FILTER]: (state, { payload }) => ({...state, savedFilters: state.savedFilters.filter(entry => entry.id != payload.filterId)}),
     [LOAD_FILTER]: (state, { payload }) => ({...state, loadQuery: payload.loadQuery}),
   },
   DEFAULT_DETECTIVE,

@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import {connect} from "react-redux";
 import { getUser } from "metabase/selectors/user";
 import "./Detective.css";
-import { getFavoritesGrp, getRoleData } from "../actions";
+import _ from "underscore";
+import { getFavoritesGrp, getFilters } from "../actions";
 import withToast from "metabase/hoc/Toast";
+import Collections from "metabase/entities/collections";
+import Dashboards from "metabase/entities/dashboards";
 import DashboardApp from "metabase/role/Detective/dashboard/DetectiveDashboardApp";
 
 
@@ -14,14 +17,14 @@ class DetectiveDo extends Component {
     }
 
     async componentDidMount(){
-        
-        this.roomID = this.props.room && this.props.room.roomID ? this.props.room.roomID : false;
-        this.groupId = this.props.room && this.props.room.group ? this.props.room.group : false;
+        this.collection = this.props.collections.find(col => col.name.toLowerCase().includes('team'));
+
+        this.dashboard = this.props.dashboards.find(dash => dash.collection_id == this.collection.id);
+
         if(this.props.groupId){
             this.props.getFavoritesGrp({groupId: this.props.groupId});
+            this.props.getFilters({groupId: this.props.groupId, dashboardId: this.dashboard.id});
         }
-
-        this.props.getRoleData({roomID: this.roomID, role: 'detective'});
         window.addEventListener("resize", this.resizeWindow);
     }
 
@@ -31,7 +34,7 @@ class DetectiveDo extends Component {
 
     render(){
         return <>
-            <DashboardApp location = {this.props.location} dashboardId ={3}/>
+            {this.dashboard && <DashboardApp location = {this.props.location} dashboardId ={this.dashboard.id}/>}
         </>
     }
 
@@ -45,7 +48,11 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = {
     getFavoritesGrp,
-    getRoleData
+    getFilters
 }
-  
-export default connect(mapStateToProps, mapDispatchToProps)(DetectiveDo);
+
+export default _.compose(
+    Collections.loadList(),
+    Dashboards.loadList(),
+    connect(mapStateToProps, mapDispatchToProps),
+  )(DetectiveDo);

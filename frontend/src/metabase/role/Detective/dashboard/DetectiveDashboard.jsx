@@ -144,9 +144,9 @@ export default class Dashboard extends Component {
       if(_.isEmpty(this.props.savedFilters) & !_.isEmpty(filterQuery)){
         isNewFilter = true
       }else{
-        isNewFilter = _.isEmpty(filterQuery)  ? false : this.props.savedFilters.find(filter => _.isEqual(filter,filterQuery)) == undefined; 
+        isNewFilter = _.isEmpty(filterQuery)  ? false : this.props.savedFilters.find(entry => _.isEqual(entry.filter,filterQuery)) == undefined; 
       }
-      console.log({isNewFilter, filterQuery, savedFilters: this.props.savedFilters});
+      
       this.setState({ isNewFilter, filterQuery });
     }
 
@@ -233,7 +233,7 @@ export default class Dashboard extends Component {
 
   onSaveFilter = () => {
     if(this.state.isNewFilter)
-      this.props.saveFilter({newFilter: this.state.filterQuery, roomID: this.props.roomID});
+      this.props.saveFilter({filter: this.state.filterQuery, groupId: this.props.groupId, dashboardId: this.props.dashboardId});
   }
 
   render() {
@@ -246,7 +246,6 @@ export default class Dashboard extends Component {
       isNightMode,
       isSharing,
       parameters,
-      savedFilters,
       showAddQuestionSidebar,
       parameterValues,
       editingParameter,

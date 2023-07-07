@@ -5,9 +5,8 @@ import Tooltip from "metabase/components/Tooltip";
 
 
 const FilterRow = (props) => {
-
-  const roomID = props.room && props.room.roomID ? props.room.roomID : false;
-  const deleteFilter = roomID ? () => props.deleteFilter({deletedFilter: props.filter, roomID}) : null;
+  
+  const deleteFilter = props.filterId ? () => props.deleteFilter({filterId: props.filterId}) : null;
 
   const onClick = () => props.loadFilter({loadQuery: props.filter});
 
@@ -45,7 +44,7 @@ export default function SavedFilters(props) {
       </tr>
     </thead>
       <tbody>
-      {props.savedFilters.map(filter => <FilterRow filter={filter} deleteFilter={props.deleteFilter} loadFilter={props.loadFilter} room={props.room}/>)}
+      {props.savedFilters.map(entry => <FilterRow filter={entry.filter} filterId={entry.id} deleteFilter={props.deleteFilter} loadFilter={props.loadFilter} room={props.room}/>)}
       </tbody>
     </table>
   </Card>;

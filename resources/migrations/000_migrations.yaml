@@ -10164,6 +10164,77 @@ databaseChangeLog:
               name: group_id
           indexName: idx_story_element_group_id
           tableName: story_element
+  - changeSet:
+      id: v42.42-006
+      author: zrisha
+      comment: Add table for saved filters
+      changes:             
+      - createTable:
+          columns:
+          - column:
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+              name: id
+              type: int
+          - column:
+              constraints:
+                nullable: false
+              name: created_at
+              type: DATETIME
+          - column:
+              constraints:
+                nullable: false
+              name: updated_at
+              type: DATETIME
+          - column:
+              constraints:
+                deferrable: false
+                foreignKeyName: fk_filter_dashboard_id
+                initiallyDeferred: false
+                nullable: false
+                references: report_dashboard(id)
+              name: dashboard_id
+              type: int
+          - column:
+              constraints:
+                deferrable: false
+                foreignKeyName: fk_filter_group_id
+                initiallyDeferred: false
+                nullable: false
+                references: permissions_group(id)
+                deleteCascade: true
+              name: group_id
+              type: int
+          - column:
+              name: filter
+              type: text
+              remarks: "JSON format of story element data"
+              constraints:
+                nullable: false
+          tableName: filter_grp
+      - createIndex:
+          columns:
+          - column:
+              name: group_id
+          indexName: idx_filter_group_id
+          tableName: filter_grp
+      - createIndex:
+          columns:
+          - column:
+              name: dashboard_id
+          indexName: idx_filter_dashboard_id
+          tableName: filter_grp
+      - createIndex:
+          columns:
+          - column:
+              name: dashboard_id
+          - column:
+              name: group_id
+          indexName: idx_filter_dashboard_id_group_id
+          tableName: filter_grp
+
 
 # >>>>>>>>>> DO NOT ADD NEW MIGRATIONS BELOW THIS LINE! ADD THEM ABOVE <<<<<<<<<<
 

@@ -12,6 +12,12 @@ export const RoleApi = {
   getRoleData: GET("/api/role/:roomID")
 };
 
+export const FilterApi = {
+  saveFilter: POST("/api/filter/group/:groupId/dashboard/:dashboardId"),
+  deleteFilter: DELETE("/api/filter/:filterId"),
+  getFilters: GET("/api/filter/group/:groupId/dashboard/:dashboardId")
+};
+
 export const StoryApi = {
   addStoryElement: POST("/api/story-element"),
   updateStoryElement: PUT("/api/story-element/:storyId"),
