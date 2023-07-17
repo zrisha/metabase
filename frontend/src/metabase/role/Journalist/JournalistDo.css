@@ -14,6 +14,7 @@
 }
 
 .story-element-picker .Card{
+    overflow-y:auto;
     height: 90%;
     height: -webkit-calc(100% - 40px);
     height: -moz-calc(100% - 40px);
