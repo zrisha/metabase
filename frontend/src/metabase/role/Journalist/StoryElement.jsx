@@ -45,7 +45,7 @@ function StoryElement(props) {
     <div style={{position: 'relative'}}>
       <Absolute top={10} right={10}>
         <Tooltip tooltip="Edit">
-        <Icon className="cursor-pointer text-brand-hover" name="pencil" onClick={onEdit}/>
+        <Icon size={18} className="cursor-pointer text-brand-hover" name="pencil" onClick={onEdit}/>
         </Tooltip>
       </Absolute>
     <Flex 

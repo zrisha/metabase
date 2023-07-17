@@ -5,7 +5,7 @@ import "./JournalistDo.css";
 import withToast from "metabase/hoc/Toast";
 import storyData from "./story-elements.json";
 import StoryElement from "./StoryElement";
-import { selectStoryElement, getStoryElements, updateStoryElementPos } from '../actions';
+import { selectStoryElement, getStoryElements, updateStoryElementPos, getFavoritesGrp } from '../actions';
 import storyOutline from './story_outline.json';
 
 
@@ -20,6 +20,7 @@ class JournalistDo extends Component {
   componentDidMount(){
     if(this.props.groupId){
       this.props.getStoryElements({groupId: this.props.groupId})
+      this.props.getFavoritesGrp({groupId: this.props.groupId});
     }
   }
 
@@ -66,7 +67,8 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = {
   selectStoryElement,
   getStoryElements,
-  updateStoryElementPos
+  updateStoryElementPos,
+  getFavoritesGrp
 }
   
 export default connect(mapStateToProps, mapDispatchToProps)(JournalistDo);
