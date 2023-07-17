@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { createAction } from "metabase/lib/redux";
-import { FavoriteApi, FilterApi, RoleApi, StoryApi } from "./services";
+import { FavoriteApi, FilterApi, RoleApi, StoryApi, NoteApi } from "./services";
 import _ from "underscore";
 
 
@@ -22,6 +22,10 @@ export const loadFilter= createAction(LOAD_FILTER);
 export const FAVORITE_GRP = `metabase/entities/questions/FAVORITE_GRP`;
 export const UNFAVORITE_GRP = `metabase/entities/questions/UNFAVORITE_GRP`;
 export const GET_FAVORITES_GRP = `metabase/entities/questions/GET_FAVORITES_GRP`;
+export const ADD_NOTE = "metabase/role/ADD_NOTE";
+export const GET_NOTES = "metabase/role/GET_NOTES";
+export const UPDATE_NOTE = "metabase/role/UPDATE_NOTE";
+export const DELETE_NOTE = "metabase/role/DELETE_NOTE";
 
 /* Journalist */
 export const ADD_STORY_ELEMENT = "metabase/role/ADD_STORY_ELEMENT";
@@ -116,6 +120,65 @@ export const deleteFilter = createAction(
       return {filterId}
     }catch(error){
       return {error}
+    }
+  },
+);
+
+export const addNote = createAction(
+  ADD_NOTE,
+  async ({data, groupId}) => {
+    try{
+      const res = await NoteApi.addNote({data: data, group_id: groupId});
+      return {data, id: res.id}
+    }catch(error){
+      console.log(error);
+      return {error}
+    }
+  }
+);
+
+export const updateNote = createAction(
+  UPDATE_NOTE,
+  async ({noteId, data}) => {
+    if(noteId){
+      try{
+        const res = await NoteApi.updateNote({noteId, data});
+        return {data, id: noteId}
+      }catch(error){
+        console.log(error);
+        return {error}
+      }
+    } else {
+      return {error: "no note  id"};
+    }
+  }
+)
+
+export const deleteNote = createAction(
+  DELETE_NOTE,
+  async ({noteId}) => {
+    if(noteId){
+      const res = await NoteApi.deleteNote({noteId});
+      return {noteId}
+    } else {
+      return {error: "no note id"};
+    }
+  }
+)
+
+export const getNotes = createAction(
+  GET_NOTES,
+  async ({ groupId }) => {
+    if(groupId){
+      try{
+        const res = await NoteApi.getNotes({groupId});
+        return { notes: res };
+      }catch(error){
+        console.log(error);
+        return {error}
+      }
+    }else{
+      return { error: "no group id"};
     }
   },
 );

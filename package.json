@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@snowplow/browser-tracker": "^3.1.6",
+    "@tinymce/tinymce-react": "^4.3.0",
     "@tippyjs/react": "^4.2.6",
     "@visx/axis": "1.8.0",
     "@visx/clip-path": "^2.1.0",

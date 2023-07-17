@@ -17,11 +17,15 @@ import {
   GET_STORY_ELEMENTS,
   UPDATE_STORY_ELEMENT_POS,
   UPDATE_STORY_ELEMENT,
-  DELETE_STORY_ELEMENT
+  DELETE_STORY_ELEMENT,
+  ADD_NOTE,
+  UPDATE_NOTE,
+  DELETE_NOTE,
+  GET_NOTES
 } from "./actions";
 
 const DEFAULT_ARTIST = { drawingTool: false };
-const DEFAULT_DETECTIVE = { savedFilters: []};
+const DEFAULT_DETECTIVE = { savedFilters: [], notes: []};
 const DEFAULT_JOURNALIST = { storyElements: {}, selectedElement: null};
 const DEFAULT_ROOM = {artist: {}, detective: {}, journalist: {}};
 const DEFAULT_FAVORITES = {cards: []};
@@ -53,6 +57,10 @@ const detective = handleActions(
     [SAVE_FILTER]: (state, { payload }) => ({...state, savedFilters: [...state.savedFilters, payload ]}),
     [DELETE_FILTER]: (state, { payload }) => ({...state, savedFilters: state.savedFilters.filter(entry => entry.id != payload.filterId)}),
     [LOAD_FILTER]: (state, { payload }) => ({...state, loadQuery: payload.loadQuery}),
+    [ADD_NOTE]: (state, { payload }) => ({...state, notes: [...state.notes, payload ]}),
+    [DELETE_NOTE]: (state, { payload }) => ({...state, notes: state.notes.filter(note => note.id != payload.noteId)}),
+    [UPDATE_NOTE]: (state, { payload }) => ({...state, notes: state.notes.map(note => note.id == payload.id ? payload : note)}),
+    [GET_NOTES]: (state, { payload }) => ({...state,  notes: payload.notes}),
   },
   DEFAULT_DETECTIVE,
 );

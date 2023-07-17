@@ -11,3 +11,8 @@
 .DashCard .card-favorited{
     border: 2px solid #f9d45c;
 }
+
+.note-list li{
+    overflow: hidden;
+    padding-right: 35px;
+}

@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import { getUser } from "metabase/selectors/user";
 import "./Detective.css";
 import _ from "underscore";
-import { getFavoritesGrp, getFilters } from "../actions";
+import { getFavoritesGrp, getFilters, getNotes } from "../actions";
 import withToast from "metabase/hoc/Toast";
 import Collections from "metabase/entities/collections";
 import Dashboards from "metabase/entities/dashboards";
@@ -24,6 +24,7 @@ class DetectiveDo extends Component {
         if(this.props.groupId){
             this.props.getFavoritesGrp({groupId: this.props.groupId});
             this.props.getFilters({groupId: this.props.groupId, dashboardId: this.dashboard.id});
+            this.props.getNotes({groupId: this.props.groupId});
         }
         window.addEventListener("resize", this.resizeWindow);
     }
@@ -48,7 +49,8 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = {
     getFavoritesGrp,
-    getFilters
+    getFilters,
+    getNotes
 }
 
 export default _.compose(

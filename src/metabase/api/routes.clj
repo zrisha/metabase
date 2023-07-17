@@ -19,6 +19,7 @@
             [metabase.api.login-history :as login-history]
             [metabase.api.metric :as metric]
             [metabase.api.native-query-snippet :as native-query-snippet]
+            [metabase.api.note :as note]
             [metabase.api.notify :as notify]
             [metabase.api.page-views :as page-views]
             [metabase.api.permissions :as permissions]
@@ -83,6 +84,7 @@
   (context "/premium-features"     [] (+auth premium-features/routes))
   (context "/metric"               [] (+auth metric/routes))
   (context "/native-query-snippet" [] (+auth native-query-snippet/routes))
+  (context "/note"                 [] (+auth note/routes))
   (context "/notify"               [] (+apikey notify/routes))
   (context "/page-views"           [] (+auth page-views/routes))
   (context "/permissions"          [] (+auth permissions/routes))

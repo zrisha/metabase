@@ -10234,6 +10234,53 @@ databaseChangeLog:
               name: group_id
           indexName: idx_filter_dashboard_id_group_id
           tableName: filter_grp
+  - changeSet:
+      id: v42.41-007
+      author: zrisha
+      comment: Add table for Detective Notes
+      changes:             
+      - createTable:
+          columns:
+          - column:
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+              name: id
+              type: int 
+          - column:
+              constraints:
+                nullable: false
+              name: created_at
+              type: DATETIME
+          - column:
+              constraints:
+                nullable: false
+              name: updated_at
+              type: DATETIME
+          - column:
+              constraints:
+                deferrable: false
+                foreignKeyName: fk_note_group_id
+                initiallyDeferred: false
+                nullable: false
+                references: permissions_group(id)
+                deleteCascade: true
+              name: group_id
+              type: int
+          - column:
+              name: data
+              type: text
+              remarks: "JSON format of note data"
+              constraints:
+                nullable: false
+          tableName: note
+      - createIndex:
+          columns:
+          - column:
+              name: group_id
+          indexName: idx_note_group_id
+          tableName: note
 
 
 # >>>>>>>>>> DO NOT ADD NEW MIGRATIONS BELOW THIS LINE! ADD THEM ABOVE <<<<<<<<<<

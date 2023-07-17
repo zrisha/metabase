@@ -5,7 +5,8 @@ import SidebarLayout from "../SidebarLayout";
 import Tasks from "./Tasks";
 import Saved from "./SavedFilters";
 import Radio from "metabase/components/Radio";
-import { deleteFilter, loadFilter } from "../actions";
+import Notes from "./Notes";
+import { deleteFilter, loadFilter, deleteNote, addNote, updateNote } from "../actions";
 
 const ModeToggle = (props) => {
   const OPTIONS = [
@@ -42,7 +43,7 @@ const Top = (props) => {
 
 const Bottom = (props) => {
     return ( 
-      <div>bottom</div>
+      <Notes {...props} />
     )
 }
 
@@ -54,14 +55,19 @@ const DetectiveDoSidebar = (props) => {
 
 const mapStateToProps = (state, props) => ({
     user: getUser(state),
+    groupId: state.role.room.group,
     room: state.role.room['detective'],
-    favoriteCards: state.role ? state.role.favorites.cards : false,
+    notes: state.role.detective ? state.role.detective.notes : false,
+    favoriteCards: state.role.favorites ? state.role.favorites.cards : false,
     savedFilters : state.role.detective ? state.role.detective.savedFilters : false
   });
 
 const mapDispatchToProps = {
   deleteFilter,
-  loadFilter
+  loadFilter,
+  deleteNote,
+  addNote,
+  updateNote
 }
   
 export default connect(mapStateToProps,mapDispatchToProps)(DetectiveDoSidebar);

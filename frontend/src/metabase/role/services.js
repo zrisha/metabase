@@ -18,6 +18,13 @@ export const FilterApi = {
   getFilters: GET("/api/filter/group/:groupId/dashboard/:dashboardId")
 };
 
+export const NoteApi = {
+  addNote: POST("/api/note"),
+  updateNote: PUT("/api/note/:noteId"),
+  getNotes: GET("/api/note/:groupId"),
+  deleteNote: DELETE("/api/note/:noteId")
+}
+
 export const StoryApi = {
   addStoryElement: POST("/api/story-element"),
   updateStoryElement: PUT("/api/story-element/:storyId"),
@@ -25,3 +32,4 @@ export const StoryApi = {
   getStoryElements: GET("/api/story-element/:groupId"),
   deleteStoryElement: DELETE("/api/story-element/:storyId")
 }
+
