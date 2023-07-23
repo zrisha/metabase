@@ -68,7 +68,7 @@
 
   .story-element{
     display: inline-block;
-    font-size: 1.3em;
+    font-size: 1.5em;
   }
   
   .story-element .element .Icon{
@@ -78,8 +78,8 @@
   }
   
   .story-element .element{
-    max-width: 275px; 
-    height: 100px;
+    max-width: 300px; 
+    height: 120px;
     padding: 5px;
     box-shadow: 0px 0px 0px transparent;
     transition: .5s;

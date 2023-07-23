@@ -10,6 +10,7 @@ import AutosizeTextarea from "react-textarea-autosize";
 import { formDomOnlyProps } from "metabase/lib/redux";
 import Button from "metabase/core/components/Button";
 import Card from 'metabase/components/Card';
+import CollapseSection from "metabase/components/CollapseSection";
 
 const handleSubmit = ({values, props, exists}) => {
   if(exists){
@@ -41,6 +42,8 @@ function StoryElementForm(props) {
             <Icon name="close" className="text-light text-medium-hover cursor-pointer" onClick = {onExit}/>
           </Absolute>
           <h3>{props.selectedElement.name}</h3>
+          {props.selectedElement.definition}
+          <CollapseSection headerClass="text-brand text-bold text-underline-hover" header="See an example">
           {props.selectedElement.description.map(ele => {
             if(Array.isArray(ele)){
               return <ul>
@@ -53,6 +56,7 @@ function StoryElementForm(props) {
           <br />
           {props.selectedElement.example && <h4>Example</h4>}
           {props.selectedElement.example}
+          </CollapseSection>
         </div>
 
         <Form 
@@ -63,7 +67,7 @@ function StoryElementForm(props) {
           onSubmit={(values) => handleSubmit({values, props, exists})} >
         <FormField 
           name="user_title" 
-          title="Title" 
+          title="Headline" 
           info="A brief description displayed on your story map. 55 letters max" 
           placeholder="Enter title to display" 
           validate={validate.required().maxLength(55)} />

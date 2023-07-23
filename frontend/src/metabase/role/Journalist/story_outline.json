@@ -1,8 +1,14 @@
 [
     {
         "id": 0,
-        "filepath": "/app/assets/story_outlines/story_outline_1.svg",
-        "width": 1401.6,
-        "height": 850
+        "filepath": "/app/assets/story_outlines/story_outline.svg",
+        "width": 1616.0703125,
+        "height": 1137.53125
+    },
+    {
+        "id": 1,
+        "filepath": "/app/assets/story_outlines/story_outline_v2.svg",
+        "width": 1616.0703125,
+        "height": 1137.53125
     }
 ]

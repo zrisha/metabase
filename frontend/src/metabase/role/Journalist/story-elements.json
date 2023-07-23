@@ -4,8 +4,9 @@
         "name": "Main Insights",
         "icon": "lightbulb",
         "tooltip": "Your main insight is the top finding from the data to highlight.",
+        "definition": "The top finding in the data from your team that you wish to highlight. Similar to the climax, it is the height of your story.",
         "description": [
-            "The top finding in the data from your team that you wish to highlight. Similar to the climax, it is the height of your story. Main insights often have the following characteristics:",
+            "Main insights often have the following characteristics:",
             ["Shocking or Interesting", 
              "Clear and Direct",
              "Inspires Action"]
@@ -33,7 +34,8 @@
         "name": "Background",
         "icon": "earth",
         "example": "Women have long suffered pay discrimation due to gender discrimination, societal norms, and maternity leave (otherwise known as the motherhood penalty). Anti-discrimination legislation is only effective if it can be enforce. Despite prior efforts, women still are experiencing unequal wages in the workforce.",
-        "description": ["Researching the details of your issue is essential for conveying credibiltiy to the audience. Likewise people may not know the details or background of the issue. Consider the following goals:",
+        "definition": "Researching the details of your issue is essential for conveying credibiltiy to the audience. Likewise people may not know the details or background of the issue.",
+        "description": ["Consider the following goals:",
             ["Demonstrate you know your issue",
             "Catch audiences up with important facts",
             "Add important context of what causes  the issue"]
@@ -67,8 +69,9 @@
         "type": "personal_story",
         "name": "Personal Story",
         "icon": "person",
+        "definition": "Personal stories about individuals affected by your issue can help audiences visualize the problem. Stories help elicit powerful emotions that resonate with audiences and motivate them to pay attention and act.",
         "description": [
-            "Personal stories about individuals affected by your issue can help audiences visualize the problem. Stories help elicit powerful emotions that resonate with audiences and motivate them to pay attention and act. Consider the following for a personal story:",
+            "Consider the following for a personal story:",
             ["Humanizes the issue and adds additional details",
             "Elicits emotional reactions such as sympathy or outrage",
             "Brief but with a powerful message",
@@ -98,8 +101,9 @@
         "type": "call_to_action",
         "name": "Call to Action",
         "icon": "hand_fist",
+        "definition": "The goal of an advocacy campaign is to enact real change! To do that, you want to motivate your audience to act. This is your chance to call upon those listening to create change.",
         "description": [
-            "The goal of an advocacy campaign is to enact real change! To do that, you want to motivate your audience to act. This is your chance to call upon those listening to create change. Consider the following suggestions:",
+            "Consider the following suggestions:",
             ["Be specific, make it clear how to help",
             "Explain how this helps your cause",
             "Be persuasive, motivate the audience"]
@@ -127,10 +131,11 @@
         "type": "supporting_insights",
         "name": "Supporting Insights",
         "icon": "line",
+        "definition": "Having other facts shows that you've done your research and also may help audiences who are still undecided on the issue. Other facts and findings from your data can support the main insight and bolster confidence that they are accurate.",
         "tooltip": "Other findings that support your stance on the issue",
         "example": "The gender pay gap hardly improved in 20 years. In 2022 women earned an average of 82% of what men earned, which is more or less the same as 2002 where they earned 80% as much as men.",
         "description": [
-        "Having other facts shows that you've done your research and also may help audiences who are still undecided on the issue. Other facts and findings from your data can support the main insight and bolster confidence that they are accurate. Consider the following for your supporting insights:",
+        "Consider the following for your supporting insights:",
             [
                 "Alternative evidence that help confirm your main insight",
                 "Data findings that describe more specific scenarios or cases",
@@ -158,10 +163,11 @@
         "type": "audience",
         "name": "Audience",
         "icon": "group",
+        "definition": "Knowing your intended audience will help you customize your message. Your audiences existing beliefs, habits, and experiences can all impact the story you tell.",
         "tooltip": "Who is the intended target of your story?",
         "example": "Our audience is adults over the age of 18 who can vote and support legislation to combat gender pay gap. Our audience may think that the gender pay gap has already been resolved and is no longer a major issue. Similatly, some of our audience may subscribe to cultural gender role of the past. Many of our audience believe in equality and fairness and can relate to being lied to, uncompensated, or unappreciated.",
         "description": [
-            "Knowing your intended audience will help you customize your message. Your audiences existing beliefs, habits, and experiences can all impact the story you tell.  Consider the following:",
+            " Consider the following:",
             [
                 "Who might listen and also be able to create change?",
                 "What are some alternative stances your audience might hold?",

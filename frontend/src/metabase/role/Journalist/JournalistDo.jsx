@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {connect} from "react-redux";
 import { getUser } from "metabase/selectors/user";
 import "./JournalistDo.css";
+import Radio from "metabase/components/Radio";
 import withToast from "metabase/hoc/Toast";
 import storyData from "./story-elements.json";
 import StoryElement from "./StoryElement";
@@ -13,8 +14,23 @@ import storyOutline from './story_outline.json';
 class JournalistDo extends Component {
   constructor() {
     super();
-    this.state = {render:false};
+    this.state = {render:false, containerWidth: false, containerHeight: false, storyOutline: '0'};
     this.dragCanvas = React.createRef()
+  }
+
+  setWindowSize = () => {
+    console.log(this.dragCanvas.current.clientHeight);
+    this.setState({
+      containerWidth: this.dragCanvas.current ? this.dragCanvas.current.offsetWidth : false,
+      containerHeight: this.dragCanvas.current ? this.dragCanvas.current.offsetHeight : false
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot){
+    if(prevState.render != this.state.render){
+      this.setWindowSize();
+    }
+
   }
 
   componentDidMount(){
@@ -22,24 +38,34 @@ class JournalistDo extends Component {
       this.props.getStoryElements({groupId: this.props.groupId})
       this.props.getFavoritesGrp({groupId: this.props.groupId});
     }
+    window.addEventListener("resize", this.setWindowSize);
+
+    this.setState({render: true});
   }
 
   render(){
     const {storyElements} = this.props.journalist;
-    const containerWidth = this.dragCanvas.current ? this.dragCanvas.current.offsetWidth : false;
-    const containerHeight = this.dragCanvas.current ? this.dragCanvas.current.offsetHeight : false;
 
-    const {width, height, filepath} = storyOutline[0]
+    const {containerWidth, containerHeight} = this.state;
 
-    const scale = containerWidth / width;
+    const {width, height, filepath} = storyOutline[this.state.storyOutline]
 
-    const padding = (containerHeight - (height * (containerWidth/width))) /2;
+    const scale = (containerWidth / width) - .05;
 
+    const marginTop = (containerHeight - (height * scale)) /2;
+    const marginLeft = (containerWidth - (width * scale)) /2;
 
     return <>
-    <div className="journalist-do-wrapper" ref={this.dragCanvas} style={{paddingTop: padding}}>
-      <img className="story-outline" src={filepath} style={{ width, transform: `scale(${scale}`}}/>
-      <div style={{transform: `scale(${scale}`, transformOrigin: "0 0", width, height, position: 'relative'}}>
+    <div className="journalist-do-wrapper" ref={this.dragCanvas}>
+      <Radio style={{position: 'absolute', zIndex: 1000, right: '12%', marginTop: '8%'}} variant="bubble" 
+        value={this.state.storyOutline}
+        onChange={(e) => this.setState({storyOutline: e})}
+        options={[
+          {name:'a', value:'0'},
+          {name:'b', value:'1'}
+        ]} />
+      {/* <img className="story-outline" src={filepath} style={{ width, transform: `scale(${scale}`}}/> */}
+      {this.state.render && <div style={{marginTop, marginLeft, transform: `scale(${scale}`, transformOrigin: "0 0", width, height, position: 'relative', backgroundImage: `url(${filepath})`}}>
         {containerWidth && Object.entries(storyElements).map(([storyId, ele]) => {
           const {type, ...data} = ele;
           return <StoryElement {...storyData[ele.type]} 
@@ -51,7 +77,7 @@ class JournalistDo extends Component {
             scale={scale}
             dims={{containerWidth, containerHeight}}/>
         })}
-      </div>
+      </div>}
     </div>
     </>
   }
