@@ -971,7 +971,7 @@ export const deletePublicLink = createAction(
 const NAVIGATE_TO_NEW_CARD = "metabase/dashboard/NAVIGATE_TO_NEW_CARD";
 export const navigateToNewCardFromDashboard = createThunkAction(
   NAVIGATE_TO_NEW_CARD,
-  ({ nextCard, previousCard, dashcard }) => (dispatch, getState) => {
+  ({ nextCard, previousCard, dashcard, embed }) => (dispatch, getState) => {
     const metadata = getMetadata(getState());
     const { dashboardId, dashboards, parameterValues } = getState().dashboard;
     const dashboard = dashboards[dashboardId];
@@ -1003,6 +1003,11 @@ export const navigateToNewCardFromDashboard = createThunkAction(
     const url = question.isObjectDetail()
       ? Urls.serializedQuestion(question.card())
       : question.getUrlWithParameters(parametersMappedToCard, parameterValues);
+
+    if(embed){
+      dispatch(push({pathname:"/role/detective/do", query: {embed: url}}))
+      return
+    }
 
     open(url, {
       blankOnMetaOrCtrlKey: true,

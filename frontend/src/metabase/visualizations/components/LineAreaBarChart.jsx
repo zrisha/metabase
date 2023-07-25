@@ -266,6 +266,7 @@ export default class LineAreaBarChart extends Component {
   getLegendSettings() {
     const {
       card,
+      noTitleSelect,
       series,
       settings,
       showTitle,
@@ -283,7 +284,7 @@ export default class LineAreaBarChart extends Component {
     const cardIds = new Set(rawSeries.map(s => s.card.id));
     const hasTitle = showTitle && settings["card.title"];
     const hasBreakout = card._breakoutColumn != null;
-    const canSelectTitle = cardIds.size === 1 && onChangeCardAndRun;
+    const canSelectTitle = noTitleSelect ? false : cardIds.size === 1 && onChangeCardAndRun;
 
     const hasMultipleSeries = series.length > 1;
     const canChangeSeries = onAddSeries || onEditSeries || onRemoveSeries;

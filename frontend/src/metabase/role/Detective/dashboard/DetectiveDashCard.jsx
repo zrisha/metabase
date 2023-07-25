@@ -280,6 +280,7 @@ export default class DashCard extends Component {
                     nextCard,
                     previousCard,
                     dashcard,
+                    embed:true
                   });
                 }
               : null

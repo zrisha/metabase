@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {connect} from "react-redux";
 import { getUser } from "metabase/selectors/user";
+import fitViewport from "metabase/hoc/FitViewPort";
 import "./Detective.css";
 import _ from "underscore";
 import { getFavoritesGrp, getFilters, getNotes } from "../actions";
@@ -10,7 +11,11 @@ import Dashboards from "metabase/entities/dashboards";
 import DashboardApp from "metabase/role/Detective/dashboard/DetectiveDashboardApp";
 
 
-@withToast
+const Iframe =   fitViewport((props) => {
+    return <iframe style={{height: "99%", width: "100%", border: "none"}} src={props.src}></iframe>
+})
+
+@withToast 
 class DetectiveDo extends Component {
     constructor() {
         super();
@@ -34,9 +39,14 @@ class DetectiveDo extends Component {
     }
 
     render(){
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.has('embed')){
+            return <Iframe src={urlParams.get('embed')} />
+        }else{
         return <>
             {this.dashboard && <DashboardApp location = {this.props.location} dashboardId ={this.dashboard.id}/>}
         </>
+        }
     }
 
 }

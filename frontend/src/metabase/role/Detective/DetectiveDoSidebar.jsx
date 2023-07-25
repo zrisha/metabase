@@ -11,10 +11,10 @@ import { deleteFilter, loadFilter, deleteNote, addNote, updateNote } from "../ac
 const ModeToggle = (props) => {
   const OPTIONS = [
     { name: "Tasks", value: "tasks" },
-    { name: "Saved", value: "saved" },
+    { name: "Filters", value: "filters" },
   ];
 
-  const onChange = () => props.mode == 'tasks' ? props.setMode('saved') : props.setMode('tasks');
+  const onChange = () => props.mode == 'tasks' ? props.setMode('filters') : props.setMode('tasks');
 
   return (
     <Radio
