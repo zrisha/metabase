@@ -240,6 +240,7 @@ export default class Dashboard extends Component {
     const {
       addParameter,
       dashboard,
+      isAdmin,
       isEditing,
       isEditingParameter,
       isFullscreen,
@@ -297,7 +298,7 @@ export default class Dashboard extends Component {
               isFullscreen={isFullscreen}
               isNightMode={shouldRenderAsNightMode}
             >
-              <DashboardHeader
+              {isAdmin && <DashboardHeader
                 {...this.props}
                 onEditingChange={this.setEditing}
                 setDashboardAttribute={this.setDashboardAttribute}
@@ -306,7 +307,7 @@ export default class Dashboard extends Component {
                 onSharingClick={this.onSharingClick}
                 onToggleAddQuestionSidebar={this.onToggleAddQuestionSidebar}
                 showAddQuestionSidebar={showAddQuestionSidebar}
-              />
+              />}
 
               {shouldRenderParametersWidgetInEditMode && (
                 <ParametersWidgetContainer isEditing={isEditing}>
