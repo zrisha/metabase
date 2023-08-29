@@ -63,6 +63,10 @@ class RoleLayout extends React.Component{
 
   }
 
+  componentWillUnmount(){
+    this.socket.disconnect();
+  }
+
   render(){
     const widths = this.roleWidths[this.role] ? this.roleWidths[this.role] : {left: '35%', right: '65%'};
 
