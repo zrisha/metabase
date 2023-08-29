@@ -89,6 +89,7 @@ import ArchiveApp from "metabase/home/containers/ArchiveApp";
 import SearchApp from "metabase/home/containers/SearchApp";
 import { trackPageView } from "metabase/lib/analytics";
 import roleroutes from "./role/roleroutes";
+import roleroutesmisc from "./role/roleroutesmisc";
 
 const MetabaseIsSetup = UserAuthWrapper({
   predicate: authData => !authData.hasSetupToken,
@@ -124,6 +125,15 @@ const UserIsNotAuthenticated = UserAuthWrapper({
   redirectAction: routerActions.replace,
 });
 
+const UserNameUnset = UserAuthWrapper({
+  predicate: currentUser => currentUser && currentUser.first_name.length > 1,
+  failureRedirectPath: "/role-misc/name",
+  authSelector: state => state.currentUser,
+  allowRedirectBack: false,
+  wrapperDisplayName: "UserNameUnset",
+  redirectAction: routerActions.replace,
+});
+
 const IsAuthenticated = MetabaseIsSetup(
   UserIsAuthenticated(({ children }) => children),
 );
@@ -134,6 +144,10 @@ const IsAdmin = MetabaseIsSetup(
 const IsNotAuthenticated = MetabaseIsSetup(
   UserIsNotAuthenticated(({ children }) => children),
 );
+
+const IsNameUnset = MetabaseIsSetup(
+  UserIsAuthenticated(UserNameUnset(({ children }) => children)),
+)
 
 export const getRoutes = store => (
   <Route title={t`Metabase`} component={App}>
@@ -183,6 +197,7 @@ export const getRoutes = store => (
 
       {/* MAIN */}
       <Route component={IsAuthenticated}>
+        <Route component={IsNameUnset}>
         {/* The global all hands rotues, things in here are for all the folks */}
         <Route
           path="/"
@@ -258,6 +273,7 @@ export const getRoutes = store => (
         {/* INDIVIDUAL DASHBOARDS */}
 
         <Route path="/auto/dashboard/*" component={AutomaticDashboardApp} />
+        </Route>
       </Route>
 
       <Route path="/collections">
@@ -338,6 +354,10 @@ export const getRoutes = store => (
 
       {/* ACCOUNT */}
       {getAccountRoutes(store, IsAuthenticated)}
+
+      <Route path="/role-misc">
+        {roleroutesmisc}
+      </Route>
 
       {/* ADMIN */}
       {getAdminRoutes(store, IsAdmin)}

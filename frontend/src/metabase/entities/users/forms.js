@@ -181,4 +181,7 @@ export default {
       },
     ],
   },
+  name: {
+    fields: NAME_FIELDS
+  }
 };
