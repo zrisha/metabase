@@ -14,7 +14,7 @@ import Link from "metabase/components/Link";
 import LogoIcon from "metabase/components/LogoIcon";
 import Modal from "metabase/components/Modal";
 
-import ProfileLink from "metabase/nav/components/ProfileLink";
+import ProfileLink from "./ProfileLink";
 
 import CollectionCreate from "metabase/collections/containers/CollectionCreate";
 import CreateDashboardModal from "metabase/components/CreateDashboardModal";
@@ -92,7 +92,7 @@ export default class Navbar extends Component {
         <ul className="wrapper flex align-center">
           <li>
             <Link
-              to="/"
+              to="/role/home"
               data-metabase-event={"Navbar;Logo"}
               className="NavItem cursor-pointer flex align-center"
             >
@@ -123,7 +123,7 @@ export default class Navbar extends Component {
       >
         <Flex style={{ minWidth: 64 }} align="center" justify="center">
           <Link
-            to="/"
+            to="/role/home"
             data-metabase-event={"Navbar;Logo"}
             className="relative cursor-pointer z2 rounded flex justify-center transition-background"
             p={1}
