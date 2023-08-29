@@ -1,0 +1,12 @@
+.role-card div{
+  height: 45px;
+  width: 45px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collab-header{
+  margin-left: 5%;
+  margin-top: 2rem;
+}

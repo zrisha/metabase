@@ -14,9 +14,11 @@ import DetectiveDoSidebar from "./Detective/DetectiveDoSidebar";
 import JournalistDo from "./Journalist/JournalistDo.jsx";
 import JournalistDoSidebar from "./Journalist/JournalistDoSidebar.jsx";
 import RoleLayout from "./RoleLayout";
+import RoleHome from "./RoleHome"
 
 
 export default <>
+      <Route path="home" component={RoleHome}/>
       <Route component={RoleLayout}>
         <Route path="artist/do" components={{main: ArtistDo, sidebar: ArtistDoSidebar}} />
         <Route path="detective/do" components={{main: DetectiveDo, sidebar: DetectiveDoSidebar}} />
