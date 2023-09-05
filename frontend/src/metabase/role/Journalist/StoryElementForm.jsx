@@ -11,6 +11,7 @@ import { formDomOnlyProps } from "metabase/lib/redux";
 import Button from "metabase/core/components/Button";
 import Card from 'metabase/components/Card';
 import CollapseSection from "metabase/components/CollapseSection";
+import Confirm from "metabase/components/Confirm";
 
 const handleSubmit = ({values, props, exists}) => {
   if(exists){
@@ -18,6 +19,18 @@ const handleSubmit = ({values, props, exists}) => {
   }else{
     props.addStoryElement({data: values, type: props.selectedElement.type, group_id: props.group});
   }
+}
+
+const DeleteButton = ({onDelete}) => {
+  return (
+    <Confirm
+      action={onDelete}
+      title={`Permanently Delete Story Element?`}
+      content={<h4>You will not be able to recover the story element!</h4>}
+    >
+      <Button type="button" warning className="mx1" >Delete</Button>
+    </Confirm>
+  )
 }
 
 function StoryElementForm(props) {
@@ -92,7 +105,7 @@ function StoryElementForm(props) {
           <div className="pb2">
             {exists ? <FormSubmit >Update Element</FormSubmit> : <FormSubmit >Add Element</FormSubmit>}
             {<Button type="button" className="mx1" onClick = {onExit} >Cancel</Button>}
-            {exists && <Button type="button" warning className="mx1" onClick = {onDelete} >Delete</Button>}
+            {exists && <DeleteButton onDelete = {onDelete} >Delete</DeleteButton>}
           </div>
         </Form>
     </Card>
