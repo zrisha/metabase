@@ -25,10 +25,7 @@ export default function Notes(props) {
   const addNote = () => {
     props.addNote({data: {value: initialNote}, groupId: props.groupId})
   }
-  const deleteNote = (e, noteId) => {
-    e.stopPropagation();
-    props.deleteNote({noteId});
-  }
+
   const onEditorChange = (value, editor, autoSave, note) => {
     if(autoSave.current){
       clearTimeout(autoSave.current)
@@ -50,7 +47,7 @@ export default function Notes(props) {
       <NoteSelector
         addNote={addNote}
         saving={isSaving.current}
-        deleteNote={deleteNote}
+        deleteNote={props.deleteNote}
         setNote={setNote}
         notes={props.notes} />
     )

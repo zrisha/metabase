@@ -4,17 +4,29 @@ import { Absolute } from "metabase/components/Position";
 import Icon from "metabase/components/Icon";
 import LoadingSpinner from "metabase/components/LoadingSpinner";
 import Button from "metabase/core/components/Button";
+import Confirm from "metabase/components/Confirm";
 
 
-const RemoveButton = ({deleteNote, noteId}) => (
-  <a
-    className="text-dark-hover drag-disabled absolute text-medium"
-    data-metabase-event="Detective;Remove Note"
-    style={{right: "10px"}}
-  >
-    <Icon name="close" size={16} onClick={(e) => deleteNote(e, noteId)} />
-  </a>
-);
+const RemoveButton = ({deleteNote, noteId, noteHeader}) => {
+  return (
+    <span onClick={(e) => e.stopPropagation()}>
+    <Confirm
+      action={() => deleteNote({noteId})}
+      title={`Permanently Delete Note?`}
+      content={<div><h4>You will not be able to recover the note!</h4><p><strong>Note preview:</strong> {noteHeader} (. . .)</p></div>}
+    >
+        <span
+          className="text-dark-hover drag-disabled absolute text-medium"
+          data-metabase-event="Detective;Remove Note"
+          style={{right: "10px"}}
+          // onClick={e => onClick(e)}
+        >
+          <Icon name="close" size={16} />
+        </span>
+    </Confirm>
+    </span>
+  )
+};
 
 const getHeader = (value) => {
   var div = document.createElement("div");
@@ -41,7 +53,7 @@ const NoteSelector = (props) => {
             onClick={() => props.setNote(note)}
             className='border-bottom p1 text-ellipsis text-nowrap'>
               <span className='text-brand-hover cursor-pointer'>{getHeader(note.data.value)}</span>
-            <RemoveButton deleteNote = {props.deleteNote} noteId={note.id} />
+            <RemoveButton noteHeader={getHeader(note.data.value).substring(0,150)} deleteNote = {props.deleteNote} noteId={note.id} />
           </li>
         ))}
       </ul> : <div style={{height: "100%"}}className='flex align-center justify-center'><LoadingSpinner /> </div>}
