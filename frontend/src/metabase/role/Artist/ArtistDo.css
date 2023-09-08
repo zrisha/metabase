@@ -5,3 +5,9 @@
     padding-top: 2.5%;
     justify-content: center;
 }
+
+.canvas-container textarea{
+    overflow: hidden;
+    position: relative;
+    left: 0 !important;
+}
