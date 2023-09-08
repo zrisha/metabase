@@ -10281,6 +10281,53 @@ databaseChangeLog:
               name: group_id
           indexName: idx_note_group_id
           tableName: note
+  - changeSet:
+      id: v42.41-008
+      author: zrisha
+      comment: Add table for Art
+      changes:             
+      - createTable:
+          columns:
+          - column:
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+              name: id
+              type: int 
+          - column:
+              constraints:
+                nullable: false
+              name: created_at
+              type: DATETIME
+          - column:
+              constraints:
+                nullable: false
+              name: updated_at
+              type: DATETIME
+          - column:
+              constraints:
+                deferrable: false
+                foreignKeyName: fk_art_group_id
+                initiallyDeferred: false
+                nullable: false
+                references: permissions_group(id)
+                deleteCascade: true
+              name: group_id
+              type: int
+          - column:
+              name: data
+              type: text
+              remarks: "JSON format of art data"
+              constraints:
+                nullable: false
+          tableName: art
+      - createIndex:
+          columns:
+          - column:
+              name: group_id
+          indexName: idx_art_group_id
+          tableName: art
 
 
 # >>>>>>>>>> DO NOT ADD NEW MIGRATIONS BELOW THIS LINE! ADD THEM ABOVE <<<<<<<<<<

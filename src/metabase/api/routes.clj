@@ -3,6 +3,7 @@
             [compojure.route :as route]
             [metabase.api.activity :as activity]
             [metabase.api.alert :as alert]
+            [metabase.api.art :as art]
             [metabase.api.automagic-dashboards :as magic]
             [metabase.api.card :as card]
             [metabase.api.card-favorite-grp :as card-favorite-grp]
@@ -67,6 +68,7 @@
   ee-routes
   (context "/activity"             [] (+auth activity/routes))
   (context "/alert"                [] (+auth alert/routes))
+  (context "/art"                  [] (+auth art/routes))
   (context "/automagic-dashboards" [] (+auth magic/routes))
   (context "/card"                 [] (+auth card/routes))
   (context "/card-favorite-grp"    [] (+auth card-favorite-grp/routes))
