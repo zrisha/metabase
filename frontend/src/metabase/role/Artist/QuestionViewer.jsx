@@ -22,7 +22,7 @@ export default class QuestionApp extends React.Component {
         this.setState({selectedQuestion: id})
     }
     render() {
-        return <div style={{height: "100%"}}>
+        return <div className="QuestionViewer">
           <EntityListLoader entityType="questions">
             {({ list }) => {
                 const cards = list.filter(x=> this.props.favoriteCards.includes(x.id))

@@ -1,0 +1,19 @@
+.QuestionViewer{
+    height: 100%;
+    padding-top: 3%;
+}
+
+.AdminSelect{
+    width:100%;
+}
+
+.AdminSelect-content {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.art-list li{
+    overflow: hidden;
+    padding-right: 35px;
+}

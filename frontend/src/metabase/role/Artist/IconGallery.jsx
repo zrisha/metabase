@@ -15,12 +15,11 @@ function IconGallery(props) {
     };
 
     return <>
-    <h3 style={{textAlign: 'center', paddingBottom:'5px'}}>Icon Selector</h3>
     <Card style={{width: "100%", height: "95%", textAlign: "center", overflowX: 'scroll', backgroundColor: "#EDF2F5"}}>
         <Flex flexWrap="wrap">
-          {props.artist.drawingTool && props.artist.drawingTool.options.stamps.Stamps.map(k => {
+          {window.drawingTool && window.drawingTool.options.stamps.Stamps.map(k => {
             return (
-              <Box key={k} width={1/4} p={1}  style={{ position: "relative"}}>
+              <Box key={k} width={1/5} p={1}  style={{ position: "relative"}}>
                 <img src={k} className="icon-in-gallery bg-light"
                   onClick={() => onClick(k)}
                 />

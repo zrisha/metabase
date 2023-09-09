@@ -21,10 +21,18 @@ import {
   ADD_NOTE,
   UPDATE_NOTE,
   DELETE_NOTE,
-  GET_NOTES
+  GET_NOTES,
+  ADD_ART,
+  UPDATE_ART,
+  DELETE_ART,
+  GET_ARTS,
+  SELECT_ART,
+  UPDATE_SAVE_STATUS
 } from "./actions";
 
-const DEFAULT_ARTIST = { drawingTool: false };
+window.Metabase.data = {};
+
+const DEFAULT_ARTIST = { drawingTool: false, arts: false, selectedArt: null, unsaved: false };
 const DEFAULT_DETECTIVE = { savedFilters: [], notes: []};
 const DEFAULT_JOURNALIST = { storyElements: {}, selectedElement: null};
 const DEFAULT_ROOM = {artist: {}, detective: {}, journalist: {}};
@@ -47,6 +55,13 @@ const artist = handleActions(
         drawingTool: window.drawingTool ? window.drawingTool : false
       }),
     },
+    [ADD_ART]: (state, { payload }) => ({...state, arts: [...state.arts, payload.newArt ], selectedArt: {id: payload.newArt.id}}),
+    [DELETE_ART]: (state, { payload }) => ({...state, arts: state.arts.filter(art => art.id != payload.artId)}),
+    [UPDATE_ART]: (state, { payload }) => ({...state, arts: state.arts.map(art => art.id == payload.id ? payload : art)}),
+    [GET_ARTS]: (state, { payload }) => ({...state,  arts: payload.arts, selectedArt: payload.selectedArt ? payload.selectedArt : null}),
+    [SELECT_ART]: (state, {payload}) => ({...state, selectedArt: payload.selectedArt}),
+    [UPDATE_SAVE_STATUS]: (state, {payload}) => ({...state, unsaved: payload.unsaved}),
+
   },
   DEFAULT_ARTIST,
 );

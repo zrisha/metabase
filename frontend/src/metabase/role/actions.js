@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { createAction } from "metabase/lib/redux";
-import { FavoriteApi, FilterApi, RoleApi, StoryApi, NoteApi } from "./services";
+import { FavoriteApi, FilterApi, RoleApi, StoryApi, NoteApi, ArtApi } from "./services";
 import _ from "underscore";
 
 
@@ -10,6 +10,14 @@ import _ from "underscore";
 export const RENDER_DRAWING_TOOL = "metabase/role/RENDER_DRAWING_TOOL";
 export const renderDrawingTool = createAction(RENDER_DRAWING_TOOL);
 export const GET_ARTIST_DATA = "metabase/role/GET_ARTIST_DATA";
+export const SELECT_ART = "metabase/role/SELECT_ART";
+export const selectArt = createAction(SELECT_ART);
+export const UPDATE_SAVE_STATUS = "metabase/role/UPDATE_SAVE_STATUS";
+export const setSaveStatus = createAction(UPDATE_SAVE_STATUS);
+export const ADD_ART = "metabase/role/ADD_ART";
+export const GET_ARTS = "metabase/role/GET_ARTS";
+export const UPDATE_ART = "metabase/role/UPDATE_ART";
+export const DELETE_ART = "metabase/role/DELETE_ART";
 
 /* Detective */
 export const GET_DETECTIVE_DATA = "metabase/role/GET_DETECTIVE_DATA";
@@ -103,7 +111,6 @@ export const saveFilter = createAction(
   SAVE_FILTER,
   async ({ groupId, filter, dashboardId }) => {
     try{
-      console.log({groupId, filter, dashboardId})
       const res = await FilterApi.saveFilter({groupId, filter, dashboardId});
       return {filter: res.filter, id: res.id}
     }catch(error){
@@ -123,6 +130,8 @@ export const deleteFilter = createAction(
     }
   },
 );
+
+/* Note */
 
 export const addNote = createAction(
   ADD_NOTE,
@@ -173,6 +182,78 @@ export const getNotes = createAction(
       try{
         const res = await NoteApi.getNotes({groupId});
         return { notes: res };
+      }catch(error){
+        console.log(error);
+        return {error}
+      }
+    }else{
+      return { error: "no group id"};
+    }
+  },
+);
+
+
+/* Art */
+
+export const addArt = createAction(
+  ADD_ART,
+  async ({data, groupId}) => {
+    try{
+      const res = await ArtApi.addArt({data, group_id: groupId});
+      return {newArt: {...res, data: JSON.stringify(res.data)}}
+    }catch(error){
+      console.log(error);
+      return {error}
+    }
+  }
+);
+
+export const updateArt = createAction(
+  UPDATE_ART,
+  async ({artId, data}) => {
+    if(artId){
+      try{
+        const res = await ArtApi.updateArt({artId, data});
+        return {...res, data: JSON.stringify(res.data)} 
+      }catch(error){
+        console.log(error);
+        return {error}
+      }
+    } else {
+      return {error: "no art  id"};
+    }
+  }
+)
+
+export const deleteArt = createAction(
+  DELETE_ART,
+  async ({artId}) => {
+    if(artId){
+      const res = await ArtApi.deleteArt({artId});
+      return {artId}
+    } else {
+      return {error: "no art id"};
+    }
+  }
+)
+
+
+export const getArts = createAction(
+  GET_ARTS,
+  async ({ groupId, updateCurrent }) => {
+    if(groupId){
+      try{
+        const res = await ArtApi.getArts({groupId});
+        const arts = res.map(x => ({...x, data: JSON.stringify(x.data)}));
+        const latestArt = arts.reduce((a, b) => {
+          return new Date(a.updated_at) > new Date(b.updated_at) ? a : b;
+        });
+
+        const payload = { arts, latestArt }
+        if(updateCurrent){
+          payload.selectedArt = {id: latestArt.id}
+        }
+        return payload;
       }catch(error){
         console.log(error);
         return {error}
@@ -265,7 +346,6 @@ export const getStoryElements = createAction(
   async ({ groupId }) => {
     if(groupId){
       const res = await StoryApi.getStoryElements({groupId});
-      console.log(res);
       const storyElements = formatStoryElement(res);
       return { storyElements };
     }else{

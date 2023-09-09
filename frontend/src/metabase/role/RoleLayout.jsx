@@ -32,6 +32,7 @@ class RoleLayout extends React.Component{
     this.roleWidths = {
       detective: {left: '25%', right: '75%'},
       journalist: {left: '30%', right: '70%'},
+      artist: {left: '30%', right: '70%'},
     }
   }
 
@@ -68,7 +69,7 @@ class RoleLayout extends React.Component{
   }
 
   render(){
-    const widths = this.roleWidths[this.role] ? this.roleWidths[this.role] : {left: '35%', right: '65%'};
+    const widths = this.roleWidths[this.role] ? this.roleWidths[this.role] : {left: '25%', right: '75%'};
 
     if(this.state.socketRendered == false || this.props.room.driver == undefined){
       return <GenericError details="Failure to connect to the websocket server" />
