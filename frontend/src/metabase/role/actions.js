@@ -2,6 +2,7 @@
 import { createAction } from "metabase/lib/redux";
 import { FavoriteApi, FilterApi, RoleApi, StoryApi, NoteApi, ArtApi } from "./services";
 import _ from "underscore";
+import { createThunkAction } from "metabase/lib/redux";
 
 
 // action constants
@@ -18,6 +19,8 @@ export const ADD_ART = "metabase/role/ADD_ART";
 export const GET_ARTS = "metabase/role/GET_ARTS";
 export const UPDATE_ART = "metabase/role/UPDATE_ART";
 export const DELETE_ART = "metabase/role/DELETE_ART";
+export const ADD_ART_BLOB = "metabase/role/ADD_ART_BLOB";
+export const UPDATE_ART_BLOB = "metabase/role/UPDATE_ART_BLOB";
 
 /* Detective */
 export const GET_DETECTIVE_DATA = "metabase/role/GET_DETECTIVE_DATA";
@@ -67,13 +70,13 @@ export const getFavoritesGrp = createAction(
     },
   );
 
-export const favoriteGrp = createAction(
-  FAVORITE_GRP,
-  async ({ cardId, groupId }) => {
-    const res = await FavoriteApi.favoriteGrp({cardId, group_id: groupId});
-    return { cardId, res };
-  },
-);
+  export const favoriteGrp = createAction(
+    FAVORITE_GRP,
+    async ({ cardId, groupId }) => {
+      const res = await FavoriteApi.favoriteGrp({cardId, group_id: groupId});
+      return { cardId, res };
+    },
+  );
 
 export const unfavoriteGrp = createAction(
   UNFAVORITE_GRP,
@@ -195,11 +198,12 @@ export const getNotes = createAction(
 
 /* Art */
 
-export const addArt = createAction(
+export const addArt = createThunkAction(
   ADD_ART,
-  async ({data, groupId}) => {
+  ({data, groupId}) => async (dispatch, getState) => {
     try{
       const res = await ArtApi.addArt({data, group_id: groupId});
+      dispatch(addArtBlob({artId: res.id}))
       return {newArt: {...res, data: JSON.stringify(res.data)}}
     }catch(error){
       console.log(error);
@@ -208,12 +212,13 @@ export const addArt = createAction(
   }
 );
 
-export const updateArt = createAction(
+export const updateArt = createThunkAction(
   UPDATE_ART,
-  async ({artId, data}) => {
+  ({artId, data, blob}) => async (dispatch, getState) => {
     if(artId){
       try{
         const res = await ArtApi.updateArt({artId, data});
+        dispatch(updateArtBlob({artId, blob}));
         return {...res, data: JSON.stringify(res.data)} 
       }catch(error){
         console.log(error);
@@ -262,6 +267,32 @@ export const getArts = createAction(
       return { error: "no group id"};
     }
   },
+);
+
+export const addArtBlob = createAction(
+  ADD_ART_BLOB,
+  async ({artId}) => {
+    try{
+      const res = await ArtApi.addBlob({artId, blob: ''})
+      return {artId}
+    }catch(error){
+      console.log(error);
+      return {error}
+    }
+  }
+);
+
+export const updateArtBlob = createAction(
+  UPDATE_ART_BLOB,
+  async ({artId, blob}) => {
+    try{
+      const res = await ArtApi.updateBlob({artId, blob})
+      return {artId}
+    }catch(error){
+      console.log(error);
+      return {error}
+    }
+  }
 );
 
 /* Misc */

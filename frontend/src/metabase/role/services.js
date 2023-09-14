@@ -25,6 +25,15 @@ export const NoteApi = {
   deleteNote: DELETE("/api/note/:noteId")
 }
 
+export const ArtApi = {
+  addArt: POST("/api/art"),
+  updateArt: PUT("/api/art/:artId"),
+  getArts: GET("/api/art/:groupId"),
+  deleteArt: DELETE("/api/art/:artId"),
+  addBlob: POST("/api/art/blob/:artId"),
+  updateBlob: PUT("/api/art/blob/:artId"),
+}
+
 export const StoryApi = {
   addStoryElement: POST("/api/story-element"),
   updateStoryElement: PUT("/api/story-element/:storyId"),

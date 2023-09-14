@@ -91,6 +91,7 @@ class ArtistDo extends Component {
       const res = await this.props.updateArt({
         data: window.drawingTool.save(),
         artId: this.props.artist.selectedArt.id,
+        blob: window.drawingTool.$canvas[0].toDataURL()
       });
       if (!res.payload.error) {
         this.props.triggerToast(
