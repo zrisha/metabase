@@ -3,7 +3,8 @@ import { GET, PUT, POST, DELETE } from "metabase/lib/api";
 export const FavoriteApi = {
     favoriteGrp: POST("/api/card-favorite-grp/:cardId"),
     unfavoriteGrp: DELETE("/api/card-favorite-grp/:cardId"),
-    getFavoritesGrp: GET("/api/card-favorite-grp/:groupId")
+    getFavoritesGrp: GET("/api/card-favorite-grp/:groupId"),
+    addBlob: POST("/api/card-favorite-grp/blob/:cardId")
   };
 
 export const RoleApi = {

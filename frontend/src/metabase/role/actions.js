@@ -3,6 +3,7 @@ import { createAction } from "metabase/lib/redux";
 import { FavoriteApi, FilterApi, RoleApi, StoryApi, NoteApi, ArtApi } from "./services";
 import _ from "underscore";
 import { createThunkAction } from "metabase/lib/redux";
+import { toPng } from 'html-to-image';
 
 
 // action constants
@@ -21,6 +22,7 @@ export const UPDATE_ART = "metabase/role/UPDATE_ART";
 export const DELETE_ART = "metabase/role/DELETE_ART";
 export const ADD_ART_BLOB = "metabase/role/ADD_ART_BLOB";
 export const UPDATE_ART_BLOB = "metabase/role/UPDATE_ART_BLOB";
+export const ADD_VIZ_BLOB = "metabase/role/ADD_ART_BLOB";
 
 /* Detective */
 export const GET_DETECTIVE_DATA = "metabase/role/GET_DETECTIVE_DATA";
@@ -70,13 +72,19 @@ export const getFavoritesGrp = createAction(
     },
   );
 
-  export const favoriteGrp = createAction(
-    FAVORITE_GRP,
-    async ({ cardId, groupId }) => {
+export const favoriteGrp = createThunkAction(
+  FAVORITE_GRP,
+  ({ cardId, groupId, vizNode }) => async (dispatch, getState) => {
+    try{
       const res = await FavoriteApi.favoriteGrp({cardId, group_id: groupId});
-      return { cardId, res };
-    },
-  );
+      dispatch(addVizBlob({cardId, vizNode}));
+      return { cardId, res }; 
+    }catch(error){
+      console.log(error);
+      return {error}
+    }
+  },
+);
 
 export const unfavoriteGrp = createAction(
   UNFAVORITE_GRP,
@@ -84,6 +92,20 @@ export const unfavoriteGrp = createAction(
     const res = await FavoriteApi.unfavoriteGrp({cardId, group_id: groupId});
     return { cardId, res };
   },
+);
+
+export const addVizBlob = createAction(
+  ADD_VIZ_BLOB,
+  async ({cardId, vizNode}) => {
+    try{
+      const blob = await toPng(vizNode);
+      const res = await FavoriteApi.addBlob({cardId, blob})
+      return {cardId}
+    }catch(error){
+      console.log(error);
+      return {error}
+    }
+  }
 );
 
 export const saveDetectiveData = createAction(

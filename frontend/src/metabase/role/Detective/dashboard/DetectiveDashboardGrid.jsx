@@ -267,7 +267,7 @@ export default class DashboardGrid extends Component {
     return (
       <DashCard
         favorited={this.props.favoriteCards ? this.props.favoriteCards.includes(dc.card_id) : false}
-        favoriteGrp={() => this.props.favoriteGrp({cardId: dc.card_id, groupId: this.props.groupId})}
+        favoriteGrp={{cardId: dc.card_id, groupId: this.props.groupId, action: this.props.favoriteGrp}}
         unfavoriteGrp={() => this.props.unfavoriteGrp({cardId: dc.card_id, groupId: this.props.groupId})}
         dashcard={dc}
         headerIcon={this.getDashboardCardIcon(dc)}

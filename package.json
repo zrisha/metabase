@@ -38,6 +38,7 @@
     "eslint-plugin-no-only-tests": "^2.4.0",
     "grid-styled": "4.1.0",
     "history": "3",
+    "html-to-image": "^1.11.11",
     "humanize-plus": "^1.8.1",
     "icepick": "2.3.0",
     "iframe-resizer": "^4.3.2",

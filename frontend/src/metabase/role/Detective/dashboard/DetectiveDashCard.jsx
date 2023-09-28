@@ -65,6 +65,7 @@ export default class DashCard extends Component {
     this.state = {
       isPreviewingCard: false,
     };
+    this.cardRef = React.createRef();
   }
 
   async componentDidMount() {
@@ -94,12 +95,17 @@ export default class DashCard extends Component {
     e.stopPropagation();
   };
 
+  favoriteGrp = () => {
+    const {cardId, groupId, action} = this.props.favoriteGrp;
+    const vizNode = this.cardRef.current.querySelector('.CardVisualization');
+    action({cardId, groupId, vizNode});
+  }
+
   render() {
     const {
       dashcard,
       dashcardData,
       favorited,
-      favoriteGrp,
       unfavoriteGrp,
       slowCards,
       isEditing,
@@ -173,6 +179,7 @@ export default class DashCard extends Component {
     
     return (
       <div
+        ref={this.cardRef}
         className={cx(
           "Card bordered rounded flex flex-column hover-parent hover--visibility",
           {
@@ -191,7 +198,7 @@ export default class DashCard extends Component {
             <DashCardActionButtons
               favorited={favorited}
               isEditing={isEditing}
-              favoriteGrp={favoriteGrp}
+              favoriteGrp={this.favoriteGrp}
               unfavoriteGrp={unfavoriteGrp}
               series={series}
               hasError={!!errorMessage}
