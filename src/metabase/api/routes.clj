@@ -11,6 +11,7 @@
             [metabase.api.dashboard :as dashboard]
             [metabase.api.database :as database]
             [metabase.api.dataset :as dataset]
+            [metabase.api.doc :as doc]
             [metabase.api.email :as email]
             [metabase.api.embed :as embed]
             [metabase.api.field :as field]
@@ -76,6 +77,7 @@
   (context "/dashboard"            [] (+auth dashboard/routes))
   (context "/database"             [] (+auth database/routes))
   (context "/dataset"              [] (+auth dataset/routes))
+  (context "/doc"                  [] (+auth doc/routes))
   (context "/email"                [] (+auth email/routes))
   (context "/embed"                [] (+message-only-exceptions embed/routes))
   (context "/field"                [] (+auth field/routes))
