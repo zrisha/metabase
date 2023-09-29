@@ -43,3 +43,7 @@ export const StoryApi = {
   deleteStoryElement: DELETE("/api/story-element/:storyId")
 }
 
+export const HomeApi = {
+  getDocId: GET("/api/doc/:groupId"),
+}
+

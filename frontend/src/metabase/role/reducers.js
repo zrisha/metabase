@@ -27,7 +27,8 @@ import {
   DELETE_ART,
   GET_ARTS,
   SELECT_ART,
-  UPDATE_SAVE_STATUS
+  UPDATE_SAVE_STATUS,
+  GET_DOC_ID
 } from "./actions";
 
 window.Metabase.data = {};
@@ -37,6 +38,7 @@ const DEFAULT_DETECTIVE = { savedFilters: [], notes: []};
 const DEFAULT_JOURNALIST = { storyElements: {}, selectedElement: null};
 const DEFAULT_ROOM = {artist: {}, detective: {}, journalist: {}};
 const DEFAULT_FAVORITES = {cards: []};
+const DEFAULT_HOME = {docId: null};
 
 
 const favorites = handleActions(
@@ -116,10 +118,18 @@ const room = handleActions(
   DEFAULT_ROOM,
 );
 
+const home = handleActions(
+  {
+    [GET_DOC_ID]: (state, { payload }) => ({...state, docId: payload.id}),
+  },
+  DEFAULT_HOME
+);
+
 export default combineReducers({
   artist,
   detective,
   journalist,
   room,
   favorites,
+  home
 });

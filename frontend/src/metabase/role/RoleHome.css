@@ -6,7 +6,45 @@
   justify-content: center;
 }
 
-.collab-header{
+.work-header{
   margin-left: 5%;
   margin-top: 2rem;
 }
+
+.docs-titlebar-buttons{
+  visibility: hidden;
+}
+
+.role-doc .blocker{
+  width: 476px;
+  height: 58px;
+  margin-top: 2px;
+  background-color: #f9fbfd;
+  right: 0;
+  position: absolute;
+}
+
+@media (max-width: 801px) {
+
+  .role-doc .blocker{
+    width: 364px;
+  }
+}
+
+@media (max-width: 671px) {
+
+  .role-doc .blocker{
+    width: 348px;
+  }
+}
+
+
+
+.role-doc .relative{
+  width: 90%;
+}
+
+.role-doc iframe{
+  width: 100%;
+}
+

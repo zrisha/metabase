@@ -1,11 +1,14 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Navbar from "./Navbar";
 import { Box, Flex } from "grid-styled";
 import Card from "metabase/components/Card";
 import Icon from "metabase/components/Icon";
 import Link from "metabase/components/Link";
 import "./RoleHome.css";
+import {connect} from "react-redux";
 import CollapseSection from "metabase/components/CollapseSection";
+import { getDocId} from "./actions";
+import { getUser } from "metabase/selectors/user";
 
 const data = [
   {
@@ -45,6 +48,14 @@ const RoleCard = props => {
 };
 
 function RoleHome(props) {
+
+  const {getDocId} = props
+
+  useEffect(() => {
+    const groupId = props.user.group_ids.find(id => id != 1 && id !=2);
+    getDocId({groupId});
+  }, [getDocId]);
+
   return (
     <>
       <Navbar location={props.location} />
@@ -57,12 +68,24 @@ function RoleHome(props) {
         </Flex>
 
         <CollapseSection
-          header={<h2>Collaborate</h2>}
-          initialState="expanded"
-          headerClass="collab-header"
+          header={<h2>See everyone's work</h2>}
+          initialState="collapsed"
+          headerClass="work-header"
         >
-          <div className="flex justify-center my3">
-            
+          <div className="flex justify-center my3 role-doc align-center">
+            <div className="relative">
+            <div className='blocker'></div>
+            {props.home.docId && <iframe
+              className="bordered"
+              src={`https://docs.google.com/document/d/${props.home.docId}/edit`}
+              frameborder="0"
+              width="90%"
+              height="700"
+              allowfullscreen="true"
+              mozallowfullscreen="true"
+              webkitallowfullscreen="true"
+            ></iframe>}
+            </div>
           </div>
         </CollapseSection>
       </section>
@@ -70,4 +93,14 @@ function RoleHome(props) {
   );
 }
 
-export default RoleHome;
+const mapDispatchToProps = {
+  getDocId
+}
+
+const mapStateToProps = (state, props) => ({
+  home: state.role.home,
+  user: getUser(state)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(RoleHome);
+

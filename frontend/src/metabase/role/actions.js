@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { createAction } from "metabase/lib/redux";
-import { FavoriteApi, FilterApi, RoleApi, StoryApi, NoteApi, ArtApi } from "./services";
+import { FavoriteApi, FilterApi, RoleApi, StoryApi, NoteApi, ArtApi, HomeApi } from "./services";
 import _ from "underscore";
 import { createThunkAction } from "metabase/lib/redux";
 import { toPng } from 'html-to-image';
@@ -49,6 +49,9 @@ export const UPDATE_STORY_ELEMENT = "metabase/role/UPDATE_STORY_ELEMENT";
 export const UPDATE_STORY_ELEMENT_POS = "metabase/role/UPDATE_STORY_ELEMENT_POS";
 export const DELETE_STORY_ELEMENT = "metabase/role/DELETE_STORY_ELEMENT";
 
+/* Home */
+
+export const GET_DOC_ID = "metabase/role/GET_DOC_ID";
 
 /* RRWeb */
 export const JOIN_ROOM = "metabase/role/JOIN_ROOM";
@@ -416,4 +419,19 @@ const formatStoryElement = (res) => {
   }
   return storyElements
 }
+
+/* Home */
+
+export const getDocId = createAction(
+  GET_DOC_ID,
+  async ({groupId}) => {
+    try{
+      const res = await HomeApi.getDocId({groupId})
+      return JSON.parse(res.out);
+    }catch(error){
+      console.log(error);
+      return {error}
+    }
+  }
+);
 
