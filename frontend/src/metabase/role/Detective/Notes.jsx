@@ -31,10 +31,15 @@ export default function Notes(props) {
       clearTimeout(autoSave.current)
     }
 
-    isSaving.current = true; 
+    isSaving.current = true;
+
+
+    var div = document.createElement("div");
+    div.innerHTML = value;
+    var text = div.textContent || div.innerText || "";
 
     autoSave.current = setTimeout(() => {
-      props.updateNote({noteId: note.id, data:{value}})
+      props.updateNote({noteId: note.id, data:{value, text}})
       isSaving.current = false
     }, 2500)
   

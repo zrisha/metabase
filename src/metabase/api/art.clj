@@ -50,7 +50,7 @@
   "Add a blob for an art"
   [art-id :as {{:keys [blob]} :body}]
   (db/insert! ArtBlob :id art-id, :blob blob)
-  (ArtBlob art-id))
+  {:art_id art-id})
 
 (api/defendpoint PUT "/blob/:art-id"
   "Update an art blob"
@@ -58,7 +58,7 @@
   (api/write-check ArtBlob art-id)
   (api/let-404 [art (ArtBlob art-id)]
                  (db/update! ArtBlob art-id :blob blob))
-  (ArtBlob art-id))
+  {:art_id art-id})
 
 (api/defendpoint DELETE "/blob/:art-id"
   "Remove an art blob"

@@ -10328,6 +10328,77 @@ databaseChangeLog:
               name: group_id
           indexName: idx_art_group_id
           tableName: art
+  - changeSet:
+      id: v42.41-01000
+      author: zrisha
+      comment: Add table for Art blobs
+      changes: 
+      - createTable:
+          columns:
+          - column:
+              constraints:
+                deferrable: false
+                foreignKeyName: fk_art_id
+                initiallyDeferred: false
+                nullable: false
+                primaryKey: true
+                references: art(id)
+                deleteCascade: true
+              name: id
+              type: int
+          - column:
+              constraints:
+                nullable: false
+              name: created_at
+              type: DATETIME
+          - column:
+              constraints:
+                nullable: false
+              name: updated_at
+              type: DATETIME
+          - column:
+              name: blob
+              type: text
+              remarks: "Blob png of art"
+              constraints:
+                nullable: false
+          tableName: art_blob
+  - changeSet:
+      id: v42.41-011
+      author: zrisha
+      comment: Add table for Viz blobs
+      changes: 
+      - createTable:
+          columns:
+          - column:
+              constraints:
+                deferrable: false
+                foreignKeyName: fk_blob_card_id
+                initiallyDeferred: false
+                nullable: false
+                primaryKey: true
+                references: report_cardfavorite_grp(card_id)
+                deleteCascade: true
+              name: id
+              type: int
+          - column:
+              constraints:
+                nullable: false
+              name: created_at
+              type: DATETIME
+          - column:
+              constraints:
+                nullable: false
+              name: updated_at
+              type: DATETIME
+          - column:
+              name: blob
+              type: text
+              remarks: "Blob png of viz"
+              constraints:
+                nullable: false
+          tableName: report_cardblob
+
 
 
 # >>>>>>>>>> DO NOT ADD NEW MIGRATIONS BELOW THIS LINE! ADD THEM ABOVE <<<<<<<<<<
