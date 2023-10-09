@@ -89,6 +89,7 @@ class ArtistDo extends Component {
   async saveDrawing() {
     try {
       const res = await this.props.updateArt({
+        groupId: this.props.groupId,
         data: window.drawingTool.save(),
         artId: this.props.artist.selectedArt.id,
         blob: window.drawingTool.$canvas[0].toDataURL()

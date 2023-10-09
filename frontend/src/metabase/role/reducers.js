@@ -57,7 +57,12 @@ const artist = handleActions(
         drawingTool: window.drawingTool ? window.drawingTool : false
       }),
     },
-    [ADD_ART]: (state, { payload }) => ({...state, arts: [...state.arts, payload.newArt ], selectedArt: {id: payload.newArt.id}}),
+    [ADD_ART]: (state, { payload }) => {
+      if(payload.newArt)
+        return ({...state, arts: [...state.arts, payload.newArt ], selectedArt: {id: payload.newArt.id}})
+      else
+        return state
+    },
     [DELETE_ART]: (state, { payload }) => ({...state, arts: state.arts.filter(art => art.id != payload.artId)}),
     [UPDATE_ART]: (state, { payload }) => ({...state, arts: state.arts.map(art => art.id == payload.id ? payload : art)}),
     [GET_ARTS]: (state, { payload }) => ({...state,  arts: payload.arts, selectedArt: payload.selectedArt ? payload.selectedArt : null}),

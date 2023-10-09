@@ -234,7 +234,7 @@ export const getNotes = createAction(
 
 export const addArt = createThunkAction(
   ADD_ART,
-  ({data, groupId}) => async (dispatch, getState) => {
+  checkGroup(({data, groupId}) => async (dispatch, getState) => {
     try{
       const res = await ArtApi.addArt({data, group_id: groupId});
       dispatch(addArtBlob({artId: res.id}))
@@ -243,12 +243,12 @@ export const addArt = createThunkAction(
       console.log(error);
       return {error}
     }
-  }
+  })
 );
 
 export const updateArt = createThunkAction(
   UPDATE_ART,
-  ({artId, data, blob}) => async (dispatch, getState) => {
+  checkGroup(({artId, data, blob, groupId}) => async (dispatch, getState) => {
     if(artId){
       try{
         const res = await ArtApi.updateArt({artId, data});
@@ -261,19 +261,19 @@ export const updateArt = createThunkAction(
     } else {
       return {error: "no art  id"};
     }
-  }
+  })
 )
 
 export const deleteArt = createAction(
   DELETE_ART,
-  async ({artId}) => {
+  checkGroup(async ({artId}) => {
     if(artId){
       const res = await ArtApi.deleteArt({artId});
       return {artId}
     } else {
       return {error: "no art id"};
     }
-  }
+  })
 )
 
 
@@ -284,6 +284,9 @@ export const getArts = createAction(
       try{
         const res = await ArtApi.getArts({groupId});
         const arts = res.map(x => ({...x, data: JSON.stringify(x.data)}));
+        if(arts.length ==0){
+          return {arts}
+        }
         const latestArt = arts.reduce((a, b) => {
           return new Date(a.updated_at) > new Date(b.updated_at) ? a : b;
         });
@@ -305,7 +308,7 @@ export const getArts = createAction(
 
 export const addArtBlob = createAction(
   ADD_ART_BLOB,
-  async ({artId}) => {
+  checkGroup(async ({artId}) => {
     try{
       const res = await ArtApi.addBlob({artId, blob: ''})
       return {artId}
@@ -313,12 +316,12 @@ export const addArtBlob = createAction(
       console.log(error);
       return {error}
     }
-  }
+  })
 );
 
 export const updateArtBlob = createAction(
   UPDATE_ART_BLOB,
-  async ({artId, blob}) => {
+  checkGroup(async ({artId, blob}) => {
     try{
       const res = await ArtApi.updateBlob({artId, blob})
       return {artId}
@@ -326,7 +329,7 @@ export const updateArtBlob = createAction(
       console.log(error);
       return {error}
     }
-  }
+  })
 );
 
 /* Misc */

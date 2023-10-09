@@ -7,11 +7,11 @@ import DateTime from "metabase/components/DateTime";
 import Confirm from "metabase/components/Confirm";
 
 
-const RemoveButton = ({deleteArt, artId}) => {
+const RemoveButton = ({deleteArt, artId, groupId}) => {
   return (
     <span onClick={(e) => e.stopPropagation()}>
     <Confirm
-      action={() => deleteArt({artId})}
+      action={() => deleteArt({artId, groupId})}
       title={`Permanently Delete Artwork #${artId}?`}
       content={<h4>You will not be able to recover the artwork!</h4>}
     >
@@ -50,7 +50,7 @@ const SavedArt = (props) => {
             onClick={() => props.selectArt({selectedArt: {id: art.id}})}
             className='border-bottom p1 text-ellipsis text-nowrap'>
               <span className='text-brand-hover cursor-pointer'>#{index + 1}: <DateTime value={new Date(art.created_at)}/></span>
-            <RemoveButton deleteArt={props.deleteArt} artId={art.id} />
+            <RemoveButton deleteArt={props.deleteArt} artId={art.id} groupId={props.groupId} />
           </li>
         ) 
         )}
