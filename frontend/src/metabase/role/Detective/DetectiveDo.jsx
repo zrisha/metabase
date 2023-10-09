@@ -22,7 +22,11 @@ class DetectiveDo extends Component {
     }
 
     async componentDidMount(){
-        this.collection = this.props.collections.find(col => col.name.toLowerCase().includes('team'));
+        if(this.props.groupId != 1){
+            this.collection = this.props.collections.find(col => col.name.toLowerCase().includes(`team ${this.props.groupId}`));
+        }else{
+            this.collection = this.props.collections.find(col => col.name.toLowerCase().includes('example'));
+        }
 
         this.dashboard = this.props.dashboards.find(dash => dash.collection_id == this.collection.id);
 

@@ -8,13 +8,13 @@ const initialNote = "<p>Write your findings here</p>"
 
 export default function Notes(props) {
   const [note, setNote] = useState(false);
+  const [isSaving, setSaving] = useState(false)
 
   const autoSave = useRef(null);
-  const isSaving = useRef(null);
 
   useEffect(() => {
     window.onbeforeunload = function() {
-      if(isSaving.current){
+      if(isSaving){
         return "";
       }else{
         return null;
@@ -26,22 +26,20 @@ export default function Notes(props) {
     props.addNote({data: {value: initialNote}, groupId: props.groupId})
   }
 
-  const onEditorChange = (value, editor, autoSave, note) => {
+  const onEditorChange = async (value, editor, autoSave, note) => {
     if(autoSave.current){
       clearTimeout(autoSave.current)
     }
 
-    isSaving.current = true;
+    setSaving(true);
 
 
     var div = document.createElement("div");
     div.innerHTML = value;
     var text = div.textContent || div.innerText || "";
 
-    autoSave.current = setTimeout(() => {
-      props.updateNote({noteId: note.id, data:{value, text}})
-      isSaving.current = false
-    }, 2500)
+    await props.updateNote({noteId: note.id, data:{value, text}})
+    setSaving(false)
   
   }
 
@@ -51,7 +49,7 @@ export default function Notes(props) {
     return (
       <NoteSelector
         addNote={addNote}
-        saving={isSaving.current}
+        saving={isSaving}
         deleteNote={props.deleteNote}
         setNote={setNote}
         notes={props.notes} />

@@ -75,8 +75,19 @@ const detective = handleActions(
     [DELETE_FILTER]: (state, { payload }) => ({...state, savedFilters: state.savedFilters.filter(entry => entry.id != payload.filterId)}),
     [LOAD_FILTER]: (state, { payload }) => ({...state, loadQuery: payload.loadQuery}),
     [ADD_NOTE]: (state, { payload }) => ({...state, notes: [...state.notes, payload ]}),
-    [DELETE_NOTE]: (state, { payload }) => ({...state, notes: state.notes.filter(note => note.id != payload.noteId)}),
-    [UPDATE_NOTE]: (state, { payload }) => ({...state, notes: state.notes.map(note => note.id == payload.id ? payload : note)}),
+    [DELETE_NOTE]: (state, { payload }) => {
+      if(!payload.noteId){
+        return state
+      }else{
+        return {...state, notes: state.notes.filter(note => note.id != payload.noteId)}
+      }
+    },
+    [UPDATE_NOTE]: (state, { payload }) => {
+      if(!payload.id)
+        return state
+      else
+        return {...state, notes: state.notes.map(note => note.id == payload.id ? payload : note)}
+    },
     [GET_NOTES]: (state, { payload }) => ({...state,  notes: payload.notes}),
   },
   DEFAULT_DETECTIVE,

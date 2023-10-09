@@ -64,6 +64,15 @@ export const changeDriver= createAction(CHANGE_DRIVER);
 /* Misc */
 export const ROLE_DATA_ERROR = "metabase/role/ROLE_DATA_ERROR";
 
+var checkGroup = function(fn){
+  return function(){
+    if(arguments[0].groupId == 1){
+      return arguments[0]
+    }else {
+      return fn.apply(this, arguments);
+    }
+  };
+};
 
 /* Detective */
 
@@ -77,7 +86,7 @@ export const getFavoritesGrp = createAction(
 
 export const favoriteGrp = createThunkAction(
   FAVORITE_GRP,
-  ({ cardId, groupId, vizNode }) => async (dispatch, getState) => {
+  checkGroup(({ cardId, groupId, vizNode }) => async (dispatch, getState) => {
     try{
       const res = await FavoriteApi.favoriteGrp({cardId, group_id: groupId});
       dispatch(addVizBlob({cardId, vizNode}));
@@ -86,20 +95,20 @@ export const favoriteGrp = createThunkAction(
       console.log(error);
       return {error}
     }
-  },
+  }),
 );
 
 export const unfavoriteGrp = createAction(
   UNFAVORITE_GRP,
-  async ({ cardId, groupId }) => {
+  checkGroup(async ({ cardId, groupId }) => {
     const res = await FavoriteApi.unfavoriteGrp({cardId, group_id: groupId});
     return { cardId, res };
-  },
+  }),
 );
 
 export const addVizBlob = createAction(
   ADD_VIZ_BLOB,
-  async ({cardId, vizNode}) => {
+  checkGroup(async ({cardId, vizNode}) => {
     try{
       const blob = await toPng(vizNode);
       const res = await FavoriteApi.addBlob({cardId, blob})
@@ -108,7 +117,7 @@ export const addVizBlob = createAction(
       console.log(error);
       return {error}
     }
-  }
+  })
 );
 
 export const saveDetectiveData = createAction(
@@ -137,33 +146,33 @@ export const getFilters = createAction(
 
 export const saveFilter = createAction(
   SAVE_FILTER,
-  async ({ groupId, filter, dashboardId }) => {
+  checkGroup(async ({ groupId, filter, dashboardId }) => {
     try{
       const res = await FilterApi.saveFilter({groupId, filter, dashboardId});
       return {filter: res.filter, id: res.id}
     }catch(error){
       return {error}
     }
-  },
+  }),
 );
 
 export const deleteFilter = createAction(
   DELETE_FILTER,
-  async ({ filterId}) => {
+  checkGroup(async ({ filterId}) => {
     try{
       const res = await FilterApi.deleteFilter({filterId});
       return {filterId}
     }catch(error){
       return {error}
     }
-  },
+  }),
 );
 
 /* Note */
 
 export const addNote = createAction(
   ADD_NOTE,
-  async ({data, groupId}) => {
+  checkGroup(async ({data, groupId}) => {
     try{
       const res = await NoteApi.addNote({data: data, group_id: groupId});
       return {data, id: res.id}
@@ -171,12 +180,12 @@ export const addNote = createAction(
       console.log(error);
       return {error}
     }
-  }
+  })
 );
 
 export const updateNote = createAction(
   UPDATE_NOTE,
-  async ({noteId, data}) => {
+  checkGroup(async ({noteId, data}) => {
     if(noteId){
       try{
         const res = await NoteApi.updateNote({noteId, data});
@@ -188,19 +197,19 @@ export const updateNote = createAction(
     } else {
       return {error: "no note  id"};
     }
-  }
+  })
 )
 
 export const deleteNote = createAction(
   DELETE_NOTE,
-  async ({noteId}) => {
+  checkGroup(async ({noteId}) => {
     if(noteId){
       const res = await NoteApi.deleteNote({noteId});
       return {noteId}
     } else {
       return {error: "no note id"};
     }
-  }
+  })
 )
 
 export const getNotes = createAction(
