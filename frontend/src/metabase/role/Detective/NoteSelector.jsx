@@ -48,9 +48,10 @@ const NoteSelector = (props) => {
       <h4 className='text-centered my1 text-white'>Notes</h4>
       <div style={{flex: 1}}  className='bg-white'>
       {!props.saving ? <ul className='note-list'>
-        {props.notes.map(note => (
+        {props.notes.map((note, i) => (
           <li
             onClick={() => props.setNote(note)}
+            key={i}
             className='border-bottom p1 text-ellipsis text-nowrap'>
               <span className='text-brand-hover cursor-pointer'>{getHeader(note.data.value)}</span>
             <RemoveButton noteHeader={getHeader(note.data.value).substring(0,150)} deleteNote = {props.deleteNote} noteId={note.id} />

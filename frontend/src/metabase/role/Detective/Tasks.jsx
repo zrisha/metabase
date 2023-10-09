@@ -66,7 +66,7 @@ export default function Tasks(props) {
           <td>Task</td>
           <td>#of</td>
         </tr>
-        {taskData.map(props => <TaskRow {...props} />)}
+        {taskData.map(props => <TaskRow key={props.label} {...props} />)}
         </tbody>
       </table>
   </Card>;

@@ -443,7 +443,7 @@ export default class Visualization extends React.PureComponent {
               settings={settings}
               icon={headerIcon}
               actionButtons={extra}
-              onChangeCardAndRun={false}
+              onChangeCardAndRun={null}
             />
           </div>
         )}
