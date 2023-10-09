@@ -32,3 +32,24 @@
   top: 35%;
   left: 2rem;
 }
+
+.Nav .demo{
+  position: absolute;
+  top:0;
+  width: 100%;
+  text-align: center;
+}
+
+.Nav .demo .bar{
+  min-width: 300px;
+  max-width: 30%;
+  border: 1px solid #4c5773;
+  border-top: none;
+  margin:auto;
+  padding: 1px 10px;
+  font-weight: bolder;
+  border-radius: 0px 0px 5px 5px;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

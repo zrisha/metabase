@@ -15,6 +15,8 @@ import LogoIcon from "metabase/components/LogoIcon";
 import Modal from "metabase/components/Modal";
 
 import ProfileLink from "./ProfileLink";
+import Tooltip from "metabase/components/Tooltip";
+import Icon from "metabase/components/Icon";
 
 import CollectionCreate from "metabase/collections/containers/CollectionCreate";
 import CreateDashboardModal from "metabase/components/CreateDashboardModal";
@@ -106,7 +108,7 @@ export default class Navbar extends Component {
   }
 
   renderMainNav() {
-    const { hasDataAccess, hasNativeWrite, location } = this.props;
+    const { hasDataAccess, hasNativeWrite, location,  demoMode} = this.props;
 
     const roleName = capitalize(location.pathname.split("/")[2]);
 
@@ -121,6 +123,9 @@ export default class Navbar extends Component {
         py={1}
         pr={2}
       >
+        {demoMode && <div className="demo">
+          <div className="bar bg-gold text-dark"><Tooltip tooltip='You are in example mode because you are not part of a group. Saving and other actions are unavailable.'><Icon size={12} name="info" /></Tooltip> <span>You are in example mode, you cannot save work</span></div>
+        </div>}
         <Flex style={{ minWidth: 64 }} align="center" justify="center">
           <Link
             to="/role/home"

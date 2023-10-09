@@ -37,7 +37,9 @@ class RoleLayout extends React.Component{
   }
 
   componentDidMount(){
-    this.group = this.props.user.group_ids.find(id => id != 1 && id !=2);
+    const groupId = this.props.user.group_ids.find(id => id != 1 && id !=2);
+    this.group = groupId ? groupId : 1;
+    
     this.role = this.props.location.pathname.split("/")[2];
 
     this.roomID = this.group ? this.role + this.group : this.role;
@@ -77,7 +79,7 @@ class RoleLayout extends React.Component{
     
     if(this.props.user.id == this.props.room.driver){
       return <IsDriver user={this.props.user} roomID={this.roomID}  socket={this.socket}>
-        <Navbar location={this.props.location}/>
+        <Navbar location={this.props.location} demoMode={this.group == 1} />
           <Layout sidebar = {this.props.sidebar} main={this.props.main} widths = { widths}/>
         </IsDriver>
      }else{
