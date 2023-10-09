@@ -15,9 +15,9 @@ import Confirm from "metabase/components/Confirm";
 
 const handleSubmit = ({values, props, exists}) => {
   if(exists){
-    props.updateStoryElement({data: {...props.selectedElement.data, ...values}, storyId: props.selectedElement.storyId})
+    props.updateStoryElement({data: {...props.selectedElement.data, ...values}, storyId: props.selectedElement.storyId, groupId: props.group})
   }else{
-    props.addStoryElement({data: values, type: props.selectedElement.type, group_id: props.group});
+    props.addStoryElement({data: values, type: props.selectedElement.type, groupId: props.group});
   }
 }
 
@@ -41,14 +41,14 @@ function StoryElementForm(props) {
   }
 
   const onDelete = () => {
-    if(exists)
-      props.deleteStoryElement({storyId: props.selectedElement.storyId})
+    if(exists){
+      props.deleteStoryElement({storyId: props.selectedElement.storyId, groupId: props.group})
+    }
   }
 
   if(!props.selectedElement || !props.selectedElement.type)
     return <></>
   
-  console.log(props.selectedElement);
   return <Card className='story-form-wrapper'>
         <div className="text-left p1 story-element-detail relative">
           <Absolute top={5} right={5}>

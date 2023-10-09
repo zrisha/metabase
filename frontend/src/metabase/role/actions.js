@@ -361,52 +361,52 @@ export const getRoleData = ({roomID, role, dashboardId = false}) => {
 
 /* Journalist */
 
-export const addStoryElement= ({data, type, group_id}) => {
+export const addStoryElement= checkGroup(({data, type, groupId}) => {
   return async function(dispatch, getState) {
     try{
-      const res = await StoryApi.addStoryElement({data: data, type, group_id});
+      const res = await StoryApi.addStoryElement({data: data, type, group_id: groupId});
       dispatch(createAction(ADD_STORY_ELEMENT)({...data, type, id: res.id}));
     }catch(error){
       console.log(error);
       return {error}
     }
   }
-}
+})
 
 export const updateStoryElementPos = createAction(
   UPDATE_STORY_ELEMENT_POS,
-  async ({storyId, data}) => {
+  checkGroup(async ({storyId, data, groupId}) => {
     if(storyId){
       const res = await StoryApi.updateStoryElementPos({storyId, data});
       return {storyId, x:data.x, y:data.y}
     } else {
       return {error: "no story element id"};
     }
-  }
+  })
 )
 
 export const updateStoryElement = createAction(
   UPDATE_STORY_ELEMENT,
-  async ({storyId, data}) => {
+  checkGroup(async ({storyId, data, groupId}) => {
     if(storyId){
       const res = await StoryApi.updateStoryElement({storyId, data});
       return {storyId, data}
     } else {
       return {error: "no story element id"};
     }
-  }
+  })
 )
 
 export const deleteStoryElement = createAction(
   DELETE_STORY_ELEMENT,
-  async ({storyId, data}) => {
+  checkGroup(async ({storyId, data, groupId}) => {
     if(storyId){
       const res = await StoryApi.deleteStoryElement({storyId});
       return {storyId}
     } else {
       return {error: "no story element id"};
     }
-  }
+  })
 )
 
 export const getStoryElements = createAction(

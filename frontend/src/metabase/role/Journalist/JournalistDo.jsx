@@ -75,6 +75,7 @@ class JournalistDo extends Component {
             selectStoryElement={this.props.selectStoryElement} 
             updateStoryElementPos={this.props.updateStoryElementPos} 
             scale={scale}
+            groupId={this.props.groupId}
             dims={{containerWidth, containerHeight}}/>
         })}
       </div>}

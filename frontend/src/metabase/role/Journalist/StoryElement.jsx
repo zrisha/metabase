@@ -26,7 +26,7 @@ function StoryElement(props) {
   }
 
   const handleStop = (e) => {
-    props.updateStoryElementPos({data: {...props.data, x: pos.x, y: pos.y}, storyId: props.storyId});
+    props.updateStoryElementPos({data: {...props.data, x: pos.x, y: pos.y}, storyId: props.storyId, groupId: props.groupId});
   }
 
   return (
