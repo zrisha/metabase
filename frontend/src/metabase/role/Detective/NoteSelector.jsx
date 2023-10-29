@@ -7,11 +7,11 @@ import Button from "metabase/core/components/Button";
 import Confirm from "metabase/components/Confirm";
 
 
-const RemoveButton = ({deleteNote, noteId, noteHeader}) => {
+const RemoveButton = ({deleteNote, noteId, noteHeader, groupId}) => {
   return (
     <span onClick={(e) => e.stopPropagation()}>
     <Confirm
-      action={() => deleteNote({noteId})}
+      action={() => deleteNote({noteId, groupId})}
       title={`Permanently Delete Note?`}
       content={<div><h4>You will not be able to recover the note!</h4><p><strong>Note preview:</strong> {noteHeader} (. . .)</p></div>}
     >
@@ -54,7 +54,7 @@ const NoteSelector = (props) => {
             key={i}
             className='border-bottom p1 text-ellipsis text-nowrap'>
               <span className='text-brand-hover cursor-pointer'>{getHeader(note.data.value)}</span>
-            <RemoveButton noteHeader={getHeader(note.data.value).substring(0,150)} deleteNote = {props.deleteNote} noteId={note.id} />
+            <RemoveButton noteHeader={getHeader(note.data.value).substring(0,150)} deleteNote = {props.deleteNote} noteId={note.id} groupId={props.groupId}/>
           </li>
         ))}
       </ul> : <div style={{height: "100%"}}className='flex align-center justify-center'><LoadingSpinner /> </div>}

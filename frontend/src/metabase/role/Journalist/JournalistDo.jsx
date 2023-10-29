@@ -14,12 +14,11 @@ import storyOutline from './story_outline.json';
 class JournalistDo extends Component {
   constructor() {
     super();
-    this.state = {render:false, containerWidth: false, containerHeight: false, storyOutline: '0'};
+    this.state = {render:false, containerWidth: false, containerHeight: false};
     this.dragCanvas = React.createRef()
   }
 
   setWindowSize = () => {
-    console.log(this.dragCanvas.current.clientHeight);
     this.setState({
       containerWidth: this.dragCanvas.current ? this.dragCanvas.current.offsetWidth : false,
       containerHeight: this.dragCanvas.current ? this.dragCanvas.current.offsetHeight : false
@@ -48,7 +47,7 @@ class JournalistDo extends Component {
 
     const {containerWidth, containerHeight} = this.state;
 
-    const {width, height, filepath} = storyOutline[this.state.storyOutline]
+    const {width, height, filepath} = storyOutline[1]
 
     const scale = (containerWidth / width) - .05;
 
@@ -57,14 +56,6 @@ class JournalistDo extends Component {
 
     return <>
     <div className="journalist-do-wrapper" ref={this.dragCanvas}>
-      <Radio style={{position: 'absolute', zIndex: 1000, right: '12%', marginTop: '8%'}} variant="bubble" 
-        value={this.state.storyOutline}
-        onChange={(e) => this.setState({storyOutline: e})}
-        options={[
-          {name:'a', value:'0'},
-          {name:'b', value:'1'}
-        ]} />
-      {/* <img className="story-outline" src={filepath} style={{ width, transform: `scale(${scale}`}}/> */}
       {this.state.render && <div style={{marginTop, marginLeft, transform: `scale(${scale}`, transformOrigin: "0 0", width, height, position: 'relative', backgroundImage: `url(${filepath})`}}>
         {containerWidth && Object.entries(storyElements).map(([storyId, ele]) => {
           const {type, ...data} = ele;

@@ -53,7 +53,11 @@ function RoleHome(props) {
 
   useEffect(() => {
     const groupId = props.user.group_ids.find(id => id != 1 && id !=2);
-    getDocId({groupId});
+    if(groupId){
+      getDocId({groupId});
+    }else {
+      getDocId({groupId: 1});
+    }
   }, [getDocId]);
 
   return (

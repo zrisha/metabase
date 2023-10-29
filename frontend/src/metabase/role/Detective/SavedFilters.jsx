@@ -7,7 +7,7 @@ import EmptyState from "metabase/components/EmptyState";
 
 const FilterRow = (props) => {
   
-  const deleteFilter = props.filterId ? () => props.deleteFilter({filterId: props.filterId}) : null;
+  const deleteFilter = props.filterId ? () => props.deleteFilter({filterId: props.filterId, groupId: props.groupId}) : null;
 
   const onClick = () => props.loadFilter({loadQuery: props.filter});
 
@@ -50,7 +50,7 @@ export default function SavedFilters(props) {
         </tr>
       </thead>
         <tbody>
-        {props.savedFilters.map(entry => <FilterRow filter={entry.filter} filterId={entry.id} deleteFilter={props.deleteFilter} loadFilter={props.loadFilter} room={props.room}/>)}
+        {props.savedFilters.map(entry => <FilterRow groupId={props.groupId} filter={entry.filter} filterId={entry.id} deleteFilter={props.deleteFilter} loadFilter={props.loadFilter} room={props.room}/>)}
         </tbody>
       </table>
     </Card>;

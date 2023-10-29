@@ -66,7 +66,7 @@ export const ROLE_DATA_ERROR = "metabase/role/ROLE_DATA_ERROR";
 
 var checkGroup = function(fn){
   return function(){
-    if(arguments[0].groupId == 1){
+    if(arguments[0].groupId && arguments[0].groupId == 1){
       return arguments[0]
     }else {
       return fn.apply(this, arguments);
@@ -158,7 +158,7 @@ export const saveFilter = createAction(
 
 export const deleteFilter = createAction(
   DELETE_FILTER,
-  checkGroup(async ({ filterId}) => {
+  checkGroup(async ({ filterId, groupId}) => {
     try{
       const res = await FilterApi.deleteFilter({filterId});
       return {filterId}
@@ -202,7 +202,7 @@ export const updateNote = createAction(
 
 export const deleteNote = createAction(
   DELETE_NOTE,
-  checkGroup(async ({noteId}) => {
+  checkGroup(async ({noteId, groupId}) => {
     if(noteId){
       const res = await NoteApi.deleteNote({noteId});
       return {noteId}

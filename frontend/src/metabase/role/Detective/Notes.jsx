@@ -38,7 +38,7 @@ export default function Notes(props) {
     div.innerHTML = value;
     var text = div.textContent || div.innerText || "";
 
-    await props.updateNote({noteId: note.id, data:{value, text}})
+    await props.updateNote({noteId: note.id, data:{value, text}, groupId: props.groupId})
     setSaving(false)
   
   }
@@ -51,6 +51,7 @@ export default function Notes(props) {
         addNote={addNote}
         saving={isSaving}
         deleteNote={props.deleteNote}
+        groupId={props.groupId}
         setNote={setNote}
         notes={props.notes} />
     )
