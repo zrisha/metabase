@@ -55,7 +55,7 @@ const DetectiveDoSidebar = (props) => {
 
 const mapStateToProps = (state, props) => ({
     user: getUser(state),
-    groupId: state.role.room.group,
+    groupId: state.role.groupId,
     room: state.role.room['detective'],
     notes: state.role.detective ? state.role.detective.notes : false,
     favoriteCards: state.role.favorites ? state.role.favorites.cards : false,

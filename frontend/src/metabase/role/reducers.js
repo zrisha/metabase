@@ -28,7 +28,8 @@ import {
   GET_ARTS,
   SELECT_ART,
   UPDATE_SAVE_STATUS,
-  GET_DOC_ID
+  GET_DOC_ID,
+  SET_GROUP
 } from "./actions";
 
 window.Metabase.data = {};
@@ -141,11 +142,19 @@ const home = handleActions(
   DEFAULT_HOME
 );
 
+const groupId = handleActions(
+  {
+    [SET_GROUP]: (state, { payload }) => payload.groupId,
+  },
+  false
+);
+
 export default combineReducers({
   artist,
   detective,
   journalist,
   room,
   favorites,
-  home
+  home,
+  groupId
 });

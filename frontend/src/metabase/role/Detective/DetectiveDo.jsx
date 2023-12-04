@@ -57,7 +57,7 @@ class DetectiveDo extends Component {
 
 const mapStateToProps = (state, props) => ({
     room: state.role.room['detective'],
-    groupId: state.role.room.group,
+    groupId: state.role.groupId,
     user: getUser(state)
   });
 

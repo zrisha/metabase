@@ -13,7 +13,7 @@ function StoryElementSidebar(props) {
               selectStoryElement={props.selectStoryElement} />
   }else{
     return <StoryElementForm 
-              group={props.room.group ? props.room.group : false}
+              group={props.group ? props.group : false}
               addStoryElement={props.addStoryElement} 
               selectStoryElement={props.selectStoryElement} 
               selectedElement={props.journalist.selectedElement} 
@@ -33,7 +33,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state, props) => ({
     journalist: state.role.journalist,
-    room: state.role.room
+    room: state.role.room,
+    group: state.role.groupId
   });
   
 export default connect(mapStateToProps, mapDispatchToProps)(StoryElementSidebar);

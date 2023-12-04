@@ -63,6 +63,8 @@ export const changeDriver= createAction(CHANGE_DRIVER);
 
 /* Misc */
 export const ROLE_DATA_ERROR = "metabase/role/ROLE_DATA_ERROR";
+export const SET_GROUP = "metabase/role/SET_GROUP";
+export const setGroup= createAction(SET_GROUP);
 
 var checkGroup = function(fn){
   return function(){
@@ -439,6 +441,9 @@ export const getDocId = createAction(
   async ({groupId}) => {
     try{
       const res = await HomeApi.getDocId({groupId})
+      if(!res){
+        return {error: 'no document found'}
+      }
       return JSON.parse(res.out);
     }catch(error){
       console.log(error);

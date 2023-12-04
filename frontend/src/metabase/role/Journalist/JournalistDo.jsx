@@ -77,7 +77,7 @@ class JournalistDo extends Component {
 
 const mapStateToProps = (state, props) => ({
     room: state.role.room['journalist'],
-    groupId: state.role.room.group,
+    groupId: state.role.groupId,
     user: getUser(state),
     journalist: state.role.journalist
   });

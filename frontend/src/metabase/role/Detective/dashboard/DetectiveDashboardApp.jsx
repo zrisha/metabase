@@ -44,7 +44,7 @@ const mapStateToProps = (state, props) => {
   return {
     dashboardId: props.dashboardId || Urls.extractEntityId(props.params.slug),
     favoriteCards: state.role.favorites.cards ? state.role.favorites.cards : [],
-    groupId: state.role.room.group ? state.role.room.group : null,
+    groupId: state.role.groupId ? state.role.groupId : null,
     roomID: state.role.room.detective.roomID ? state.role.room.detective.roomID : null,
     savedFilters: state.role.detective.savedFilters ? state.role.detective.savedFilters : [],
     loadQuery: state.role.detective.loadQuery ? state.role.detective.loadQuery : false,

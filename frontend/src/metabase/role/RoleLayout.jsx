@@ -5,7 +5,7 @@ import { getUser } from "metabase/selectors/user";
 import Navbar from "./Navbar";
 import "./RoleLayout.css";
 import {connect} from "react-redux";
-import { joinRoom, leaveRoom, changeDriver} from "./actions";
+import { joinRoom, leaveRoom, changeDriver, setGroup} from "./actions";
 import { io } from "socket.io-client";
 import RPlayer from "./RPlayer";
 import './animation.css';
@@ -26,7 +26,8 @@ class RoleLayout extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      socketRendered: false
+      socketRendered: false,
+      groupId: false
     }
 
     this.roleWidths = {
@@ -38,11 +39,19 @@ class RoleLayout extends React.Component{
 
   componentDidMount(){
     const groupId = this.props.user.group_ids.find(id => id != 1 && id !=2);
-    this.group = groupId ? groupId : 1;
-    
-    this.role = this.props.location.pathname.split("/")[2];
+    //Set group or default to demo
+    const currentGroup = groupId ? groupId : 1
+    this.setState({groupId: currentGroup});
 
+    this.role = this.props.location.pathname.split("/")[2];
     this.roomID = this.group ? this.role + this.group : this.role;
+
+    this.props.setGroup({groupId: currentGroup});
+
+    //Skip websocket for demo group
+    if(currentGroup == 1 || !currentGroup){
+      return
+    }
   
     this.socket = io("http://localhost:4987", {auth: {user: this.props.user, roomID :this.roomID}})
     this.socket.on("connect", () => {
@@ -67,11 +76,24 @@ class RoleLayout extends React.Component{
   }
 
   componentWillUnmount(){
-    this.socket.disconnect();
+    if(this.socket){
+      this.socket.disconnect();
+    }
   }
 
   render(){
     const widths = this.roleWidths[this.role] ? this.roleWidths[this.role] : {left: '25%', right: '75%'};
+
+    if(this.state.groupId == false){
+      return <></>
+    }
+
+    if(this.state.groupId == 1){
+      return <>
+        <Navbar location={this.props.location} demoMode={true} />
+        <Layout sidebar = {this.props.sidebar} main={this.props.main} widths = { widths}/>
+      </>
+    }
 
     if(this.state.socketRendered == false || this.props.room.driver == undefined){
       return <GenericError details="Failure to connect to the websocket server" />
@@ -79,7 +101,7 @@ class RoleLayout extends React.Component{
     
     if(this.props.user.id == this.props.room.driver){
       return <IsDriver user={this.props.user} roomID={this.roomID}  socket={this.socket}>
-        <Navbar location={this.props.location} demoMode={this.group == 1} />
+        <Navbar location={this.props.location} />
           <Layout sidebar = {this.props.sidebar} main={this.props.main} widths = { widths}/>
         </IsDriver>
      }else{
@@ -89,7 +111,7 @@ class RoleLayout extends React.Component{
 }
 
 const mapDispatchToProps = {
-  joinRoom, leaveRoom, changeDriver
+  joinRoom, leaveRoom, changeDriver, setGroup
 }
 
 const mapStateToProps = (state, props) => ({

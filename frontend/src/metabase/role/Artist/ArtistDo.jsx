@@ -232,7 +232,7 @@ class ArtistDo extends Component {
 const mapStateToProps = (state, props) => ({
   room: state.role.room["artist"],
   artist: state.role.artist,
-  groupId: state.role.room.group,
+  groupId: state.role.groupId,
   user: getUser(state),
 });
 
