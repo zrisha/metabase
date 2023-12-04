@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { push } from "react-router-redux";
 
-import { Flex, Box } from "grid-styled";
+import { Flex } from "grid-styled";
 
 import * as Urls from "metabase/lib/urls";
 import { color, darken } from "metabase/lib/colors";
@@ -119,6 +119,7 @@ export default class Navbar extends Component {
         // TODO: hide nav using state in redux instead?
         className="Nav relative bg-brand text-white z3 flex-no-shrink rr-block"
         align="center"
+        justify="space-between"
         style={{ backgroundColor: color("nav"), position: this.props.position }}
         py={1}
         pr={2}
@@ -126,7 +127,7 @@ export default class Navbar extends Component {
         {demoMode && <div className="demo">
           <div className="bar bg-gold text-dark"><Tooltip tooltip='You are in example mode because you are not part of a group. Saving and other actions are unavailable.'><Icon size={12} name="info" /></Tooltip> <span>You are in example mode, you cannot save work</span></div>
         </div>}
-        <Flex style={{ minWidth: 64 }} align="center" justify="center">
+        <div className="role-menu">
           <Link
             to="/role/home"
             data-metabase-event={"Navbar;Logo"}
@@ -139,24 +140,25 @@ export default class Navbar extends Component {
               style={{ minWidth: 32, height: 32 }}
               align="center"
               justify="center"
+              flexDirection="column"
             >
-              <LogoIcon dark height={32} />
+              <div><h3>Data Roles</h3></div>
+              <div>Spin-off of <LogoIcon dark height={16} />etabase</div>
             </Flex>
           </Link>
-        </Flex>
-        <Flex className="flex-full z1" pr={2} align="center">
-          <Flex align="center" style={{ maxWidth: 500 }}>
-            {/* left menu */}
-          </Flex>
-        </Flex>
-        <Flex className="flex-full z1" pr={2} align="center">
-          <Flex align="center" style={{ maxWidth: 500 }}>
+        </div>
+        <div>
+          <Flex align="center">
             <h2>{roleName}</h2>
           </Flex>
-        </Flex>
-        <Flex ml="auto" align="center" pl={[1, 2]} className="relative z2">
-          <ProfileLink {...this.props} />
-        </Flex>
+        </div>
+        <div className="role-menu">
+          <Flex
+            justify="flex-end"
+          >
+            <ProfileLink {...this.props} />
+          </Flex>
+        </div>
         {this.renderModal()}
       </Flex>
     );

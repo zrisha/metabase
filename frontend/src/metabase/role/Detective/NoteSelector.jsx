@@ -41,7 +41,7 @@ const getHeader = (value) => {
 
 const NoteSelector = (props) => {
   return (
-    <Card style={{height:"100%", overflowY: 'auto'}} className='bg-brand relative flex flex-column'>
+    <Card style={{height:"100%", overflowY: 'auto', backgroundColor: '#509ee3'}} className='relative flex flex-column'>
       <Absolute top={5} right={5} data-metabase-event="Detective;Add Note" className="text-white-hover cursor-pointer">
         <Button onlyIcon icon="add" disabled={props.saving} onClick={props.addNote}/>
       </Absolute>
