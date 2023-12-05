@@ -10,6 +10,6 @@
 (api/defendpoint GET "/:group-id"
   "Grab all arts based on group ID"
   [group-id]
-  (shell/sh "node" "resources/google-doc/sync_doc.js" (str group-id)))
+  (shell/sh "node" "ext/google-doc/main.js" (str group-id)))
 
 (api/define-routes)

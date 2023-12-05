@@ -94,6 +94,18 @@
       (catch Throwable e
         (log/error e (trs "Failed to copy file"))))))
 
+(defn copy-regular-files!
+  "Copy all files in `source-dir` to `dest-dir`. Overwrites existing files if last modified timestamp is not the same as
+  that of the source file — see #11699 for more context."
+  [^Path source-dir, ^Path dest-dir]
+  (doseq [^Path source (files-seq source-dir)
+          :let         [target (append-to-path dest-dir (str (.getFileName source)))]]
+    (if (regular-file? source)
+      (try
+        (copy-file! source target)
+        (catch Throwable e
+          (log/error e (trs "Failed to copy file")))))))
+
 
 ;;; ------------------------------------------ Opening filesystems for URLs ------------------------------------------
 

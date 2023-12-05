@@ -33,6 +33,7 @@
 /cypress
 /deploy/artifacts/*
 /docs/uberdoc.html
+/ext
 /frontend/test/snapshots/*
 /lein-plugins/*/target
 /local/src
@@ -82,3 +83,4 @@ dev/src/dev/nocommit/
 .clj-kondo/.cache
 
 node_modules.nosync
+tinymce/*

@@ -5,13 +5,9 @@ const path = require("path");
 const isProduction = process.env.NODE_ENV == "production";
 
 const config = {
-  entry: "./src/socket.js",
+  entry: "./src/sync_doc.js",
   output: {
-    path: path.resolve(__dirname, "dist")
-  },
-  externals: {
-    bufferutil: "bufferutil",
-    "utf-8-validate": "utf-8-validate",
+    path: path.resolve(__dirname, 'dist')
   },
   plugins: [
     // Add your plugins here

@@ -9,7 +9,7 @@ const {
   TextRun,
   ImageRun
 } = docx;
-const storyElements = require("../../frontend/src/metabase/role/Journalist/story-elements.json");
+const storyElements = require("./story-elements.json");
 const styles = fs.readFileSync("./styles.xml", "utf-8");
 const { GoogleAuth } = require("google-auth-library");
 const { google } = require("googleapis");
@@ -138,9 +138,17 @@ class RoleDoc {
       })
     )
     this.artData.forEach((art, i) => {
+      if(art.blob.length < 22){
+        return
+      }
       var img = Buffer.from(art.blob.substr(22), 'base64');
-      var dimensions = sizeOf(img);
-      const ar = dimensions.width / dimensions.height;
+      // console.log(Buffer.byteLength(img))
+      // sizeOf(img,(err, res) => {
+      //   console.log(err)
+      //   console.log(res);
+      // });
+      //const ar = dimensions.width / dimensions.height;
+      const ar = 1.3;
       
       children.push(
         this.createHeading(`Art ${i+1}`)

@@ -3,6 +3,7 @@
   (:require [clojure.string :as str]
             [clojure.tools.logging :as log]
             [clojure.tools.trace :as trace]
+            [clojure.java.io :as io]
             [metabase.config :as config]
             [metabase.core.initialization-status :as init-status]
             [metabase.db :as mdb]
@@ -20,8 +21,10 @@
             [metabase.task :as task]
             [metabase.troubleshooting :as troubleshooting]
             [metabase.util :as u]
+            [metabase.util.files :as files]
             [metabase.util.i18n :refer [deferred-trs trs]]
-            [toucan.db :as db]))
+            [toucan.db :as db])
+  (:import java.io.File))
 
   ;; Load up the drivers shipped as part of the main codebase, so they will show up in the list of available DB types
 (comment metabase.driver.h2/keep-me
@@ -90,6 +93,29 @@
   (log/info (trs "Setting up and migrating Metabase DB. Please sit tight, this may take a minute..."))
   (mdb/setup-db!)
   (init-status/set-progress! 0.5)
+
+  ;; startup node socket server.
+  (println "Creating a directory")
+  (files/create-dir-if-not-exists! (files/get-path "ext"))
+  (println "Copying file")
+  (files/with-open-path-to-resource [nodePath "websocket/dist/main.js"]
+        (files/copy-file! nodePath (files/get-path "ext/socket.js")))
+  (def ret (-> (ProcessBuilder. ["node" "ext/socket.js"]) .inheritIO .start))
+
+  ;; Copy google-doc files
+  (println "Starting google-doc setup")
+  (files/create-dir-if-not-exists! (files/get-path "ext/google-doc"))
+  (files/create-dir-if-not-exists! (files/get-path "ext/google-doc/credentials"))
+  (files/create-dir-if-not-exists! (files/get-path "ext/google-doc/docs"))
+  (println "Copying folder")
+  (files/with-open-path-to-resource [docPath "google-doc/dist"]
+      (files/copy-regular-files! docPath (files/get-path "ext/google-doc")))
+  (println "Copying creds")
+  ;; for credential files
+  (files/with-open-path-to-resource [credPath "google-doc/dist/credentials"]
+        (files/copy-files! credPath (files/get-path "ext/google-doc/credentials")))
+
+
 
   ;; run a very quick check to see if we are doing a first time installation
   ;; the test we are using is if there is at least 1 User in the database

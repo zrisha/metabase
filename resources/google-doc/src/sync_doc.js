@@ -18,7 +18,7 @@ async function updateCredentials(){
                 'id': res.data.id,
                 'created_at': Date.now()
             }
-            await fs.writeFile('credentials.json', JSON.stringify(payload), 'utf8');
+            await fs.writeFile('credentials/credentials.json', JSON.stringify(payload), 'utf8');
             return res.data
         }else{
             return {error: "unknown error", res}
