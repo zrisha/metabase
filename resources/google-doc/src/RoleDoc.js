@@ -113,7 +113,7 @@ class RoleDoc {
         text: "Notes (Detective)",
         heading: HeadingLevel.HEADING_3,
       }),
-      ...this.noteData.map((note, i) => {
+      ...this.noteData.filter(note => note.data && note.data.text).map((note, i) => {
         const payload = [];
         payload.push(this.createHeading(`Note ${i+1}`));
         payload.push(new Paragraph({
@@ -141,14 +141,16 @@ class RoleDoc {
       if(art.blob.length < 22){
         return
       }
-      var img = Buffer.from(art.blob.substr(22), 'base64');
-      // console.log(Buffer.byteLength(img))
-      // sizeOf(img,(err, res) => {
-      //   console.log(err)
-      //   console.log(res);
-      // });
-      //const ar = dimensions.width / dimensions.height;
-      const ar = 1.3;
+
+      let ar = 1.5
+
+      try{
+        var img = Buffer.from(art.blob.substr(22), 'base64');
+        var dimensions = sizeOf(img);
+        ar = dimensions.width / dimensions.height;
+      }catch(e){
+
+      }
       
       children.push(
         this.createHeading(`Art ${i+1}`)

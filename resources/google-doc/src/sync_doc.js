@@ -39,7 +39,12 @@ async function getCredentials(){
               timeLeft = (totalDuration - age);
         
         if(timeLeft < 86400000){
-            creds = updateCredentials();
+            creds = await updateCredentials();
+        }
+
+        const status = await testCredentials(creds)
+        if(status == 401){
+            creds = await updateCredentials();
         }
         return creds;
     }catch(e){
@@ -50,6 +55,16 @@ async function getCredentials(){
             console.log(e);
             return e
         }
+    }
+}
+
+async function testCredentials(creds){
+    const headers = { "X-Metabase-Session": creds.id}
+    try{
+        const currentUser = await axios.get(`${process.env.SITE_URL}/api/user/current`, { headers });
+        return currentUser.status
+    }catch(e){
+        return e.response.status
     }
 }
 
