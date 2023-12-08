@@ -52,32 +52,36 @@
                                    "'unsafe-eval'" ; TODO - we keep working towards removing this entirely
                                    "https://maps.google.com"
                                    "https://apis.google.com"
+                                   "https://*.google.com"
+                                   "https://*.youtube.com"
                                    "https://*.googleapis.com"
                                    "*.gstatic.com"
                                    (when (public-settings/anon-tracking-enabled)
                                      "https://www.google-analytics.com")
                                    ;; for webpack hot reloading
                                    (when config/is-dev?
-                                     "localhost:8080 localhost:4987")
+                                     "localhost:8080")
                                    ;; for react dev tools to work in Firefox until resolution of
                                    ;; https://github.com/facebook/react/issues/17997
                                    (when config/is-dev?
                                      "'unsafe-inline'")]
                                   (when-not config/is-dev?
                                     (map (partial format "'sha256-%s'") inline-js-hashes)))
-                  :child-src    ["'self'"
+                  :child-src    ["'self' blob:"
                                  ;; TODO - double check that we actually need this for Google Auth
-                                 "https://accounts.google.com"]
+                                 "https://accounts.google.com https://*.youtube.com https://*.google.com"]
                   :style-src    ["'self'"
                                  "'unsafe-inline'"]
                   :font-src     ["'self'"
                                  (when config/is-dev?
-                                   "localhost:8080 localhost:4987")]
+                                   "localhost:8080")]
                   :img-src      ["*"
                                  "'self' data:"]
                   :connect-src  ["'self'"
                                  ;; MailChimp. So people can sign up for the Metabase mailing list in the sign up process
                                  "metabase.us10.list-manage.com"
+                                 ;;websocket server for collaboration
+                                 "localhost:4987 ws://localhost:4987"
                                  ;; Google analytics
                                  (when (public-settings/anon-tracking-enabled)
                                    "www.google-analytics.com")
@@ -86,7 +90,7 @@
                                    (snowplow/snowplow-url))
                                  ;; Webpack dev server
                                  (when config/is-dev?
-                                   "localhost:8080 ws://localhost:8080 localhost:4987")]
+                                   "localhost:8080 ws://localhost:8080")]
                   :manifest-src ["'self'"]}]
       (format "%s %s; " (name k) (str/join " " vs))))})
 
@@ -138,7 +142,7 @@
 
 (defn- add-security-headers* [request response]
   (update response :headers merge (security-headers
-                                   :allow-iframes? ((some-fn request.u/public? request.u/embed?) request)
+                                   :allow-iframes? ((some-fn request.u/public? request.u/embed? request.u/role?) request)
                                    :allow-cache?   (request.u/cacheable? request))))
 
 (defn add-security-headers

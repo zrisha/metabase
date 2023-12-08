@@ -28,6 +28,12 @@
   [{:keys [uri]}]
   (re-matches #"^/embed/.*$" uri))
 
+(defn role?
+  "Is this request one that will serve roles?"
+  [{:keys [headers]}]  
+  (let [referer (.get headers "referer")]
+  (if (string? referer) (re-find #"/role/" referer) nil)))
+
 (defn cacheable?
   "Can the ring request be permanently cached?"
   [{:keys [request-method uri query-string], :as request}]
