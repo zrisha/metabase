@@ -73,6 +73,7 @@ const AUTHORITY_LEVEL_REGULAR = {
 };
 
 export const PLUGIN_COLLECTIONS = {
+  teamColor: '#AA4A44',
   authorityLevelFormFields: [],
   isRegularCollection: () => true,
   REGULAR_COLLECTION: AUTHORITY_LEVEL_REGULAR,

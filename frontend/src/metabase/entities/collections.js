@@ -150,6 +150,10 @@ export function getCollectionIcon(collection, { tooltip = "default" } = {}) {
   if (isPersonalCollection(collection)) {
     return { name: "person" };
   }
+  if(collection.name.toLowerCase().includes('team')){
+    return { name: "group", color: PLUGIN_COLLECTIONS.teamColor ? color(PLUGIN_COLLECTIONS.teamColor): null}
+  }
+  
   const authorityLevel =
     PLUGIN_COLLECTIONS.AUTHORITY_LEVEL[collection.authority_level];
   return authorityLevel
