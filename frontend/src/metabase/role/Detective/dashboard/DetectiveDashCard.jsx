@@ -337,7 +337,7 @@ const DashCardActionButtons = ({
 }) => {
   const buttons = [];
 
-  if(dashcard.card_id){
+  if(dashcard.card_id && dashcard.card.display !== 'scalar'){
     buttons.push(
       <FavoriteButton
         cardId={dashcard.card_id}
