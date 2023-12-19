@@ -7,12 +7,6 @@ export const FavoriteApi = {
     addBlob: POST("/api/card-favorite-grp/blob/:cardId")
   };
 
-export const RoleApi = {
-  addRoleData: POST("/api/role"),
-  updateRoleData: PUT("/api/role"),
-  getRoleData: GET("/api/role/:roomID")
-};
-
 export const FilterApi = {
   saveFilter: POST("/api/filter/group/:groupId/dashboard/:dashboardId"),
   deleteFilter: DELETE("/api/filter/:filterId"),

@@ -14,7 +14,7 @@ function StoryElement(props) {
 
 
   const onEdit = (e) => {
-    props.selectStoryElement({selectedElement: props});
+    props.selectStoryElement({data: props});
     e.stopPropagation();
   }
 

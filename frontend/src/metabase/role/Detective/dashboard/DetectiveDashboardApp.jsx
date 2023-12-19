@@ -36,7 +36,7 @@ import * as dashboardActions from "metabase/dashboard/actions";
 import { parseHashOptions } from "metabase/lib/browser";
 import * as Urls from "metabase/lib/urls";
 
-import { favoriteGrp, unfavoriteGrp, saveDetectiveData, saveFilter } from "metabase/role/actions";
+import { favoriteGrp, unfavoriteGrp, saveFilter } from "metabase/role/actions";
 
 import Dashboards from "metabase/entities/dashboards";
 
@@ -74,7 +74,6 @@ const mapDispatchToProps = {
   ...dashboardActions,
   favoriteGrp,
   unfavoriteGrp,
-  saveDetectiveData,
   saveFilter,
   archiveDashboard: id => Dashboards.actions.setArchived({ id }, true),
   fetchDatabaseMetadata,

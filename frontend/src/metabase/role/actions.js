@@ -26,15 +26,14 @@ export const ADD_VIZ_BLOB = "metabase/role/ADD_ART_BLOB";
 
 /* Detective */
 export const GET_DETECTIVE_DATA = "metabase/role/GET_DETECTIVE_DATA";
-export const SAVE_DETECTIVE_DATA = "metabase/role/SAVE_DETECTIVE_DATA";
 export const GET_FILTERS = "metabase/role/GET_FILTERS";
 export const SAVE_FILTER = "metabase/role/SAVE_FILTER";
 export const DELETE_FILTER = "metabase/role/DELETE_FILTER";
 export const LOAD_FILTER = "metabase/role/LOAD_FILTER";
 export const loadFilter= createAction(LOAD_FILTER);
-export const FAVORITE_GRP = `metabase/entities/questions/FAVORITE_GRP`;
-export const UNFAVORITE_GRP = `metabase/entities/questions/UNFAVORITE_GRP`;
-export const GET_FAVORITES_GRP = `metabase/entities/questions/GET_FAVORITES_GRP`;
+export const FAVORITE_GRP = `metabase/role/FAVORITE_GRP`;
+export const UNFAVORITE_GRP = `metabase/role/UNFAVORITE_GRP`;
+export const GET_FAVORITES_GRP = `metabase/role/GET_FAVORITES_GRP`;
 export const ADD_NOTE = "metabase/role/ADD_NOTE";
 export const GET_NOTES = "metabase/role/GET_NOTES";
 export const UPDATE_NOTE = "metabase/role/UPDATE_NOTE";
@@ -43,7 +42,7 @@ export const DELETE_NOTE = "metabase/role/DELETE_NOTE";
 /* Journalist */
 export const ADD_STORY_ELEMENT = "metabase/role/ADD_STORY_ELEMENT";
 export const SELECT_STORY_ELEMENT = "metabase/role/SELECT_STORY_ELEMENT";
-export const selectStoryElement= createAction(SELECT_STORY_ELEMENT);
+export const selectStoryElement= createAction(SELECT_STORY_ELEMENT, ({data}) => {return {data, type: data ? data.type : null}});
 export const GET_STORY_ELEMENTS = "metabase/role/GET_STORY_ELEMENTS";
 export const UPDATE_STORY_ELEMENT = "metabase/role/UPDATE_STORY_ELEMENT";
 export const UPDATE_STORY_ELEMENT_POS = "metabase/role/UPDATE_STORY_ELEMENT_POS";
@@ -81,8 +80,8 @@ var checkGroup = function(fn){
 export const getFavoritesGrp = createAction(
     GET_FAVORITES_GRP,
     async ({ groupId }) => {
-      const favorites = await FavoriteApi.getFavoritesGrp({groupId});
-      return { groupId, favorites };
+      const res = await FavoriteApi.getFavoritesGrp({groupId});
+      return { groupId, data: res };
     },
   );
 
@@ -92,7 +91,7 @@ export const favoriteGrp = createThunkAction(
     try{
       const res = await FavoriteApi.favoriteGrp({cardId, group_id: groupId});
       dispatch(addVizBlob({cardId, vizNode}));
-      return { cardId, res }; 
+      return { cardId, groupId };
     }catch(error){
       console.log(error);
       return {error}
@@ -104,7 +103,7 @@ export const unfavoriteGrp = createAction(
   UNFAVORITE_GRP,
   checkGroup(async ({ cardId, groupId }) => {
     const res = await FavoriteApi.unfavoriteGrp({cardId, group_id: groupId});
-    return { cardId, res };
+    return { cardId, groupId };
   }),
 );
 
@@ -122,24 +121,12 @@ export const addVizBlob = createAction(
   })
 );
 
-export const saveDetectiveData = createAction(
-  SAVE_DETECTIVE_DATA,
-  async ({ roomID, data }) => {
-    try{
-      const res = await RoleApi.updateRoleData({id: roomID, data});
-      return {res}
-    }catch(error){
-      return {error}
-    }
-  },
-);
-
 export const getFilters = createAction(
   GET_FILTERS,
   async ({ groupId, dashboardId }) => {
     try{
       const res = await FilterApi.getFilters({groupId, dashboardId});
-      return {res}
+      return {groupId, data: res}
     }catch(error){
       return {error}
     }
@@ -151,7 +138,7 @@ export const saveFilter = createAction(
   checkGroup(async ({ groupId, filter, dashboardId }) => {
     try{
       const res = await FilterApi.saveFilter({groupId, filter, dashboardId});
-      return {filter: res.filter, id: res.id}
+      return {filter: res.filter, id: res.id, groupId}
     }catch(error){
       return {error}
     }
@@ -163,7 +150,7 @@ export const deleteFilter = createAction(
   checkGroup(async ({ filterId, groupId}) => {
     try{
       const res = await FilterApi.deleteFilter({filterId});
-      return {filterId}
+      return {filterId, groupId}
     }catch(error){
       return {error}
     }
@@ -177,7 +164,7 @@ export const addNote = createAction(
   checkGroup(async ({data, groupId}) => {
     try{
       const res = await NoteApi.addNote({data: data, group_id: groupId});
-      return {data, id: res.id}
+      return {data, id: res.id, groupId}
     }catch(error){
       console.log(error);
       return {error}
@@ -187,11 +174,11 @@ export const addNote = createAction(
 
 export const updateNote = createAction(
   UPDATE_NOTE,
-  checkGroup(async ({noteId, data}) => {
+  checkGroup(async ({noteId, data, groupId}) => {
     if(noteId){
       try{
         const res = await NoteApi.updateNote({noteId, data});
-        return {data, id: noteId}
+        return {data, id: noteId, groupId}
       }catch(error){
         console.log(error);
         return {error}
@@ -207,7 +194,7 @@ export const deleteNote = createAction(
   checkGroup(async ({noteId, groupId}) => {
     if(noteId){
       const res = await NoteApi.deleteNote({noteId});
-      return {noteId}
+      return {noteId, groupId}
     } else {
       return {error: "no note id"};
     }
@@ -220,7 +207,7 @@ export const getNotes = createAction(
     if(groupId){
       try{
         const res = await NoteApi.getNotes({groupId});
-        return { notes: res };
+        return { data: res, groupId };
       }catch(error){
         console.log(error);
         return {error}
@@ -240,7 +227,7 @@ export const addArt = createThunkAction(
     try{
       const res = await ArtApi.addArt({data, group_id: groupId});
       dispatch(addArtBlob({artId: res.id}))
-      return {newArt: {...res, data: JSON.stringify(res.data)}}
+      return {artId: res.id, groupId, data: {...res, data: JSON.stringify(res.data)}}
     }catch(error){
       console.log(error);
       return {error}
@@ -255,7 +242,7 @@ export const updateArt = createThunkAction(
       try{
         const res = await ArtApi.updateArt({artId, data});
         dispatch(updateArtBlob({artId, blob}));
-        return {...res, data: JSON.stringify(res.data)} 
+        return {artId, groupId, data: {...res, data: JSON.stringify(res.data)}}
       }catch(error){
         console.log(error);
         return {error}
@@ -268,7 +255,7 @@ export const updateArt = createThunkAction(
 
 export const deleteArt = createAction(
   DELETE_ART,
-  checkGroup(async ({artId}) => {
+  checkGroup(async ({artId, groupId}) => {
     if(artId){
       const res = await ArtApi.deleteArt({artId});
       return {artId}
@@ -277,7 +264,6 @@ export const deleteArt = createAction(
     }
   })
 )
-
 
 export const getArts = createAction(
   GET_ARTS,
@@ -334,53 +320,27 @@ export const updateArtBlob = createAction(
   })
 );
 
-/* Misc */
-
-export const getRoleData = ({roomID, role, dashboardId = false}) => {
-  return async function(dispatch, getState) {
-    const getResponse = await RoleApi.getRoleData({roomID, role});
-    let payload = {}
-    if(getResponse.status && getResponse.status == 202){
-      try{
-        const res = await RoleApi.addRoleData({id: roomID, role, data: {}});
-          payload = {id: roomID, role, data: {}, res}
-      }catch(error){
-        payload = {error}
-      }
-    }else{
-      payload = {data: getResponse.data, dashboardId}
-    }
-    switch(role){
-      case 'artist':
-        dispatch(createAction(GET_ARTIST_DATA)(payload));
-      case 'detective':
-        dispatch(createAction(GET_DETECTIVE_DATA)(payload));
-      default:
-        dispatch(createAction(ROLE_DATA_ERROR)(payload));
-    }
-  }
-}
-
 /* Journalist */
 
-export const addStoryElement= checkGroup(({data, type, groupId}) => {
-  return async function(dispatch, getState) {
+export const addStoryElement = createAction(
+  ADD_STORY_ELEMENT,
+  checkGroup(async ({data, type, groupId}) => {
     try{
       const res = await StoryApi.addStoryElement({data: data, type, group_id: groupId});
-      dispatch(createAction(ADD_STORY_ELEMENT)({...data, type, id: res.id}));
+      return {data, type, id: res.id, groupId};
     }catch(error){
       console.log(error);
       return {error}
     }
-  }
-})
+  })
+)
 
 export const updateStoryElementPos = createAction(
   UPDATE_STORY_ELEMENT_POS,
   checkGroup(async ({storyId, data, groupId}) => {
     if(storyId){
       const res = await StoryApi.updateStoryElementPos({storyId, data});
-      return {storyId, x:data.x, y:data.y}
+      return {storyId, data, groupId}
     } else {
       return {error: "no story element id"};
     }
@@ -392,7 +352,7 @@ export const updateStoryElement = createAction(
   checkGroup(async ({storyId, data, groupId}) => {
     if(storyId){
       const res = await StoryApi.updateStoryElement({storyId, data});
-      return {storyId, data}
+      return {storyId, data, groupId}
     } else {
       return {error: "no story element id"};
     }
@@ -404,7 +364,7 @@ export const deleteStoryElement = createAction(
   checkGroup(async ({storyId, data, groupId}) => {
     if(storyId){
       const res = await StoryApi.deleteStoryElement({storyId});
-      return {storyId}
+      return {storyId, groupId}
     } else {
       return {error: "no story element id"};
     }

@@ -7,7 +7,7 @@ import Icon from "metabase/components/Icon";
 
 function StoryElementPicker(props) {
     const onClick = (ele) => {
-      props.selectStoryElement({selectedElement: ele});
+      props.selectStoryElement({data: ele});
     };
 
 

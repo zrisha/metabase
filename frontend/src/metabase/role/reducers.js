@@ -1,4 +1,5 @@
 import { handleActions, combineReducers } from "metabase/lib/redux";
+import Utils from "metabase/lib/utils";
 
 import {
   CHANGE_DRIVER,
@@ -44,7 +45,7 @@ const DEFAULT_HOME = {docId: null};
 
 const favorites = handleActions(
   {
-    [GET_FAVORITES_GRP]: (state, { payload }) => ({...state, cards: payload.favorites.map(x => x.card_id)}),
+    [GET_FAVORITES_GRP]: (state, { payload }) => ({...state, cards: payload.data.map(x => x.card_id)}),
     [FAVORITE_GRP]: (state, { payload }) => ({...state, cards: [...state.cards, payload.cardId]}),
     [UNFAVORITE_GRP]: (state, { payload }) => ({...state, cards: state.cards.filter(item => item !== payload.cardId)})
   },
@@ -59,13 +60,18 @@ const artist = handleActions(
       }),
     },
     [ADD_ART]: (state, { payload }) => {
-      if(payload.newArt)
-        return ({...state, arts: [...state.arts, payload.newArt ], selectedArt: {id: payload.newArt.id}})
+      if(payload.data && payload.data.data)
+        return ({...state, arts: [...state.arts, payload.data ], selectedArt: {id: payload.data.id}})
       else
         return state
     },
     [DELETE_ART]: (state, { payload }) => ({...state, arts: state.arts.filter(art => art.id != payload.artId)}),
-    [UPDATE_ART]: (state, { payload }) => ({...state, arts: state.arts.map(art => art.id == payload.id ? payload : art)}),
+    [UPDATE_ART]: (state, { payload }) => {
+      if(payload.data.id)
+        return ({...state, arts: state.arts.map(art => art.id == payload.artId ? payload.data : art)})
+      else
+        return state
+    },
     [GET_ARTS]: (state, { payload }) => ({...state,  arts: payload.arts, selectedArt: payload.selectedArt ? payload.selectedArt : null}),
     [SELECT_ART]: (state, {payload}) => ({...state, selectedArt: payload.selectedArt}),
     [UPDATE_SAVE_STATUS]: (state, {payload}) => ({...state, unsaved: payload.unsaved}),
@@ -76,7 +82,7 @@ const artist = handleActions(
 
 const detective = handleActions(
   {
-    [GET_FILTERS]: (state, { payload }) => ({...state, savedFilters: payload.res, dashboardId: payload.dashboardId}),
+    [GET_FILTERS]: (state, { payload }) => ({...state, savedFilters: payload.data, dashboardId: payload.dashboardId}),
     [SAVE_FILTER]: (state, { payload }) => ({...state, savedFilters: [...state.savedFilters, payload ]}),
     [DELETE_FILTER]: (state, { payload }) => ({...state, savedFilters: state.savedFilters.filter(entry => entry.id != payload.filterId)}),
     [LOAD_FILTER]: (state, { payload }) => ({...state, loadQuery: payload.loadQuery}),
@@ -94,16 +100,19 @@ const detective = handleActions(
       else
         return {...state, notes: state.notes.map(note => note.id == payload.id ? payload : note)}
     },
-    [GET_NOTES]: (state, { payload }) => ({...state,  notes: payload.notes}),
+    [GET_NOTES]: (state, { payload }) => ({...state,  notes: payload.data}),
   },
   DEFAULT_DETECTIVE,
 );
 
 const journalist = handleActions(
   {
-    [ADD_STORY_ELEMENT]: (state, { payload }) => ({...state, storyElements: {...state.storyElements, [payload.id]: payload}, selectedElement: null}),
+    [ADD_STORY_ELEMENT]: (state, { payload }) => {
+      const id = payload.id ? payload.id : (payload.groupId == 1 ? Utils.uuid() : undefined)
+      return ({...state, storyElements: {...state.storyElements, [id]: {...payload.data, id: payload.id, type: payload.type}}, selectedElement: null})
+    },
     [UPDATE_STORY_ELEMENT_POS]: (state, { payload }) => {
-      const update = {...state.storyElements[payload.storyId], x: payload.x, y:payload.y};
+      const update = {...state.storyElements[payload.storyId], x: payload.data.x, y:payload.data.y};
       if(payload.status){
         return state
       }
@@ -116,7 +125,7 @@ const journalist = handleActions(
       }
       return ({...state, storyElements: {...state.storyElements, [payload.storyId]: update}})
     },
-    [SELECT_STORY_ELEMENT]: (state, { payload }) => ({...state, selectedElement: payload.selectedElement}),
+    [SELECT_STORY_ELEMENT]: (state, { payload }) => ({...state, selectedElement: payload.data}),
     [GET_STORY_ELEMENTS]: (state, { payload }) => ({...state, storyElements: payload.storyElements}),
     [DELETE_STORY_ELEMENT]: (state, { payload }) => {
       const { [payload.storyId]: value, ...update } = state.storyElements;

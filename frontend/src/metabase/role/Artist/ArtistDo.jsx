@@ -6,7 +6,6 @@ import { Absolute } from "metabase/components/Position";
 import DrawingTool from "./drawing-tool.js";
 import "./drawing-tool.css";
 import { GET } from "metabase/lib/api";
-import { renderDrawingTool } from "../actions";
 import Button from "metabase/core/components/Button";
 import ButtonBar from "metabase/components/ButtonBar";
 import withToast from "metabase/hoc/Toast";
@@ -94,13 +93,14 @@ class ArtistDo extends Component {
         artId: this.props.artist.selectedArt.id,
         blob: window.drawingTool.$canvas[0].toDataURL()
       });
-      if (!res.payload.error) {
+
+      if (!res.payload.error && res.payload.data.id) {
         this.props.triggerToast(
           <div className="flex align-center">{`Your drawing was saved`}</div>,
           { icon: "pencil" },
         );
         this.props.setSaveStatus({ unsaved: false });
-      } else if (res.payload.error) {
+      } else if (res.payload.error || !res.payload.data.id) {
         this.props.triggerToast(
           <div className="flex align-center">
             {`Unknown Error saving your drawing`}
@@ -237,7 +237,6 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = {
-  renderDrawingTool,
   getFavoritesGrp,
   addArt,
   updateArt,
