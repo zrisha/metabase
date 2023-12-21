@@ -42,7 +42,8 @@ export const DELETE_NOTE = "metabase/role/DELETE_NOTE";
 /* Journalist */
 export const ADD_STORY_ELEMENT = "metabase/role/ADD_STORY_ELEMENT";
 export const SELECT_STORY_ELEMENT = "metabase/role/SELECT_STORY_ELEMENT";
-export const selectStoryElement= createAction(SELECT_STORY_ELEMENT, ({data}) => {return {data, type: data ? data.type : null}});
+export const CLEAR_STORY_ELEMENT = "metabase/role/CLEAR_STORY_ELEMENT";
+export const clearStoryElement = createAction(CLEAR_STORY_ELEMENT);
 export const GET_STORY_ELEMENTS = "metabase/role/GET_STORY_ELEMENTS";
 export const UPDATE_STORY_ELEMENT = "metabase/role/UPDATE_STORY_ELEMENT";
 export const UPDATE_STORY_ELEMENT_POS = "metabase/role/UPDATE_STORY_ELEMENT_POS";
@@ -174,11 +175,11 @@ export const addNote = createAction(
 
 export const updateNote = createAction(
   UPDATE_NOTE,
-  checkGroup(async ({noteId, data, groupId}) => {
-    if(noteId){
+  checkGroup(async ({id, data, groupId}) => {
+    if(id){
       try{
-        const res = await NoteApi.updateNote({noteId, data});
-        return {data, id: noteId, groupId}
+        const res = await NoteApi.updateNote({noteId: id, data});
+        return {data, id, groupId}
       }catch(error){
         console.log(error);
         return {error}
@@ -383,6 +384,16 @@ export const getStoryElements = createAction(
     }
   },
 );
+
+export const selectStoryElement= createAction(
+  SELECT_STORY_ELEMENT, 
+  ({data}) => {
+    return {
+      data, 
+      type: data ? data.type : null,
+      storyId: data && data.storyId ? data.storyId : null
+    }
+  });
 
 const formatStoryElement = (res) => {
   const storyElements = {}

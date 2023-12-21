@@ -15,6 +15,7 @@ import {
   LOAD_FILTER,
   ADD_STORY_ELEMENT,
   SELECT_STORY_ELEMENT,
+  CLEAR_STORY_ELEMENT,
   GET_STORY_ELEMENTS,
   UPDATE_STORY_ELEMENT_POS,
   UPDATE_STORY_ELEMENT,
@@ -86,7 +87,10 @@ const detective = handleActions(
     [SAVE_FILTER]: (state, { payload }) => ({...state, savedFilters: [...state.savedFilters, payload ]}),
     [DELETE_FILTER]: (state, { payload }) => ({...state, savedFilters: state.savedFilters.filter(entry => entry.id != payload.filterId)}),
     [LOAD_FILTER]: (state, { payload }) => ({...state, loadQuery: payload.loadQuery}),
-    [ADD_NOTE]: (state, { payload }) => ({...state, notes: [...state.notes, payload ]}),
+    [ADD_NOTE]: (state, { payload }) => {
+      payload.id = payload.id ? payload.id : (payload.groupId == 1 ? Utils.uuid() : undefined)
+      return {...state, notes: [...state.notes, payload ]}
+    },
     [DELETE_NOTE]: (state, { payload }) => {
       if(!payload.noteId){
         return state
@@ -126,6 +130,7 @@ const journalist = handleActions(
       return ({...state, storyElements: {...state.storyElements, [payload.storyId]: update}})
     },
     [SELECT_STORY_ELEMENT]: (state, { payload }) => ({...state, selectedElement: payload.data}),
+    [CLEAR_STORY_ELEMENT]: (state, { payload }) => ({...state, selectedElement: null}),
     [GET_STORY_ELEMENTS]: (state, { payload }) => ({...state, storyElements: payload.storyElements}),
     [DELETE_STORY_ELEMENT]: (state, { payload }) => {
       const { [payload.storyId]: value, ...update } = state.storyElements;

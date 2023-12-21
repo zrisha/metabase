@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
-import { addStoryElement, selectStoryElement, updateStoryElement, deleteStoryElement } from '../actions';
+import { addStoryElement, selectStoryElement, clearStoryElement, updateStoryElement, deleteStoryElement } from '../actions';
 import storyData from "./story-elements.json";
 import StoryElementPicker from "./StoryElementPicker";
 import StoryElementForm from "./StoryElementForm";
@@ -16,6 +16,7 @@ function StoryElementSidebar(props) {
               group={props.group ? props.group : false}
               addStoryElement={props.addStoryElement} 
               selectStoryElement={props.selectStoryElement} 
+              clearStoryElement={props.clearStoryElement} 
               selectedElement={props.journalist.selectedElement} 
               storyElements={props.journalist.storyElements} 
               updateStoryElement={props.updateStoryElement}
@@ -28,6 +29,7 @@ const mapDispatchToProps = {
   addStoryElement,
   selectStoryElement,
   updateStoryElement,
+  clearStoryElement,
   deleteStoryElement
 };
 

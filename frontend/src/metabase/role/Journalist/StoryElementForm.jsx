@@ -37,7 +37,7 @@ function StoryElementForm(props) {
   const exists = props.selectedElement && 'storyId' in props.selectedElement;
 
   const onExit = () => {
-    props.selectStoryElement({data: null});
+    props.clearStoryElement();
   }
 
   const onDelete = () => {

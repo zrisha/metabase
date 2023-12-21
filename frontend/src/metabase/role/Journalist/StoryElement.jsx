@@ -14,7 +14,7 @@ function StoryElement(props) {
 
 
   const onEdit = (e) => {
-    props.selectStoryElement({data: props});
+    props.selectStoryElement({data: props, storyId: props.storyId});
     e.stopPropagation();
   }
 
@@ -68,10 +68,10 @@ function StoryElement(props) {
         hasBackground={true}
       >
         <div className="p2">
-        {props.fields && props.fields.map(ele => <>
+        {props.fields && props.fields.map(ele => <React.Fragment key={ele.name}>
           <h4>{ele.title}</h4>
           <p>{props.data[ele.name]}</p>
-        </>)}
+        </React.Fragment>)}
         </div>
       </Popover>
     </div>

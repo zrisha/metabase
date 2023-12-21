@@ -60,7 +60,8 @@ class JournalistDo extends Component {
         {containerWidth && Object.entries(storyElements).map(([storyId, ele]) => {
           const {type, ...data} = ele;
           return <StoryElement {...storyData[ele.type]} 
-            storyId={storyId} 
+            storyId={storyId}
+            key={storyId} 
             type={type} 
             data={data} 
             selectStoryElement={this.props.selectStoryElement} 
