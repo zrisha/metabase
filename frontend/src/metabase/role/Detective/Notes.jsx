@@ -38,8 +38,10 @@ export default function Notes(props) {
     div.innerHTML = value;
     var text = div.textContent || div.innerText || "";
 
-    await props.updateNote({noteId: note.id, data:{value, text}, groupId: props.groupId})
-    setSaving(false)
+    autoSave.current = setTimeout(async () => {
+      await props.updateNote({id: note.id, data:{value, text}, groupId: props.groupId})
+      setSaving(false)
+    }, 2500)    
   
   }
 
