@@ -27,7 +27,6 @@ class RoleLayout extends React.Component{
     super(props);
     this.state = {
       socketRendered: false,
-      groupId: false
     }
 
     this.roleWidths = {
@@ -39,20 +38,19 @@ class RoleLayout extends React.Component{
 
   componentDidMount(){
     const groupId = this.props.user.group_ids.find(id => id != 1 && id !=2);
+
     //Set group or default to demo
     const currentGroup = groupId ? groupId : 1
-    this.setState({groupId: currentGroup});
-
-    this.role = this.props.location.pathname.split("/")[2];
-    this.roomID = this.group ? this.role + this.group : this.role;
 
     this.props.setGroup({groupId: currentGroup});
+    this.role = this.props.location.pathname.split("/")[2];
 
     //Skip websocket for demo group
     if(currentGroup == 1 || !currentGroup){
       return
     }
-  
+
+    this.roomID = currentGroup ? this.role + groupId : this.role;
     this.socket = io("http://localhost:4987", {auth: {user: this.props.user, roomID :this.roomID}})
     this.socket.on("connect", () => {
       this.setState({socketRendered: true});
@@ -84,11 +82,11 @@ class RoleLayout extends React.Component{
   render(){
     const widths = this.roleWidths[this.role] ? this.roleWidths[this.role] : {left: '25%', right: '75%'};
 
-    if(this.state.groupId == false){
+    if(this.props.groupId == false){
       return <></>
     }
 
-    if(this.state.groupId == 1){
+    if(this.props.groupId == 1){
       return <>
         <Navbar location={this.props.location} demoMode={true} />
         <Layout sidebar = {this.props.sidebar} main={this.props.main} widths = { widths}/>
@@ -116,7 +114,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state, props) => ({
   room: state.role.room[props.location.pathname.split("/")[2]],
-  user: getUser(state)
+  user: getUser(state),
+  groupId: state.role.groupId
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoleLayout);

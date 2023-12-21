@@ -142,8 +142,8 @@ const journalist = handleActions(
 
 const room = handleActions(
   {
-    [JOIN_ROOM]: (state, { payload }) => ({...state, [payload.role]: payload.room, group: payload.group}),
-    [LEAVE_ROOM]: (state, { payload }) => ({...state, [payload.role]: payload.room, group: payload.group}),
+    [JOIN_ROOM]: (state, { payload }) => ({...state, [payload.role]: payload.room, group: payload.group, currentRole: payload.role}),
+    [LEAVE_ROOM]: (state, { payload }) => ({...state, [payload.role]: payload.room, group: payload.group, currentRole: null}),
     [CHANGE_DRIVER]: (state, { payload }) => ({...state, [payload.role]: payload.room, group: payload.group}),
   },
   DEFAULT_ROOM,
