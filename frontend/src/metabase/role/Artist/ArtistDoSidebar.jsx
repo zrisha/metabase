@@ -48,7 +48,7 @@ const ArtistDoSidebar = props => {
     <>
       <SidebarLayout
         top={<Top {...props} />}
-        bottom={<QuestionViewer favoriteCards={props.favoriteCards} />}
+        bottom={<QuestionViewer role="artist" favoriteCards={props.favoriteCards} />}
         heights={[45, 55]}
       />
     </>

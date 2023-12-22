@@ -5,6 +5,7 @@ import Card from "metabase/components/Card";
 import Select from "metabase/components/Select";
 import { Flex } from "grid-styled";
 import EmptyState from "metabase/components/EmptyState";
+import { trackStructEvent } from "metabase/lib/analytics";
 import EntityListLoader from "metabase/entities/containers/EntityListLoader";
   import {
     getIconForVisualizationType,
@@ -20,6 +21,8 @@ export default class QuestionApp extends React.Component {
 
     onChange = (id) => {
         this.setState({selectedQuestion: id})
+        //log action
+        trackStructEvent(this.props.role, "Select Question", "question_id", id)
     }
     render() {
         return <div className="QuestionViewer">
