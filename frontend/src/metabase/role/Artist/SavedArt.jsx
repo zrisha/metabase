@@ -17,7 +17,6 @@ const RemoveButton = ({deleteArt, artId, groupId}) => {
     >
         <span
           className="text-dark-hover drag-disabled absolute text-medium"
-          data-metabase-event="Artist;Remove Art"
           style={{right: "10px"}}
         >
           <Icon name="close" size={16} />
@@ -30,7 +29,7 @@ const RemoveButton = ({deleteArt, artId, groupId}) => {
 const SavedArt = (props) => {
   return (
     <Card style={{height:"100%", overflowY: 'auto'}} className='bg-brand relative flex flex-column'>
-      <Absolute top={5} right={5} data-metabase-event="Artist;Add Art" className="text-white-hover cursor-pointer">
+      <Absolute top={5} right={5} className="text-white-hover cursor-pointer">
         <Button onlyIcon icon="add" disabled={false} onClick={() => props.addArt({data: {}, groupId: props.groupId})}/>
       </Absolute>
       <h4 className='text-centered my1 text-white'>Arts</h4>

@@ -66,6 +66,14 @@ export const ROLE_DATA_ERROR = "metabase/role/ROLE_DATA_ERROR";
 export const SET_GROUP = "metabase/role/SET_GROUP";
 export const setGroup= createAction(SET_GROUP);
 
+/* Loggin Filter */
+
+export const excludeLogging = [
+  GET_ARTIST_DATA, GET_ARTS, GET_DETECTIVE_DATA, GET_DOC_ID, GET_FAVORITES_GRP,
+  GET_FILTERS, GET_NOTES, GET_STORY_ELEMENTS, ADD_ART_BLOB, UPDATE_ART_BLOB, ADD_VIZ_BLOB,
+  UPDATE_SAVE_STATUS, RENDER_DRAWING_TOOL
+].reduce((o, key) => ({ ...o, [key]: 1}), {})
+
 var checkGroup = function(fn){
   return function(){
     if(arguments[0].groupId && arguments[0].groupId == 1){

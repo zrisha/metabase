@@ -1,6 +1,7 @@
 import { getSafe } from "metabase/ext/util";
 import { getParameters, getDashboardId } from "metabase/dashboard/selectors";
 import { PUT } from "metabase/lib/api";
+import {excludeLogging} from "metabase/role/actions";
 
 export const logging = store => next => action => {
   if (!action) {
@@ -38,6 +39,11 @@ export const logging = store => next => action => {
       break;
     }
     default:
+      if(action.type.includes('/role/')){
+        if(!excludeLogging[action.type]){
+          logAction(action, store)
+        }
+      }
       break;
   }
 
@@ -78,4 +84,25 @@ async function logFilter(action, store) {
     },
   });
   return call;
+}
+
+async function logAction(action, store){
+  const action_type = action.type.split('/')
+  const action_name = action_type.pop()
+  const category = action_type.pop()
+
+  let payload = null
+  if(action.payload){
+    const {data, ...otherData} = action.payload
+    payload = otherData;
+  }
+
+  const call = await PUT("/api/user-activity")({
+    activity: {
+      action: action_name,
+      category,
+      payload,
+    },
+  });
+  return call
 }
