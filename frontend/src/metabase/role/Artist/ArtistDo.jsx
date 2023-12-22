@@ -6,6 +6,7 @@ import { Absolute } from "metabase/components/Position";
 import DrawingTool from "./drawing-tool.js";
 import "./drawing-tool.css";
 import { GET } from "metabase/lib/api";
+import { trackStructEvent } from "metabase/lib/analytics";
 import Button from "metabase/core/components/Button";
 import ButtonBar from "metabase/components/ButtonBar";
 import withToast from "metabase/hoc/Toast";
@@ -23,8 +24,12 @@ class ArtistDo extends Component {
   constructor() {
     super();
     this.updateCount = 0;
+    this.loaded = false
     this.artistCanvas = React.createRef();
     this.saveDrawing = this.saveDrawing.bind(this);
+    this.skippedEvents = [
+      'undo:possible', 'undo:impossible', 'redo:possible', 'redo:impossible'
+    ]
   }
 
   //For keeping the canvas the proper size
@@ -38,13 +43,29 @@ class ArtistDo extends Component {
   //Tracks canvas changes
   onChange = () => {
     this.updateCount += 1;
-    if (this.updateCount > 2) {
-      if (this.props.artist.unsaved != true) {
-        console.log("set update true");
-        this.props.setSaveStatus({ unsaved: true });
-      }
+    if (this.loaded) {
+      this.toggleSaveStatus(true);
     }
   };
+
+  //Logs events from drawing tool
+  onEvent = (event, value) => {
+    if(!this.loaded || !event || this.skippedEvents.includes(event))
+      return
+
+    if(value){
+      trackStructEvent("artist", event, "drawingTool", value)
+    }
+    else if(event){
+      trackStructEvent("artist", event, "drawingTool")
+    }
+  };
+
+  toggleSaveStatus = (status) => {
+    if (this.props.artist.unsaved != status) {
+      this.props.setSaveStatus({ unsaved: status });
+    }
+  }
 
   //Catch leaving before saving for router
   routerWillLeave = nextLocation => {
@@ -71,6 +92,7 @@ class ArtistDo extends Component {
       );
       if (selectedArt && selectedArt.data) {
         const data = JSON.parse(selectedArt.data);
+        this.loaded = false
 
         //Load in newly selected artwork
         if (data.canvas) {
@@ -78,9 +100,9 @@ class ArtistDo extends Component {
         } else if (data.canvas == undefined) {
           window.drawingTool.clear();
         }
-        this.props.setSaveStatus({ unsaved: false });
-        this.updateCount = 0;
+        this.toggleSaveStatus(false);
         this.resizeWindow();
+        this.loaded = true
       }
     }
   }
@@ -99,7 +121,7 @@ class ArtistDo extends Component {
           <div className="flex align-center">{`Your drawing was saved`}</div>,
           { icon: "pencil" },
         );
-        this.props.setSaveStatus({ unsaved: false });
+        this.toggleSaveStatus(false);
       } else if (res.payload.error || !res.payload.data.id) {
         this.props.triggerToast(
           <div className="flex align-center">
@@ -141,6 +163,7 @@ class ArtistDo extends Component {
       const stamp_paths = icon_filenames.map(x => `/app/assets/fa-icons/${x}`);
       window.drawingTool = new DrawingTool("#drawing-tool-container", {
         onDrawingChanged: this.onChange,
+        onAnyEvent: this.onEvent,
         stamps: {
           Stamps: stamp_paths,
         },
@@ -151,6 +174,7 @@ class ArtistDo extends Component {
     } catch (e) {
       window.drawingTool = new DrawingTool("#drawing-tool-container", {
         onDrawingChanged: this.onChange,
+        onAnyEvent: this.onEvent,
         parseSVG: true,
         height: (window.innerHeight - (48 + 16)) * 0.85,
         width: this.artistCanvas.current.offsetWidth * 0.85,
@@ -191,6 +215,7 @@ class ArtistDo extends Component {
         if (data && data.canvas) {
           window.drawingTool.load(data);
           this.resizeWindow();
+          this.loaded = true
         }
       }
     } catch (e) {
