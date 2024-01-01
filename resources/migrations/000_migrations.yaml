@@ -10364,7 +10364,7 @@ databaseChangeLog:
                 nullable: false
           tableName: art_blob
   - changeSet:
-      id: v42.41-011
+      id: v42.41-0111
       author: zrisha
       comment: Add table for Viz blobs
       changes: 
@@ -10377,7 +10377,7 @@ databaseChangeLog:
                 initiallyDeferred: false
                 nullable: false
                 primaryKey: true
-                references: report_cardfavorite_grp(card_id)
+                references: report_card(id)
                 deleteCascade: true
               name: id
               type: int
@@ -10398,6 +10398,20 @@ databaseChangeLog:
               constraints:
                 nullable: false
           tableName: report_cardblob
+  - changeSet:
+      id: v42.41-012
+      author: zrisha
+      comment: Add column for session id to logging
+      changes:  
+      - addColumn:
+          tableName: user_activity
+          columns:
+            - column:
+                name: session_id
+                type: varchar(254)
+                constraints:
+                  nullable: true
+
 
 
 
