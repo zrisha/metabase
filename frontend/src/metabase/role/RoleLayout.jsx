@@ -51,7 +51,7 @@ class RoleLayout extends React.Component{
     }
 
     this.roomID = currentGroup ? this.role + groupId : this.role;
-    this.socket = io("http://localhost:4987", {auth: {user: this.props.user, roomID :this.roomID}})
+    this.socket = io("http://localhost:4987", {auth: {user: this.props.user, roomID :this.roomID, groupId, role: this.role}})
     this.socket.on("connect", () => {
       this.setState({socketRendered: true});
       //Update room with new user
@@ -103,7 +103,7 @@ class RoleLayout extends React.Component{
           <Layout sidebar = {this.props.sidebar} main={this.props.main} widths = { widths}/>
         </IsDriver>
      }else{
-      return <RPlayer room={this.props.room} user={this.props.user} roomID={this.roomID} socket={this.socket}/>
+      return <RPlayer role={this.role} room={this.props.room} user={this.props.user} roomID={this.roomID} socket={this.socket}/>
      }
   }
 }

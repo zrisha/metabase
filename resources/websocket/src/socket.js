@@ -1,5 +1,7 @@
 const { Server } = require("socket.io");
 const { createServer } = require("http");
+const Credentials = require('./Credentials.js')
+const axios = require('axios');
 const httpServer = createServer();
 const io = new Server(httpServer, {
   cors: {
@@ -7,6 +9,60 @@ const io = new Server(httpServer, {
   },
   maxHttpBufferSize: 1e8
 });
+
+const credentials = new Credentials({
+  username: process.env['MB_API_USERNAME'],
+  password: process.env['MB_API_PASSWORD']
+})
+
+async function putRequest(data){
+  const currentCreds = await credentials.getCredentials();
+  
+  const headers = { "X-Metabase-Session": currentCreds.id}
+  try{
+      const response = await axios.put(`${credentials.siteURL}/api/room-activity`, data, { headers });
+      return response
+  }catch(e){
+    if(e.response){
+      return e.response
+    }else{
+      console.log(e)
+      return e
+    }
+  }
+}
+
+async function logData(args){
+  const {auth, activity, roomState} = args;
+
+  const { user, groupId, role } = auth;
+
+  const data = {
+    user_id: user.id,
+    group_id: groupId,
+    role,
+    activity,
+  };
+
+  if(roomState){
+    data.room_state = {
+      driver: roomState['driver'],
+      navigators: [...roomState['navigators'].values()]
+    }
+  }
+
+  const res = await putRequest(data);
+
+  if(res.status && res.status == 401){
+    await credentials.updateCredentials()
+    const retry = await putRequest(data)
+    return retry
+  }else{
+    return res
+  }
+}
+
+
 
 const socketState = {}
 io.on("connection", (socket) => {
@@ -34,6 +90,12 @@ io.on("connection", (socket) => {
       driver: socketState[roomID]['driver'],
       navigators: Array.from(socketState[roomID]['navigators'])
     });
+
+    logData({
+      auth: socket.handshake.auth,
+      roomState: socketState[roomID],
+      activity: {action: 'JOIN_ROOM'}
+    })
   });
 
   //emit event from the host/driver
@@ -44,16 +106,26 @@ io.on("connection", (socket) => {
 
   //emit event from the viewer/navigator
   socket.on("agent-event", function (data) {
+    const {event, ...otherData} = data;
+
     const {roomID, user } = socket.handshake.auth;
     data.roomID = roomID;
     data.user = user;
     io.to(data.roomID).emit(data.event, data);
+
+    if(event !== 'new-viewer'){
+      logData({
+        auth: socket.handshake.auth,
+        activity: {action: event, ...otherData}
+      })
+    }
   });
 
   //Fufill request to change the driver
   socket.on("change-driver", function (data) {
     const {roomID} = socket.handshake.auth;
     console.log(`driving requested by ${data.user.id} in ${roomID}`);
+
     if(socketState[roomID]['driver']){
       socketState[roomID]['navigators'].add(socketState[roomID]['driver']);
       socketState[roomID]['navigators'].delete(data.user.id);
@@ -64,6 +136,12 @@ io.on("connection", (socket) => {
       driver: socketState[roomID]['driver'],
       navigators: Array.from(socketState[roomID]['navigators'])
     });
+
+    logData({
+      auth: socket.handshake.auth,
+      roomState: socketState[roomID],
+      activity: {action: 'CHANGE_DRIVER'}
+    })
   });
 
   //Claim driver if none present
@@ -77,6 +155,11 @@ io.on("connection", (socket) => {
         driver: socketState[roomID]['driver'],
         navigators: Array.from(socketState[roomID]['navigators'])
       });
+      logData({
+        auth: socket.handshake.auth,
+        roomState: socketState[roomID],
+        activity: {action: 'CLAIM_DRIVER'}
+      })
     }
   });
 
@@ -93,6 +176,11 @@ io.on("connection", (socket) => {
       driver: socketState[roomID]['driver'],
       navigators: Array.from(socketState[roomID]['navigators'])
     });
+    logData({
+      auth: socket.handshake.auth,
+      roomState: socketState[roomID],
+      activity: {action: 'LEAVE_ROOM'}
+    })
  });
 });
 

@@ -10411,6 +10411,59 @@ databaseChangeLog:
                 type: varchar(254)
                 constraints:
                   nullable: true
+  - changeSet:
+      id: v42.41-0130
+      author: zrisha
+      comment: Add table for Room (socket) activity
+      changes:
+      - createTable:
+          tableName: room_activity
+          remarks: "Keeps track of collaborative activity of the websocket rooms"
+          columns:
+            - column:
+                name: id
+                type: int
+                autoIncrement: true
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: timestamp
+                type: ${timestamp_type}
+                remarks: "When this action occurred."
+                defaultValueComputed: current_timestamp
+                constraints:
+                  nullable: false
+            - column:
+                name: user_id
+                type: int
+                remarks: "ID of the User involved."
+                constraints:
+                  nullable: false
+            - column:
+                name: group_id
+                type: int
+                remarks: "ID of the group involved."
+                constraints:
+                  nullable: false
+            - column:
+                name: role
+                type: varchar(254)
+                remarks: "Name of the role involved."
+                constraints:
+                  nullable: false
+            - column:
+                name: activity
+                type: text
+                remarks: "JSON format of activity"
+                constraints:
+                  nullable: false
+            - column:
+                name: room_state
+                type: text
+                remarks: "JSON format for state of room"
+                constraints:
+                  nullable: true
 
 
 

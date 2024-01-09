@@ -11,6 +11,7 @@
   "author": "Zak Risha",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.3",
     "nodemon": "^2.0.22",
     "socket.io": "^4.5.4",
     "webpack-node-externals": "^3.0.0"
