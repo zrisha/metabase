@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { createAction } from "metabase/lib/redux";
-import { FavoriteApi, FilterApi, RoleApi, StoryApi, NoteApi, ArtApi, HomeApi } from "./services";
+import { FavoriteApi, FilterApi, StoryApi, NoteApi, ArtApi, HomeApi } from "./services";
 import _ from "underscore";
 import { createThunkAction } from "metabase/lib/redux";
 import { toPng } from 'html-to-image';
@@ -52,6 +52,7 @@ export const DELETE_STORY_ELEMENT = "metabase/role/DELETE_STORY_ELEMENT";
 /* Home */
 
 export const GET_DOC_ID = "metabase/role/GET_DOC_ID";
+export const GET_ROLE_ACTIVITY = "metabase/role/GET_ROLE_ACTIVITY";
 
 /* RRWeb */
 export const JOIN_ROOM = "metabase/role/JOIN_ROOM";
@@ -69,6 +70,7 @@ export const setGroup= createAction(SET_GROUP);
 /* Loggin Filter */
 
 export const excludeLogging = [
+  JOIN_ROOM, LEAVE_ROOM, CHANGE_DRIVER,
   GET_ARTIST_DATA, GET_ARTS, GET_DETECTIVE_DATA, GET_DOC_ID, GET_FAVORITES_GRP,
   GET_FILTERS, GET_NOTES, GET_STORY_ELEMENTS, ADD_ART_BLOB, UPDATE_ART_BLOB, ADD_VIZ_BLOB,
   UPDATE_SAVE_STATUS, RENDER_DRAWING_TOOL
@@ -424,6 +426,20 @@ export const getDocId = createAction(
         return {error: 'no document found'}
       }
       return JSON.parse(res.out);
+    }catch(error){
+      console.log(error);
+      return {error}
+    }
+  }
+);
+
+export const getRoleActivity = createAction(
+  GET_ROLE_ACTIVITY,
+  async ({groupId}) => {
+    try{
+      const res = await HomeApi.getRoleActivity({groupId})
+      
+      return {roleActivity: res}
     }catch(error){
       console.log(error);
       return {error}

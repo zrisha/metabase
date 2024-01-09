@@ -31,7 +31,8 @@ import {
   SELECT_ART,
   UPDATE_SAVE_STATUS,
   GET_DOC_ID,
-  SET_GROUP
+  SET_GROUP,
+  GET_ROLE_ACTIVITY
 } from "./actions";
 
 window.Metabase.data = {};
@@ -41,7 +42,7 @@ const DEFAULT_DETECTIVE = { savedFilters: [], notes: []};
 const DEFAULT_JOURNALIST = { storyElements: {}, selectedElement: null};
 const DEFAULT_ROOM = {artist: {}, detective: {}, journalist: {}};
 const DEFAULT_FAVORITES = {cards: []};
-const DEFAULT_HOME = {docId: null};
+const DEFAULT_HOME = {docId: null, roleActivity: []};
 
 
 const favorites = handleActions(
@@ -152,6 +153,7 @@ const room = handleActions(
 const home = handleActions(
   {
     [GET_DOC_ID]: (state, { payload }) => ({...state, docId: payload.id}),
+    [GET_ROLE_ACTIVITY]: (state, { payload }) => ({...state, roleActivity: payload.roleActivity})
   },
   DEFAULT_HOME
 );
