@@ -89,6 +89,9 @@ class RoleDoc {
           payload.push(this.createHeading(`${ele.name}: ${ele.user_title}`));
 
           ele.fields.forEach((field) => {
+            if(!field['value'] || !field['title']){
+              return
+            }
             payload.push(
               new Paragraph({
                 children: [
@@ -138,7 +141,7 @@ class RoleDoc {
       })
     )
     this.artData.forEach((art, i) => {
-      if(art.blob.length < 22){
+      if(!art.blob || art.blob.length < 22){
         return
       }
 
