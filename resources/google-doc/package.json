@@ -2,7 +2,7 @@
   "name": "google-doc",
   "version": "1.0.0",
   "description": "",
-  "main": "sync_doc.js",
+  "main": "index.js",
   "scripts": {
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"

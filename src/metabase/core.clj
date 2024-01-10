@@ -22,6 +22,7 @@
             [metabase.troubleshooting :as troubleshooting]
             [metabase.util :as u]
             [metabase.util.files :as files]
+            [environ.core :as env]
             [metabase.util.i18n :refer [deferred-trs trs]]
             [toucan.db :as db])
   (:import java.io.File))
@@ -94,7 +95,16 @@
   (mdb/setup-db!)
   (init-status/set-progress! 0.5)
 
-  ;; startup node socket server.
+  ;; check for api environ variables
+  (or (get env/env :mb-api-username)
+    (log/warn (u/format-color 'red "WARNING: %s is unset. Please set it and try again."
+                                (str/upper-case (str/replace (name :mb-api-user) #"-" "_")))))
+  
+    ;; check for api environ variables
+  (or (get env/env :mb-api-password)
+    (log/warn (u/format-color 'red "WARNING: %s is unset. Please set it and try again."
+                                (str/upper-case (str/replace (name :mb-api-user) #"-" "_")))))
+
   (println "Creating a directory")
   (files/create-dir-if-not-exists! (files/get-path "ext"))
   (println "Copying file")

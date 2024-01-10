@@ -5,7 +5,7 @@ const path = require("path");
 const isProduction = process.env.NODE_ENV == "production";
 
 const config = {
-  entry: "./src/sync_doc.js",
+  entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, 'dist')
   },

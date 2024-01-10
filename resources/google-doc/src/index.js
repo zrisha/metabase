@@ -1,9 +1,11 @@
 process.chdir(__dirname);
-const RoleDoc = require('./RoleDoc');
+const RoleDoc = require('./WorkDoc');
+const PlanDoc = require('./PlanDoc');
 const axios = require('axios');
 const md5 = require('md5');
 require('dotenv').config()
 const fs = require('fs/promises');
+
 
 
 async function updateCredentials(){
@@ -91,15 +93,18 @@ async function fetchData(groupId){
     }
 }
 
-async function main(){
-    const args = process.argv.slice(2);
-    if(!args[0] || isNaN(parseInt(args[0]))){
-        console.log({error: 'group id not provided or is invalid'})
-        return
-    }
 
-    const groupId = parseInt(args[0]);
+async function planDoc(groupId){
+    const doc = new PlanDoc({
+        groupId,
+        filename: `Team Planning (GID ${groupId})`
+    });
 
+    const id =  await doc.requestFileId()
+    console.log(JSON.stringify(id));
+}
+
+async function workDoc(groupId){
     const allData = await fetchData(groupId);
 
     const {artData, storyData, noteData, vizData} = allData;
@@ -112,6 +117,27 @@ async function main(){
 
     const id = await doc.createAndUpload();
     console.log(JSON.stringify({id}));
+}
+
+const argFunctions = {
+    'work_doc': workDoc,
+    'plan_doc': planDoc
+}
+
+async function main(){
+    const args = process.argv.slice(2);
+
+    if(!args[0] || (Object.keys(argFunctions).includes(args[0]) == false)){
+        console.log({error: 'Invalid argument for google doc function'})
+        return
+    }
+
+    if(!args[1] || isNaN(parseInt(args[1]))){
+        console.log({error: 'group id not provided or is invalid'})
+        return
+    }
+    
+    argFunctions[args[0]](parseInt(args[1]));
 
 }
 
