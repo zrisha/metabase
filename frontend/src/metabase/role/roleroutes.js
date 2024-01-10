@@ -14,11 +14,18 @@ import DetectiveDoSidebar from "./Detective/DetectiveDoSidebar";
 import JournalistDo from "./Journalist/JournalistDo.jsx";
 import JournalistDoSidebar from "./Journalist/JournalistDoSidebar.jsx";
 import RoleLayout from "./RoleLayout";
-import RoleHome from "./RoleHome"
+import RoleHome from "./RoleHome";
+import TeamReflect from "./TeamReflect.jsx";
+import TeamDoc from "./TeamDoc.jsx";
+import TeamPlan from "./TeamPlan.jsx";
 
 
 export default <>
-      <Route path="home" component={RoleHome}/>
+      <Route path="home" component={RoleHome}>
+        <Route path="plan" component={TeamPlan} />
+        <Route path="reflect" component={TeamReflect} />
+        <Route path="work" component={TeamDoc} />
+      </Route>
       <Route component={RoleLayout}>
         <Route path="artist/do" components={{main: ArtistDo, sidebar: ArtistDoSidebar}} />
         <Route path="detective/do" components={{main: DetectiveDo, sidebar: DetectiveDoSidebar}} />

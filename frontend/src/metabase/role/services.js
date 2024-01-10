@@ -38,6 +38,8 @@ export const StoryApi = {
 }
 
 export const HomeApi = {
-  getDocId: GET("/api/doc/:groupId"),
+  getWorkDoc: GET("/api/doc/work/:groupId"),
+  getPlanDoc: GET("/api/doc/plan/:groupId"),
+  getRoleActivity: GET("/api/room-activity/:groupId"),
 }
 

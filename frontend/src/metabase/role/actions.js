@@ -51,7 +51,8 @@ export const DELETE_STORY_ELEMENT = "metabase/role/DELETE_STORY_ELEMENT";
 
 /* Home */
 
-export const GET_DOC_ID = "metabase/role/GET_DOC_ID";
+export const GET_WORK_DOC = "metabase/role/GET_WORK_DOC";
+export const GET_PLAN_DOC = "metabase/role/GET_PLAN_DOC";
 export const GET_ROLE_ACTIVITY = "metabase/role/GET_ROLE_ACTIVITY";
 
 /* RRWeb */
@@ -71,7 +72,7 @@ export const setGroup= createAction(SET_GROUP);
 
 export const excludeLogging = [
   JOIN_ROOM, LEAVE_ROOM, CHANGE_DRIVER,
-  GET_ARTIST_DATA, GET_ARTS, GET_DETECTIVE_DATA, GET_DOC_ID, GET_FAVORITES_GRP,
+  GET_ARTIST_DATA, GET_ARTS, GET_DETECTIVE_DATA, GET_WORK_DOC, GET_PLAN_DOC, GET_FAVORITES_GRP,
   GET_FILTERS, GET_NOTES, GET_STORY_ELEMENTS, ADD_ART_BLOB, UPDATE_ART_BLOB, ADD_VIZ_BLOB,
   UPDATE_SAVE_STATUS, RENDER_DRAWING_TOOL
 ].reduce((o, key) => ({ ...o, [key]: 1}), {})
@@ -417,18 +418,42 @@ const formatStoryElement = (res) => {
 
 /* Home */
 
-export const getDocId = createAction(
-  GET_DOC_ID,
+export const getWorkDoc = createAction(
+  GET_WORK_DOC,
   async ({groupId}) => {
-    try{
-      const res = await HomeApi.getDocId({groupId})
-      if(!res){
-        return {error: 'no document found'}
+    if(groupId){
+      try{
+        const res = await HomeApi.getWorkDoc({groupId})
+        if(!res){
+          return {error: 'no document found'}
+        }
+        return JSON.parse(res.out);
+      }catch(error){
+        console.log(error);
+        return {error}
       }
-      return JSON.parse(res.out);
-    }catch(error){
-      console.log(error);
-      return {error}
+    }else{
+      return { error: "no group id"};
+    }
+  }
+);
+
+export const getPlanDoc = createAction(
+  GET_PLAN_DOC,
+  async ({groupId}) => {
+    if(groupId){
+      try{
+        const res = await HomeApi.getPlanDoc({groupId})
+        if(!res){
+          return {error: 'no document found'}
+        }
+        return JSON.parse(res.out);
+      }catch(error){
+        console.log(error);
+        return {error}
+      }
+    }else{
+      return { error: "no group id"};
     }
   }
 );

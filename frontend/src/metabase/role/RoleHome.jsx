@@ -1,14 +1,19 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useMemo} from "react";
 import Navbar from "./Navbar";
 import { Box, Flex } from "grid-styled";
 import Card from "metabase/components/Card";
 import Icon from "metabase/components/Icon";
 import Link from "metabase/components/Link";
+import PageHeading from "metabase/components/type/PageHeading";
 import "./RoleHome.css";
 import {connect} from "react-redux";
-import CollapseSection from "metabase/components/CollapseSection";
-import { getDocId} from "./actions";
+import { setGroup} from "./actions";
 import { getUser } from "metabase/selectors/user";
+import { push } from "react-router-redux";
+
+import {
+  SegmentedControl,
+} from "metabase/components/SegmentedControl";
 
 const data = [
   {
@@ -27,6 +32,12 @@ const data = [
     icon: "palette",
   },
 ];
+
+const TAB = {
+  PLAN: "plan",
+  REFLECT: "reflect",
+  WORK: "work",
+};
 
 const RoleCard = props => {
   return (
@@ -48,57 +59,80 @@ const RoleCard = props => {
 };
 
 function RoleHome(props) {
+  const {pathname} = props.location
 
-  const {getDocId} = props
+  const currentTab = useMemo(() => {
+    if (/\/plan?/.test(pathname)) {
+      return TAB.PLAN;
+    }
+    if (/\/reflect?/.test(pathname)) {
+      return TAB.REFLECT;
+    }
+    if (/\/work?/.test(pathname)) {
+      return TAB.WORK;
+    }
+    return null;
+  }, [pathname]);
 
   useEffect(() => {
     const groupId = props.user.group_ids.find(id => id != 1 && id !=2);
-    if(groupId){
-      getDocId({groupId});
-    }else {
-      getDocId({groupId: 1});
-    }
-  }, [getDocId]);
+    //Set group or default to demo
+    const currentGroup = groupId ? groupId : 1
+
+    props.setGroup({groupId: currentGroup});
+  });
 
   return (
     <>
       <Navbar location={props.location} />
-      <section>
-        <h1 className="text-centered p2">Select a Role</h1>
+      <section className="border-bottom bg-white pb4">
+        <PageHeading className="text-centered p2">Select a Role</PageHeading>
         <Flex justifyContent="space-evenly">
           {data.map(props => (
             <RoleCard {...props} />
           ))}
         </Flex>
-
-        <CollapseSection
-          header={<h2>See everyone's work</h2>}
-          initialState="collapsed"
-          headerClass="work-header"
-        >
-          <div className="flex justify-center my3 role-doc align-center">
-            <div className="relative">
-            <div className='blocker'></div>
-            {props.home.docId && <iframe
-              className="bordered"
-              src={`https://docs.google.com/document/d/${props.home.docId}/edit`}
-              frameborder="0"
-              width="90%"
-              height="700"
-              allowfullscreen="true"
-              mozallowfullscreen="true"
-              webkitallowfullscreen="true"
-            ></iframe>}
-            </div>
-          </div>
-        </CollapseSection>
+      </section>
+      <section>
+        <PageHeading className="text-centered p2">Team Space</PageHeading>
+        <Flex justifyContent="center">
+          <Box my={2} width={[1, 1/2, 1/2, 1/3]}>
+          <SegmentedControl
+            fullWidth
+            value={currentTab}
+            onChange={props.onChangeTab}
+            variant="fill-background"
+            options={[
+              {
+                icon: 'lightbulb',
+                name: 'Plan',
+                value: 'plan'
+              },
+              {
+                icon: 'lineandbar',
+                name: 'Reflect',
+                value: 'reflect'
+              },
+              {
+                icon: 'insight',
+                name: 'View Work',
+                value: 'work'
+              }
+            ]}
+          />
+          </Box>
+        </Flex>
+        <div>
+          {props.children}
+        </div>
       </section>
     </>
   );
 }
 
 const mapDispatchToProps = {
-  getDocId
+  setGroup,
+  onChangeTab: tab => push(`/role/home/${tab}`),
 }
 
 const mapStateToProps = (state, props) => ({

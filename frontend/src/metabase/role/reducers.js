@@ -30,7 +30,8 @@ import {
   GET_ARTS,
   SELECT_ART,
   UPDATE_SAVE_STATUS,
-  GET_DOC_ID,
+  GET_WORK_DOC,
+  GET_PLAN_DOC,
   SET_GROUP,
   GET_ROLE_ACTIVITY
 } from "./actions";
@@ -42,7 +43,7 @@ const DEFAULT_DETECTIVE = { savedFilters: [], notes: []};
 const DEFAULT_JOURNALIST = { storyElements: {}, selectedElement: null};
 const DEFAULT_ROOM = {artist: {}, detective: {}, journalist: {}};
 const DEFAULT_FAVORITES = {cards: []};
-const DEFAULT_HOME = {docId: null, roleActivity: []};
+const DEFAULT_HOME = {workDoc: null, roleActivity: [], planDoc: null};
 
 
 const favorites = handleActions(
@@ -152,7 +153,8 @@ const room = handleActions(
 
 const home = handleActions(
   {
-    [GET_DOC_ID]: (state, { payload }) => ({...state, docId: payload.id}),
+    [GET_PLAN_DOC]: (state, { payload }) => ({...state, planDoc: payload.id}),
+    [GET_WORK_DOC]: (state, { payload }) => ({...state, workDoc: payload.id}),
     [GET_ROLE_ACTIVITY]: (state, { payload }) => ({...state, roleActivity: payload.roleActivity})
   },
   DEFAULT_HOME
