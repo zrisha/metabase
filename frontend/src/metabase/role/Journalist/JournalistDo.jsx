@@ -58,9 +58,10 @@ class JournalistDo extends Component {
     <div className="journalist-do-wrapper" ref={this.dragCanvas}>
       {this.state.render && <div style={{marginTop, marginLeft, transform: `scale(${scale}`, transformOrigin: "0 0", width, height, position: 'relative', backgroundImage: `url(${filepath})`}}>
         {containerWidth && Object.entries(storyElements).map(([storyId, ele]) => {
+          const id = parseInt(storyId)
           const {type, ...data} = ele;
           return <StoryElement {...storyData[ele.type]} 
-            storyId={storyId}
+            storyId={id != NaN ? id : storyId}
             key={storyId} 
             type={type} 
             data={data} 

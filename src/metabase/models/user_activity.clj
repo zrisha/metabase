@@ -28,22 +28,25 @@
 
 ;;; ------------------------------------------------------ Etc. ------------------------------------------------------
 
-;; ## Persistence Functions
+(def badge-actions 
+  #{
+    :SAVE_FILTER
+    :ADD_NOTE
+    :UPDATE_NOTE
+    :FAVORITE_GRP
+    :UNFAVORITE_GRP
 
-;; TODO - this is probably the exact wrong way to have written this functionality.
-;; This could have been a multimethod or protocol, and various entity classes could implement it;
-;; Furthermore, we could have just used *current-user-id* to get the responsible user, instead of leaving it open to
-;; user error.
+    :ADD_ART
+    :UPDATE_ART
 
-(defn record-user-activity!
-  "Inserts a new `UserActivity` entry.
+    :ADD_STORY_ELEMENT 
+    :UPDATE_STORY_ELEMENT 
+    })
 
-   Takes the following kwargs:
-     :activity       Required.  details of the activity.
-     :user-id        Required.  ID of the `User` responsible for the activity.  defaults to (events/object->user-id object)"
-  {:style/indent 0}
-  [& {:keys [activity user_id]}]
-    (db/insert! UserActivity
-      :activity    activity
-      :user_id     user_id
-      ))
+(defn process-badges!
+  "extracts relevant logs to badges"
+  [data]
+  (filter (fn [row]
+    (let [action (get-in row [:activity :action])]
+      (contains? badge-actions (keyword action))))
+    data))

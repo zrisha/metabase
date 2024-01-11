@@ -41,5 +41,6 @@ export const HomeApi = {
   getWorkDoc: GET("/api/doc/work/:groupId"),
   getPlanDoc: GET("/api/doc/plan/:groupId"),
   getRoleActivity: GET("/api/room-activity/:groupId"),
+  getBadges: GET("/api/user-activity/badges/:groupId"),
 }
 

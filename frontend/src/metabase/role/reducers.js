@@ -33,7 +33,8 @@ import {
   GET_WORK_DOC,
   GET_PLAN_DOC,
   SET_GROUP,
-  GET_ROLE_ACTIVITY
+  GET_ROLE_ACTIVITY,
+  GET_BADGES
 } from "./actions";
 
 window.Metabase.data = {};
@@ -43,7 +44,7 @@ const DEFAULT_DETECTIVE = { savedFilters: [], notes: []};
 const DEFAULT_JOURNALIST = { storyElements: {}, selectedElement: null};
 const DEFAULT_ROOM = {artist: {}, detective: {}, journalist: {}};
 const DEFAULT_FAVORITES = {cards: []};
-const DEFAULT_HOME = {workDoc: null, roleActivity: [], planDoc: null};
+const DEFAULT_HOME = {workDoc: null, roleActivity: [], planDoc: null, badges: []};
 
 
 const favorites = handleActions(
@@ -155,7 +156,8 @@ const home = handleActions(
   {
     [GET_PLAN_DOC]: (state, { payload }) => ({...state, planDoc: payload.id}),
     [GET_WORK_DOC]: (state, { payload }) => ({...state, workDoc: payload.id}),
-    [GET_ROLE_ACTIVITY]: (state, { payload }) => ({...state, roleActivity: payload.roleActivity})
+    [GET_ROLE_ACTIVITY]: (state, { payload }) => ({...state, roleActivity: payload.roleActivity}),
+    [GET_BADGES]: (state, { payload }) => ({...state, badges: payload.badges})
   },
   DEFAULT_HOME
 );

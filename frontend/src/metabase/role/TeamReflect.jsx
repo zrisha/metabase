@@ -4,7 +4,8 @@ import {connect} from "react-redux";
 import { Box, Flex } from "grid-styled";
 import Visualization from "metabase/visualizations/components/Visualization";
 import ExplicitSize from "metabase/components/ExplicitSize";
-import {getRoleActivity} from "./actions";
+import {getRoleActivity, getBadges} from "./actions";
+import Badges from "./Badges";
 
 const columns = [
   {
@@ -49,7 +50,8 @@ const formatData = (data) => {
 const TeamAnalytics = (props) => {
   useEffect(() => {
     if(props.groupId){
-      props.getRoleActivity({groupId: props.groupId})
+      props.getRoleActivity({groupId: props.groupId});
+      props.getBadges({groupId: props.groupId});
     }
   }, [props.groupId]);
 
@@ -74,11 +76,12 @@ const TeamAnalytics = (props) => {
   return (
     <Flex justifyContent="center">
       <Box m={[ 1, 2]} p={1} width={[1 / 3, 1 / 4]}>
+        <h3>Activity from today</h3>
         {data && <VizCard data={data} width={props.width}/>}
       </Box>
-      <Box m={[ 1, 2]}  p={1} width={[1 / 3, 1 / 4]}>
-      </Box>
-      <Box m={[ 1, 2 ]} p={1} width={[1 / 3, 1 / 4]}>
+      <Box m={[ 1, 2]}  p={1} width={[2 / 5, 1 / 3]}>
+        <h3>Badges earned today</h3>
+        <Badges data={props.badges}/>
       </Box>
     </Flex>
   )
@@ -103,12 +106,14 @@ class VizCard extends React.Component {
 }
 
 const mapDispatchToProps = {
-  getRoleActivity
+  getRoleActivity,
+  getBadges
 }
 
 const mapStateToProps = (state, props) => ({
   groupId: state.role.groupId,
-  roleActivity: state.role.home.roleActivity
+  roleActivity: state.role.home.roleActivity,
+  badges: state.role.home.badges
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamAnalytics);

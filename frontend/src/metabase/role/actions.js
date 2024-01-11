@@ -54,6 +54,7 @@ export const DELETE_STORY_ELEMENT = "metabase/role/DELETE_STORY_ELEMENT";
 export const GET_WORK_DOC = "metabase/role/GET_WORK_DOC";
 export const GET_PLAN_DOC = "metabase/role/GET_PLAN_DOC";
 export const GET_ROLE_ACTIVITY = "metabase/role/GET_ROLE_ACTIVITY";
+export const GET_BADGES = "metabase/role/GET_BADGES";
 
 /* RRWeb */
 export const JOIN_ROOM = "metabase/role/JOIN_ROOM";
@@ -73,7 +74,7 @@ export const setGroup= createAction(SET_GROUP);
 export const excludeLogging = [
   JOIN_ROOM, LEAVE_ROOM, CHANGE_DRIVER,
   GET_ARTIST_DATA, GET_ARTS, GET_DETECTIVE_DATA, GET_WORK_DOC, GET_PLAN_DOC, GET_FAVORITES_GRP,
-  GET_FILTERS, GET_NOTES, GET_STORY_ELEMENTS, ADD_ART_BLOB, UPDATE_ART_BLOB, ADD_VIZ_BLOB,
+  GET_FILTERS, GET_NOTES, GET_STORY_ELEMENTS, SET_GROUP, ADD_ART_BLOB, UPDATE_ART_BLOB, ADD_VIZ_BLOB,
   UPDATE_SAVE_STATUS, RENDER_DRAWING_TOOL
 ].reduce((o, key) => ({ ...o, [key]: 1}), {})
 
@@ -471,4 +472,95 @@ export const getRoleActivity = createAction(
     }
   }
 );
+
+export const getBadges = createAction(
+  GET_BADGES,
+  async ({groupId}) => {
+    try{
+      const res = await HomeApi.getBadges({groupId})
+      return {badges: aggregateBadges(res, badges)}
+    }catch(error){
+      console.log(error);
+      return {error}
+    }
+  }
+);
+
+const getId = ({payload}) => {
+  if(!payload)
+    return
+
+  if(payload.id)
+    return payload.id
+
+  const idKey = Object
+  .keys(payload)
+  .filter(key => (key !== 'groupId') & (key.toLowerCase().includes('id')))
+
+  if(idKey.length == 1){
+    return payload[idKey[0]]
+  }else{
+    console.log("error: multiple ids for log")
+    return false
+  }
+}
+
+const badges = {
+  intersect: {
+    NEW_STORY: ['ADD_STORY_ELEMENT'],
+    NEW_ART: ['ADD_ART', 'UPDATE_ART'],
+    NEW_NOTE: ['ADD_NOTE', 'UPDATE_NOTE'],
+    NEW_FILTER: ['SAVE_FILTER'],
+  },
+  difference: {
+    UPDATE_ART: ['ADD_ART', 'UPDATE_ART'],
+    UPDATE_NOTE: ['ADD_NOTE', 'UPDATE_NOTE'],
+    UPDATE_STORY: ['ADD_STORY_ELEMENT', 'UPDATE_STORY_ELEMENT'],
+    NEW_FAV_VIZ: ['UNFAVORITE_GRP', 'FAVORITE_GRP']
+  }
+  
+}
+
+function aggregateBadges(logs, badges){
+  const agg = {}
+  logs.forEach(log => {
+    const {action} = log;
+    const id = getId(log);
+    if(action && ~agg[action]){
+      agg[action] = new Set();
+    }
+
+    if(id){
+      agg[action].add(id);
+    }
+  })
+  const teamBadges = new Set();
+
+  for (const [badge, criteria] of Object.entries(badges.difference)) {
+    if(criteria.length == 2){
+      if(!agg[criteria[0]]){
+        teamBadges.add(badge)
+      }else if(agg[criteria[0]] && agg[criteria[1]]){
+        const shared = _.difference(Array.from(agg[criteria[0]]), Array.from(agg[criteria[1]]))
+        if(shared.length > 0){
+          teamBadges.add(badge)
+        }
+      }
+    }
+  }
+
+  for (const [badge, criteria] of Object.entries(badges.intersect)) {
+    if(criteria.length == 1){
+      if(agg[criteria]){
+        teamBadges.add(badge)
+      }
+    }else if((criteria.length == 2) && agg[criteria[0]] && agg[criteria[1]]){
+      const shared = _.intersection(Array.from(agg[criteria[0]]), Array.from(agg[criteria[1]]))
+      if(shared.length > 0){
+        teamBadges.add(badge)
+      }
+    }
+  }
+  return Array.from(teamBadges)
+}
 
