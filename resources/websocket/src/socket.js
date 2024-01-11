@@ -67,10 +67,14 @@ async function logData(args){
 const socketState = {}
 io.on("connection", (socket) => {
   //Initialize state of the room
+  const userId = socket.handshake.auth.user.id;
+  const firstName = socket.handshake.auth.user.first_name;
+
   if(!socketState[socket.handshake.auth.roomID]){
     socketState[socket.handshake.auth.roomID] = {
-      'driver': socket.handshake.auth.user.id,
-      'navigators': new Set()
+      'driver': userId,
+      'navigators': new Set(),
+      'names': {[userId]: socket.handshake.auth.user.first_name}
     }
   }else{
     if(socketState[socket.handshake.auth.roomID]['driver']){
@@ -78,6 +82,7 @@ io.on("connection", (socket) => {
     } else{
       socketState[socket.handshake.auth.roomID]['driver'] = socket.handshake.auth.user.id
     }
+    socketState[socket.handshake.auth.roomID]['names'][userId] = firstName
   }
 
   //join a room instructed by client
@@ -88,7 +93,8 @@ io.on("connection", (socket) => {
     io.to(roomID).emit("user-join", {
       roomID,
       driver: socketState[roomID]['driver'],
-      navigators: Array.from(socketState[roomID]['navigators'])
+      navigators: Array.from(socketState[roomID]['navigators']),
+      names: socketState[roomID]['names']
     });
 
     logData({
@@ -171,10 +177,12 @@ io.on("connection", (socket) => {
     } else{
       socketState[roomID]['navigators'].delete(user.id);
     }
+    delete socketState[roomID]['names'][user.id]
     io.to(roomID).emit("user-leave", {
       roomID,
       driver: socketState[roomID]['driver'],
-      navigators: Array.from(socketState[roomID]['navigators'])
+      navigators: Array.from(socketState[roomID]['navigators']),
+      names: socketState[roomID]['names']
     });
     logData({
       auth: socket.handshake.auth,

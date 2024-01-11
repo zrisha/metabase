@@ -2,16 +2,20 @@ import React from 'react';
 import Utils from "metabase/lib/utils";
 import { CSSTransitionGroup } from 'react-transition-group';
 import Ping from './Ping';
+import Collaborator from './Collaborator';
 import Button from "metabase/core/components/Button";
 import EntityMenu from "metabase/components/EntityMenu";
 import { color, darken } from "metabase/lib/colors";
 import Icon from "metabase/components/Icon";
 import Link from "metabase/components/Link";
+import RoleLogo from './RoleLogo';
+import { capitalize } from "metabase/lib/formatting";
 
 class RPlayer extends React.Component{
   constructor(props){
     super(props);
     this.wrapper = React.createRef();
+    this.roleName = false
     this.state = {
       pings: {},
       pingIcon: 'chevronup'
@@ -51,6 +55,10 @@ class RPlayer extends React.Component{
     //   console.log(messages);
     // }
 
+    if(this.props.role){
+      this.roleName = capitalize(this.props.role);
+    }
+
     this.replayer = new rrweb.Replayer([], {
       root: this.wrapper.current,
       liveMode: true,
@@ -87,17 +95,35 @@ class RPlayer extends React.Component{
       this.props.socket.emit("claim-driver")
     }
   }
+
+  renderCollaborators(room){
+    const {driver, navigators, names} = room;
+
+    const fnames = names ? names : {};
+
+    return (
+      <div>
+        {driver && <Collaborator driver id={driver} name={fnames[driver]}/>}
+        {navigators && navigators.map(navigator => <Collaborator id={navigator} name={fnames[navigator]}/>)}
+      </div>
+    )
+  }
+
   render() {
+    const {room} = this.props;
+
     return <>
-      <div className="flex" style={{height: "66px", position: 'absolute', zIndex: 1000, justifyContent:"center", width: "100%", color: 'white', backgroundColor: 'rgb(80, 158, 227)'}}>
-        <div style={{width: "25%", lineHeight: '36px'}}>
-          <p>Driver User ID:{this.props.room.driver}</p>
+      <div className="flex justify-between align-center" style={{height: "66px", position: 'absolute', zIndex: 1000, width: "100%", color: 'white', backgroundColor: color('bg-dark')}}>
+        <div className='flex align-center'>
+          <RoleLogo />
+          {room && this.renderCollaborators(room)}
         </div>
-        <div style={{width: "25%", lineHeight: '36px'}}>
-          <p>Navigators User ID:{this.props.room.navigators}</p>
+        <div>
+          {<h2> Observing {capitalize(this.props.role)}</h2>}
         </div>
-        <div style={{width: "25%", lineHeight: '36px'}}>
-          <p><Button purple onClick={this.requestDriving}>Request Control</Button></p>
+        <div className='flex align-center'>
+        <div>
+          <p><Button className="bg-purple-hover" primary onClick={this.requestDriving}>Request Control</Button></p>
         </div>
         <div className="flex align-center">
         <EntityMenu
@@ -144,6 +170,7 @@ class RPlayer extends React.Component{
             ]}
           />
         </div>
+      </div>
       </div>
       <div className="my-own-wrapper" ref={this.wrapper} onClick={this.onClick}/>
       <CSSTransitionGroup

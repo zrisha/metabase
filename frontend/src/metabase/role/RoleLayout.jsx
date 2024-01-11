@@ -99,7 +99,7 @@ class RoleLayout extends React.Component{
     
     if(this.props.user.id == this.props.room.driver){
       return <IsDriver user={this.props.user} roomID={this.roomID}  socket={this.socket}>
-        <Navbar location={this.props.location} />
+        <Navbar location={this.props.location}  room={this.props.room}/>
           <Layout sidebar = {this.props.sidebar} main={this.props.main} widths = { widths}/>
         </IsDriver>
      }else{

@@ -12,6 +12,8 @@ import { color, darken } from "metabase/lib/colors";
 
 import Link from "metabase/components/Link";
 import LogoIcon from "metabase/components/LogoIcon";
+import RoleLogo from "./RoleLogo";
+import Collaborator from "./Collaborator";
 import Modal from "metabase/components/Modal";
 
 import ProfileLink from "./ProfileLink";
@@ -86,6 +88,19 @@ export default class Navbar extends Component {
     );
   }
 
+  renderCollaborators(room){
+    const {driver, navigators, names} = room;
+
+    const fnames = names ? names : {};
+
+    return (
+      <div>
+        {driver && <Collaborator driver id={driver} name={fnames[driver]}/>}
+        {navigators && navigators.map(navigator => <Collaborator id={navigator} name={fnames[navigator]}/>)}
+      </div>
+    )
+  }
+
   renderEmptyNav() {
     return (
       // NOTE: DO NOT REMOVE `Nav` CLASS FOR NOW, USED BY MODALS, FULLSCREEN DASHBOARD, ETC
@@ -108,7 +123,7 @@ export default class Navbar extends Component {
   }
 
   renderMainNav() {
-    const { hasDataAccess, hasNativeWrite, location,  demoMode} = this.props;
+    const { hasDataAccess, hasNativeWrite, location, room,  demoMode} = this.props;
 
     const roleName = capitalize(location.pathname.split("/")[2]);
 
@@ -127,25 +142,9 @@ export default class Navbar extends Component {
         {demoMode && <div className="demo">
           <div className="bar bg-gold text-dark"><Tooltip tooltip='You are in example mode because you are not part of a group. Saving and other actions are unavailable.'><Icon size={12} name="info" /></Tooltip> <span>You are in example mode, you cannot save work</span></div>
         </div>}
-        <div className="role-menu">
-          <Link
-            to="/role/home"
-            data-metabase-event={"Navbar;Logo"}
-            className="relative cursor-pointer z2 rounded flex justify-center transition-background"
-            p={1}
-            mx={1}
-            hover={{ backgroundColor: getDefaultSearchColor() }}
-          >
-            <Flex
-              style={{ minWidth: 32, height: 32 }}
-              align="center"
-              justify="center"
-              flexDirection="column"
-            >
-              <div><h3>Data Roles</h3></div>
-              <div>Spin-off of <LogoIcon dark height={16} />etabase</div>
-            </Flex>
-          </Link>
+        <div className="flex align-center">
+          <RoleLogo />
+          {room && this.renderCollaborators(room)}
         </div>
         <div>
           <Flex align="center">
