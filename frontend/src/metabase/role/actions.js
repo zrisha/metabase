@@ -73,8 +73,8 @@ export const setGroup= createAction(SET_GROUP);
 
 export const excludeLogging = [
   JOIN_ROOM, LEAVE_ROOM, CHANGE_DRIVER,
-  GET_ARTIST_DATA, GET_ARTS, GET_DETECTIVE_DATA, GET_WORK_DOC, GET_PLAN_DOC, GET_FAVORITES_GRP,
-  GET_FILTERS, GET_NOTES, GET_STORY_ELEMENTS, SET_GROUP, ADD_ART_BLOB, UPDATE_ART_BLOB, ADD_VIZ_BLOB,
+  GET_ARTIST_DATA, GET_ARTS, GET_BADGES, GET_DETECTIVE_DATA, GET_WORK_DOC, GET_PLAN_DOC, GET_FAVORITES_GRP,
+  GET_FILTERS, GET_NOTES, GET_ROLE_ACTIVITY, GET_STORY_ELEMENTS, SET_GROUP, ADD_ART_BLOB, UPDATE_ART_BLOB, ADD_VIZ_BLOB,
   UPDATE_SAVE_STATUS, RENDER_DRAWING_TOOL
 ].reduce((o, key) => ({ ...o, [key]: 1}), {})
 
@@ -521,12 +521,14 @@ const badges = {
   
 }
 
+const areSetsEqual = (a, b) => a.size === b.size && [...a].every(value => b.has(value));
+
 function aggregateBadges(logs, badges){
   const agg = {}
   logs.forEach(log => {
     const {action} = log;
     const id = getId(log);
-    if(action && ~agg[action]){
+    if(action && !agg[action]){
       agg[action] = new Set();
     }
 
@@ -538,11 +540,10 @@ function aggregateBadges(logs, badges){
 
   for (const [badge, criteria] of Object.entries(badges.difference)) {
     if(criteria.length == 2){
-      if(!agg[criteria[0]]){
+      if(!agg[criteria[0]] && agg[criteria[1]]){
         teamBadges.add(badge)
       }else if(agg[criteria[0]] && agg[criteria[1]]){
-        const shared = _.difference(Array.from(agg[criteria[0]]), Array.from(agg[criteria[1]]))
-        if(shared.length > 0){
+        if(areSetsEqual(agg[criteria[0]], agg[criteria[1]]) == false){
           teamBadges.add(badge)
         }
       }
