@@ -61,6 +61,19 @@ class ArtistDo extends Component {
     }
   };
 
+  saveImage = () => {
+    const url = window.drawingTool.$canvas[0].toDataURL("image/png")
+    const link = document.createElement("a");
+    let selectedArt = this.props.artist.arts.findIndex(
+      art => art.id == this.props.artist.selectedArt.id,
+    );
+    selectedArt = selectedArt !== -1 ? selectedArt + 1 : false;
+
+    link.download = selectedArt ? `sketch_${selectedArt}.png` : "sketch.png";
+    link.href = url;
+    link.click();
+  }
+
   toggleSaveStatus = (status) => {
     if (this.props.artist.unsaved != status) {
       this.props.setSaveStatus({ unsaved: status });
@@ -246,6 +259,9 @@ class ArtistDo extends Component {
           <ButtonBar>
             <Button primary onClick={this.saveDrawing}>
               Save
+            </Button>
+            <Button  onClick={this.saveImage}>
+              Export
             </Button>
           </ButtonBar>
         </Absolute>
