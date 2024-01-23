@@ -51,11 +51,10 @@ class JournalistDo extends Component {
 
     const scale = (containerWidth / width) - .05;
 
-    const marginTop = (containerHeight - (height * scale)) /2;
-    const marginLeft = (containerWidth - (width * scale)) /2;
+    const marginTop = (containerHeight - (height * scale)) > 0 ?  (containerHeight - (height * scale)) /2 : 0;
+    const marginLeft = (containerWidth - (width * scale)) > 0 ?  (containerWidth - (width * scale)) /2 : 0;
 
-    return <>
-    <div className="journalist-do-wrapper" ref={this.dragCanvas}>
+    return <div className="journalist-do-wrapper" ref={this.dragCanvas}>
       {this.state.render && <div style={{marginTop, marginLeft, transform: `scale(${scale}`, transformOrigin: "0 0", width, height, position: 'relative', backgroundImage: `url(${filepath})`}}>
         {containerWidth && Object.entries(storyElements).map(([storyId, ele]) => {
           const id = parseInt(storyId)
@@ -73,7 +72,6 @@ class JournalistDo extends Component {
         })}
       </div>}
     </div>
-    </>
   }
 }
 

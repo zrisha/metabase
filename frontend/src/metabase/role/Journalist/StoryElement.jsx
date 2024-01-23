@@ -10,7 +10,7 @@ import cx from "classnames";
 function StoryElement(props) {
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
-  const [pos, setPos] = useState({x: props.data.x ? props.data.x : 0, y: props.data.y ? props.data.y : 0});
+  const [pos, setPos] = useState({x: props.data.x ? props.data.x : 100, y: props.data.y ? props.data.y : 200});
 
 
   const onEdit = (e) => {
@@ -28,6 +28,8 @@ function StoryElement(props) {
   const handleStop = (e) => {
     props.updateStoryElementPos({data: {...props.data, x: pos.x, y: pos.y}, storyId: props.storyId, groupId: props.groupId});
   }
+
+  console.log(pos);
 
   return (
   <Draggable 
