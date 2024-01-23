@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 import "./RoleLayout.css";
 import {connect} from "react-redux";
 import { joinRoom, leaveRoom, changeDriver, setGroup} from "./actions";
+import LoadingSpinner from "metabase/components/LoadingSpinner";
 import { io } from "socket.io-client";
 import RPlayer from "./RPlayer";
 import './animation.css';
@@ -51,11 +52,18 @@ class RoleLayout extends React.Component{
     }
 
     this.roomID = currentGroup ? this.role + groupId : this.role;
-    this.socket = io("http://localhost:4987", {auth: {user: this.props.user, roomID :this.roomID, groupId, role: this.role}})
+    this.socket = io("http://localhost:4987", {reconnectionAttempts: 5, auth: {user: this.props.user, roomID :this.roomID, groupId, role: this.role}})
     this.socket.on("connect", () => {
       this.setState({socketRendered: true});
       //Update room with new user
       this.socket.emit("new-user");
+    });
+
+    this.socket.on("connect_error", (err) => {
+      if(this.state.socketRendered !== 'error'){
+        this.setState({socketRendered: 'error'});
+      }
+      console.log(`connect_error due to ${err.message}`);
     });
 
     //State updates for changes in room
@@ -93,7 +101,11 @@ class RoleLayout extends React.Component{
       </>
     }
 
-    if(this.state.socketRendered == false || this.props.room.driver == undefined){
+    if(this.state.socketRendered == false){
+      return <LoadingSpinner />
+    }
+
+    if(this.props.room.driver == undefined || this.state.socketRendered == 'error'){
       return <GenericError details="Failure to connect to the websocket server" />
     }
     

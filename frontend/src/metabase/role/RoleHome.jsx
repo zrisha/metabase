@@ -80,7 +80,7 @@ function RoleHome(props) {
     const currentGroup = groupId ? groupId : 1
 
     props.setGroup({groupId: currentGroup});
-  });
+  }, [props.user]);
 
   return (
     <>
