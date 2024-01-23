@@ -12,8 +12,8 @@ async function updateCredentials(){
     try{
         const res = await axios.post(
             `${process.env.SITE_URL}/api/session`, {
-                username: process.env.API_USERNAME,
-                password: process.env.API_PASSWORD
+                username: process.env.MB_API_USERNAME,
+                password: process.env.MB_API_PASSWORD
             });
         if(res.status == 200 || res.data.id){
             const payload = {
