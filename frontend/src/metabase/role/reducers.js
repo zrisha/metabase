@@ -1,5 +1,6 @@
 import { handleActions, combineReducers } from "metabase/lib/redux";
 import Utils from "metabase/lib/utils";
+import { dissoc } from "icepick";
 
 import {
   CHANGE_DRIVER,
@@ -43,15 +44,18 @@ const DEFAULT_ARTIST = { drawingTool: false, arts: false, selectedArt: null, uns
 const DEFAULT_DETECTIVE = { savedFilters: [], notes: []};
 const DEFAULT_JOURNALIST = { storyElements: {}, selectedElement: null};
 const DEFAULT_ROOM = {artist: {}, detective: {}, journalist: {}};
-const DEFAULT_FAVORITES = {cards: []};
+const DEFAULT_FAVORITES = {cards: {}};
 const DEFAULT_HOME = {workDoc: null, roleActivity: [], planDoc: null, badges: []};
 
 
 const favorites = handleActions(
   {
-    [GET_FAVORITES_GRP]: (state, { payload }) => ({...state, cards: payload.data.map(x => x.card_id)}),
-    [FAVORITE_GRP]: (state, { payload }) => ({...state, cards: [...state.cards, payload.cardId]}),
-    [UNFAVORITE_GRP]: (state, { payload }) => ({...state, cards: state.cards.filter(item => item !== payload.cardId)})
+    [GET_FAVORITES_GRP]: (state, { payload }) => ({...state, cards: Object.fromEntries(payload.data.map(card => {
+      const {card_id, hash, ...data} = card;
+      return [hash ? hash : card_id, hash ? {...data, hash:true} : data]
+    }))}),
+    [FAVORITE_GRP]: (state, { payload }) => ({...state, cards: {...state.cards, [payload.hash ? payload.hash : payload.cardId]: payload.id ? dissoc(payload, 'hash') : {id: 1}}}),
+    [UNFAVORITE_GRP]: (state, { payload }) => ({...state, cards: dissoc(state.cards, payload.hash ? payload.hash : payload.cardId)})
   },
   DEFAULT_FAVORITES,
 )

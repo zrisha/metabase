@@ -296,6 +296,7 @@ export default class Visualization extends React.PureComponent {
       width,
       height,
       headerIcon,
+      description,
       errorIcon,
       isSlow,
       expectedDuration,
@@ -430,6 +431,11 @@ export default class Visualization extends React.PureComponent {
         hasHeaderContent &&
         (loading || error || noResults || isHeaderEnabled)) ||
       replacementContent;
+
+    
+    if(description){
+      settings['card.description'] = description;
+    }
 
     return (
       <div

@@ -11,6 +11,7 @@ import { PLUGIN_COLLECTIONS } from "metabase/plugins";
 import { getVisualizationRaw } from "metabase/visualizations";
 import * as MetabaseAnalytics from "metabase/lib/analytics";
 import { color } from "metabase/lib/colors";
+import { getIn } from "icepick";
 
 import {
   GRID_WIDTH,
@@ -264,11 +265,18 @@ export default class DashboardGrid extends Component {
   };
 
   renderDashCard(dc, { isMobile, gridItemWidth }) {
+    const dcData = getIn(this.props.dashcardData, [dc.id, dc.card_id]);
+    const hash = dcData && dcData.hash ? dcData.hash : false;
+    const favorited = hash ? this.props.favoriteCards[hash] : this.props.favoriteCards[dc.card_id];
+    
+
     return (
       <DashCard
-        favorited={this.props.favoriteCards ? this.props.favoriteCards.includes(dc.card_id) : false}
+        favorited={favorited ? favorited : false}
+        filterQuery={this.props.filterQuery}
+        // favorited={this.props.favoriteCards ? this.props.favoriteCards[dc.card_id] : false}
         favoriteGrp={{cardId: dc.card_id, groupId: this.props.groupId, action: this.props.favoriteGrp}}
-        unfavoriteGrp={() => this.props.unfavoriteGrp({cardId: dc.card_id, groupId: this.props.groupId})}
+        unfavoriteGrp={() => this.props.unfavoriteGrp({cardId: dc.card_id, hash, favoriteId: favorited.id, groupId: this.props.groupId})}
         dashcard={dc}
         headerIcon={this.getDashboardCardIcon(dc)}
         dashcardData={this.props.dashcardData}

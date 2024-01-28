@@ -62,7 +62,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-  favoriteCards: state.role ? state.role.favorites.cards : [],
+  favoriteCards: state.role ? state.role.favorites.cards : {},
   groupId: state.role ? state.role.groupId : null,
   arts: state.role ? state.role.artist.arts : [],
   selectedArt: state.role ? state.role.artist.selectedArt : null,

@@ -96,9 +96,14 @@ export default class DashCard extends Component {
   };
 
   favoriteGrp = () => {
-    const {cardId, groupId, action} = this.props.favoriteGrp;
+    const {groupId, action} = this.props.favoriteGrp;
+    const {dashcard, dashcardData, filterQuery} = this.props;
+    
+    const hash = getIn(dashcardData, [dashcard.id, dashcard.card_id]).hash;
+    const data = {name: dashcard.card.name, filterQuery, display:dashcard.card.display}
     const vizNode = this.cardRef.current.querySelector('.CardVisualization');
-    action({cardId, groupId, vizNode});
+
+    action({cardId: dashcard.card_id, groupId, vizNode, hash, data});
   }
 
   render() {
@@ -106,6 +111,7 @@ export default class DashCard extends Component {
       dashcard,
       dashcardData,
       favorited,
+      filterQuery,
       unfavoriteGrp,
       slowCards,
       isEditing,
@@ -119,8 +125,17 @@ export default class DashCard extends Component {
       dashboard,
       parameterValues,
       mode,
-      headerIcon,
     } = this.props;
+
+    let {headerIcon} = this.props;
+    
+    let description = false;
+    const hasFilter = dashcard.parameter_mappings.find(mapping => parameterValues[mapping.parameter_id]);
+
+    if(hasFilter){
+      headerIcon = {name: 'filter'}
+      description = `This data is filtered. Current filter = ${JSON.stringify(filterQuery)}`
+    };
 
     const mainCard = {
       ...dashcard.card,
@@ -224,6 +239,7 @@ export default class DashCard extends Component {
           classNameWidgets={isEmbed && "text-light text-medium-hover"}
           error={errorMessage}
           headerIcon={headerIcon}
+          description={description}
           errorIcon={errorIcon}
           isSlow={isSlow}
           expectedDuration={expectedDuration}

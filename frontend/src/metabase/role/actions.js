@@ -81,7 +81,8 @@ export const excludeLogging = [
 var checkGroup = function(fn){
   return function(){
     if(arguments[0].groupId && arguments[0].groupId == 1){
-      return arguments[0]
+      const {vizNode, ...otherArgs} = arguments[0]
+      return otherArgs
     }else {
       return fn.apply(this, arguments);
     }
@@ -100,11 +101,11 @@ export const getFavoritesGrp = createAction(
 
 export const favoriteGrp = createThunkAction(
   FAVORITE_GRP,
-  checkGroup(({ cardId, groupId, vizNode }) => async (dispatch, getState) => {
+  checkGroup(({ cardId, groupId, vizNode, hash, data}) => async (dispatch, getState) => {
     try{
-      const res = await FavoriteApi.favoriteGrp({cardId, group_id: groupId});
-      dispatch(addVizBlob({cardId, vizNode}));
-      return { cardId, groupId };
+      const res = await FavoriteApi.favoriteGrp({cardId, group_id: groupId, hash, data});
+      dispatch(addVizBlob({favoriteId: res.id, vizNode}));
+      return { cardId, groupId, hash, id: res.id };
     }catch(error){
       console.log(error);
       return {error}
@@ -114,19 +115,19 @@ export const favoriteGrp = createThunkAction(
 
 export const unfavoriteGrp = createAction(
   UNFAVORITE_GRP,
-  checkGroup(async ({ cardId, groupId }) => {
-    const res = await FavoriteApi.unfavoriteGrp({cardId, group_id: groupId});
-    return { cardId, groupId };
+  checkGroup(async ({ cardId, groupId, hash, favoriteId }) => {
+    const res = await FavoriteApi.unfavoriteGrp({favoriteId});
+    return { cardId, groupId, hash, id: favoriteId };
   }),
 );
 
 export const addVizBlob = createAction(
   ADD_VIZ_BLOB,
-  checkGroup(async ({cardId, vizNode}) => {
+  checkGroup(async ({favoriteId, vizNode}) => {
     try{
       const blob = await toPng(vizNode);
-      const res = await FavoriteApi.addBlob({cardId, blob})
-      return {cardId}
+      const res = await FavoriteApi.addBlob({favoriteId, blob})
+      return {favoriteId}
     }catch(error){
       console.log(error);
       return {error}

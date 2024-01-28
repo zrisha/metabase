@@ -518,6 +518,13 @@ export const fetchCardData = createThunkAction(FETCH_CARD_DATA, function(
       dashcard && dashcard.parameter_mappings,
     );
 
+    const hash = getHash({
+      dashcard, 
+      dashboard, 
+      metadata: getMetadata(getState()), 
+      parameterValues
+    });
+
     if (!reload) {
       // if reload not set, check to see if the last result has the same query dict and return that
       const lastResult = getIn(dashcardData, [dashcard.id, card.id]);
@@ -633,6 +640,10 @@ export const fetchCardData = createThunkAction(FETCH_CARD_DATA, function(
     setFetchCardDataCancel(card.id, dashcard.id, null);
     clearTimeout(slowCardTimer);
 
+    if(result){
+      result.hash = hash;
+    }
+
     return {
       dashcard_id: dashcard.id,
       card_id: card.id,
@@ -640,6 +651,25 @@ export const fetchCardData = createThunkAction(FETCH_CARD_DATA, function(
     };
   };
 });
+
+const getHash = ({metadata, dashcard, dashboard, parameterValues}) => {
+
+  let question = new Question(dashcard.card, metadata);
+  question = question.lockDisplay();
+
+  const parametersMappedToCard = getParametersMappedToDashcard(
+    dashboard,
+    dashcard,
+  );
+
+  const url = question.isObjectDetail()
+  ? Urls.serializedQuestion(question.card())
+  : question.getUrlWithParameters(parametersMappedToCard, parameterValues);
+
+  const hashLoc = url.indexOf('#');
+  
+  return hashLoc == -1 ? null : url.substring(hashLoc)
+}
 
 export const markCardAsSlow = createAction(MARK_CARD_AS_SLOW, card => ({
   id: card.id,

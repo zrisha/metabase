@@ -10464,9 +10464,42 @@ databaseChangeLog:
                 remarks: "JSON format for state of room"
                 constraints:
                   nullable: true
-
-
-
+  - changeSet:
+      id: v42.41-014
+      author: zrisha
+      changes:
+        - delete:
+            tableName: report_cardfavorite_grp
+        - delete:
+            tableName: report_cardblob
+        - dropUniqueConstraint:
+            tableName: report_cardfavorite_grp
+            constraintName: idx_unique_cardfavorite_grp_card_id_group_id
+        - dropIndex:
+            indexName: idx_cardfavorite_grp_card_id
+        - dropIndex:
+            indexName: idx_cardfavoritegrp_card_id_group_id
+        - addColumn:
+            columns:
+            - column:
+                name: hash
+                type: varchar(20000)
+                constraints:
+                  nullable: true
+            - column:
+                name: data
+                type: text
+            tableName: report_cardfavorite_grp
+        - dropForeignKeyConstraint:
+            baseTableName: report_cardblob
+            constraintName: fk_blob_card_id
+        - addForeignKeyConstraint:
+            baseTableName: report_cardblob
+            baseColumnNames: id
+            referencedTableName: report_cardfavorite_grp
+            referencedColumnNames: id
+            constraintName: fk_blob_cardfavoritegrp
+            onDelete: CASCADE
 
 # >>>>>>>>>> DO NOT ADD NEW MIGRATIONS BELOW THIS LINE! ADD THEM ABOVE <<<<<<<<<<
 

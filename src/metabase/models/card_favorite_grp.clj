@@ -7,4 +7,5 @@
 (u/strict-extend (class CardFavoriteGrp)
   models/IModel
   (merge models/IModelDefaults
-         {:properties (constantly {:timestamped? true})}))
+         {:types      (constantly {:data :json})
+         :properties (constantly {:timestamped? true})}))

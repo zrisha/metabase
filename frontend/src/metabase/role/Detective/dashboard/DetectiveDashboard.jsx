@@ -342,6 +342,7 @@ export default class Dashboard extends Component {
                     <DashboardGrid
                       {...this.props}
                       onEditingChange={this.setEditing}
+                      filterQuery={this.state.filterQuery}
                     />
                   ) : (
                     <DashboardEmptyState

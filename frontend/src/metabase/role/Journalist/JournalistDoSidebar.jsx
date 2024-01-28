@@ -14,7 +14,7 @@ const JournalistDoSidebar = (props) => {
 
 const mapStateToProps = (state, props) => ({
     user: getUser(state),
-    favoriteCards: state.role ? state.role.favorites.cards : []
+    favoriteCards: state.role ? state.role.favorites.cards : {},
   });
   
 export default connect(mapStateToProps)(JournalistDoSidebar);
