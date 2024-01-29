@@ -184,6 +184,9 @@ class RoleDoc {
       })
     )
     this.vizData.forEach((viz, i) => {
+      if(!viz.blob || viz.blob.length < 22){
+        return
+      }
       var img = Buffer.from(viz.blob.substr(22), 'base64');
       var dimensions = sizeOf(img);
       const ar = dimensions.width / dimensions.height;
