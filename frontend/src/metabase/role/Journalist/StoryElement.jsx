@@ -29,8 +29,6 @@ function StoryElement(props) {
     props.updateStoryElementPos({data: {...props.data, x: pos.x, y: pos.y}, storyId: props.storyId, groupId: props.groupId});
   }
 
-  console.log(pos);
-
   return (
   <Draggable 
     handle=".cursor-grab" 

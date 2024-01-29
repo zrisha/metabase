@@ -9,10 +9,8 @@ function TeamPlan(props) {
     
     if (groupId) {
       props.getPlanDoc({ groupId });
-    } else {
-      props.getPlanDoc({ groupId: 1 });
     }
-  }, [props.getPlanDoc]);
+  }, [props.groupId]);
 
   return (
     <div className="flex justify-center my3 role-doc align-center">

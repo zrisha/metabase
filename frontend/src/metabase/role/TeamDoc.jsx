@@ -7,10 +7,8 @@ function TeamDoc(props) {
     const {groupId} = props;
     if (groupId) {
       props.getWorkDoc({ groupId });
-    } else {
-      props.getWorkDoc({ groupId: 1 });
     }
-  }, [props.getWorkDoc]);
+  }, [props.groupId]);
 
   return (
     <div className="flex justify-center my3 role-doc align-center">
