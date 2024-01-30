@@ -36,6 +36,8 @@ export const UNFAVORITE_GRP = `metabase/role/UNFAVORITE_GRP`;
 export const GET_FAVORITES_GRP = `metabase/role/GET_FAVORITES_GRP`;
 export const ADD_NOTE = "metabase/role/ADD_NOTE";
 export const GET_NOTES = "metabase/role/GET_NOTES";
+export const SELECT_NOTE = "metabase/role/SELECT_NOTE";
+export const selectNote = createAction(SELECT_NOTE);
 export const UPDATE_NOTE = "metabase/role/UPDATE_NOTE";
 export const DELETE_NOTE = "metabase/role/DELETE_NOTE";
 

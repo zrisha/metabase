@@ -7,7 +7,8 @@ const initialNote = "<p>Write your findings here</p>"
 
 
 export default function Notes(props) {
-  const [note, setNote] = useState(false);
+  const {selectedNote, selectNote, notes} = props;
+  const note = notes ? notes[selectedNote] : false;
   const [isSaving, setSaving] = useState(false)
 
   const autoSave = useRef(null);
@@ -54,7 +55,7 @@ export default function Notes(props) {
         saving={isSaving}
         deleteNote={props.deleteNote}
         groupId={props.groupId}
-        setNote={setNote}
+        selectNote={selectNote}
         notes={props.notes} />
     )
   }else if (note && note.data){
@@ -78,9 +79,9 @@ export default function Notes(props) {
           setup: function (editor) {
 
             editor.ui.registry.addButton('backbtn', {
-              icon: 'undo',
+              text: "Save",
               onAction: function (_) {
-                setNote(false)
+                selectNote(false)
               }
             });
           },

@@ -22,6 +22,7 @@ import {
   UPDATE_STORY_ELEMENT,
   DELETE_STORY_ELEMENT,
   ADD_NOTE,
+  SELECT_NOTE,
   UPDATE_NOTE,
   DELETE_NOTE,
   GET_NOTES,
@@ -41,7 +42,7 @@ import {
 window.Metabase.data = {};
 
 const DEFAULT_ARTIST = { drawingTool: false, arts: false, selectedArt: null, unsaved: false };
-const DEFAULT_DETECTIVE = { savedFilters: [], notes: []};
+const DEFAULT_DETECTIVE = { savedFilters: [], notes: [], selectedNote: null};
 const DEFAULT_JOURNALIST = { storyElements: {}, selectedElement: null};
 const DEFAULT_ROOM = {artist: {}, detective: {}, journalist: {}};
 const DEFAULT_FAVORITES = {cards: {}};
@@ -94,9 +95,10 @@ const detective = handleActions(
     [SAVE_FILTER]: (state, { payload }) => ({...state, savedFilters: [...state.savedFilters, payload ]}),
     [DELETE_FILTER]: (state, { payload }) => ({...state, savedFilters: state.savedFilters.filter(entry => entry.id != payload.filterId)}),
     [LOAD_FILTER]: (state, { payload }) => ({...state, loadQuery: payload.loadQuery}),
+    [SELECT_NOTE]: (state, {payload}) => ({...state, selectedNote: payload.selectedNote}),
     [ADD_NOTE]: (state, { payload }) => {
       payload.id = payload.id ? payload.id : (payload.groupId == 1 ? Utils.uuid() : undefined)
-      return {...state, notes: [...state.notes, payload ]}
+      return {...state, notes: [...state.notes, payload ], selectedNote: state.notes.length}
     },
     [DELETE_NOTE]: (state, { payload }) => {
       if(!payload.noteId){

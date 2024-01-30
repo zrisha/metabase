@@ -50,7 +50,7 @@ const NoteSelector = (props) => {
       {!props.saving ? <ul className='note-list'>
         {props.notes.map((note, i) => (
           <li
-            onClick={() => props.setNote(note)}
+            onClick={() => props.selectNote({selectedNote: i})}
             key={i}
             className='border-bottom p1 text-ellipsis text-nowrap'>
               <span className='text-brand-hover cursor-pointer'>{getHeader(note.data.value)}</span>

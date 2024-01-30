@@ -6,7 +6,7 @@ import Tasks from "./Tasks";
 import Saved from "./SavedFilters";
 import Radio from "metabase/components/Radio";
 import Notes from "./Notes";
-import { deleteFilter, loadFilter, deleteNote, addNote, updateNote } from "../actions";
+import { deleteFilter, loadFilter, deleteNote, addNote, updateNote, selectNote } from "../actions";
 
 const ModeToggle = (props) => {
   const OPTIONS = [
@@ -58,6 +58,7 @@ const mapStateToProps = (state, props) => ({
     groupId: state.role.groupId,
     room: state.role.room['detective'],
     notes: state.role.detective ? state.role.detective.notes : false,
+    selectedNote: state.role.detective ? state.role.detective.selectedNote : false,
     favoriteCards: state.role.favorites ? state.role.favorites.cards : false,
     savedFilters : state.role.detective ? state.role.detective.savedFilters : false
   });
@@ -67,7 +68,8 @@ const mapDispatchToProps = {
   loadFilter,
   deleteNote,
   addNote,
-  updateNote
+  updateNote,
+  selectNote
 }
   
 export default connect(mapStateToProps,mapDispatchToProps)(DetectiveDoSidebar);
