@@ -7,12 +7,12 @@ import Tooltip from "metabase/components/Tooltip";
 
 
 const TaskRow = (props) => {
-  const icon = props.completed ? "check" : "close"
+  const iconColor = props.completed ? "green" : "lightgrey";
 
   return(
     <tr style={{backgroundColor: 'unset'}}>
       <td>
-        <Icon name={icon} style={{color: icon == 'check' ? "green" : "red"}}/>
+        <Icon name="check" style={{color: iconColor}}/>
       </td>
       <td>
         <Label>{props.label}</Label>
@@ -30,7 +30,7 @@ const TaskRow = (props) => {
 }
 
 export default function Tasks(props) {
-  const numFavorited = props.favoriteCards ? props.favoriteCards.length : false;
+  const numFavorited = props.favoriteCards ? Object.keys(props.favoriteCards).length : false;
   const numFilters = props.savedFilters ? props.savedFilters.length : false;
   const numNotes = props.notes ? props.notes.length : false;
 
@@ -50,7 +50,7 @@ export default function Tasks(props) {
       progress: `${numFilters}`
     },
     {
-      completed: numFilters != false & numFilters >= 1 ? true : false,
+      completed: numNotes != false & numNotes >= 1 ? true : false,
       label: 'Write Notes',
       text: 'Write down the key findings of your analysis',
       tooltip: <span>You can write notes below. Click the plus sign to add a new note, then click it in the list to bring up the editor.</span>,
