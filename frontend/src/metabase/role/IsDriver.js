@@ -82,7 +82,7 @@ class IsDriver extends React.Component{
           pings: prevState.pings
         }
       });
-    }, 700)
+    }, 1400)
   }
 
   componentDidMount(){
@@ -118,7 +118,7 @@ class IsDriver extends React.Component{
         {this.props.children}
         {this.renderModal()}
         <CSSTransitionGroup
-          transitionName="example"
+          transitionName="ping"
           transitionEnterTimeout={400}
           transitionLeaveTimeout={300}>
             {Object.entries(this.state.pings).map(([key,entry]) => <Ping key={key} x={entry.x} y={entry.y} icon={entry.icon} />)}

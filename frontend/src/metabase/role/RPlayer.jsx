@@ -40,7 +40,7 @@ class RPlayer extends React.Component{
           pings: prevState.pings
         }
       });
-    }, 700)
+    }, 1400)
   }
   
   userEvent = (data) => {
@@ -174,7 +174,7 @@ class RPlayer extends React.Component{
       </div>
       <div className="my-own-wrapper" ref={this.wrapper} onClick={this.onClick}/>
       <CSSTransitionGroup
-        transitionName="example"
+        transitionName="ping"
         transitionEnterTimeout={400}
         transitionLeaveTimeout={300}>
           {Object.entries(this.state.pings).map(([key,entry]) => <Ping key={key} x={entry.x} y={entry.y} icon={entry.icon} />)}

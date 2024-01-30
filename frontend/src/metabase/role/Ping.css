@@ -12,11 +12,11 @@
   }
 }
 
-.example-enter {
+.ping-enter {
   opacity: 0.01;
 }
 
-.example-enter-active {
+.ping-enter-active {
   opacity: 1;
   transition: opacity 200ms;
   animation-name: pulse;
@@ -24,11 +24,11 @@
   animation-timing-function: ease-in-out;
 }
 
-.example-leave {
+.ping-leave {
   opacity: 1;
 }
 
-.example-leave-active {
+.ping-leave-active {
   opacity: 0.01;
   transition: opacity 300ms;
 }
