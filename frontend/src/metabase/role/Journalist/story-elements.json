@@ -38,42 +38,6 @@
             }
         ]
     },
-    "background": {
-        "type": "background",
-        "name": "Background",
-        "icon": "earth",
-        "example": "Women have long suffered pay discrimation due to gender discrimination, societal norms, and maternity leave (otherwise known as the motherhood penalty). Anti-discrimination legislation is only effective if it can be enforce. Despite prior efforts, women still are experiencing unequal wages in the workforce.",
-        "definition": "Researching the details of your issue is essential for conveying credibiltiy to the audience. Likewise people may not know the details or background of the issue.",
-        "description": ["Consider the following goals:",
-            ["Demonstrate you know your issue",
-            "Catch audiences up with important facts",
-            "Add important context of what causes  the issue"]
-        ],
-        "tooltip": "Details for your audience who might not know much about your isssue.",
-        "fields": [
-            {
-                "name": "user_importance",
-                "title": "Importance",
-                "type": "textarea",
-                "placeholder": "Write why this issue deserves attention",
-                "info": "Why this issue deserves the audience's attention"
-            },
-            {
-                "name": "user_rightness",
-                "title": "Rightness",
-                "type": "textarea",
-                "placeholder": "Write why your stance is just or fair",
-                "info": "Why this a just cause or explain why your stance is fair"
-            },
-            {
-                "name": "user_history",
-                "title": "History",
-                "type": "textarea",
-                "placeholder": "Write important historical information here",
-                "info": "What has happened over time with this issue that an audience should know?"
-            } 
-        ]
-    },
     "personal_story": {
         "type": "personal_story",
         "name": "Personal Story",
@@ -103,38 +67,6 @@
                 "type": "textarea",
                 "placeholder": "What happened to this individual?",
                 "info": "Write about the event related to your issue and how it impacted the individual"
-            }
-        ]
-    },
-    "supporting_insights": {
-        "type": "supporting_insights",
-        "name": "Supporting Insights",
-        "icon": "line",
-        "definition": "Having other facts shows that you've done your research and also may help audiences who are still undecided on the issue. Other facts and findings from your data can support the main insight and bolster confidence that they are accurate.",
-        "tooltip": "Other findings that support your stance on the issue",
-        "example": "The gender pay gap hardly improved in 20 years. In 2022 women earned an average of 82% of what men earned, which is more or less the same as 2002 where they earned 80% as much as men.",
-        "description": [
-        "Consider the following for your supporting insights:",
-            [
-                "Alternative evidence that help confirm your main insight",
-                "Data findings that describe more specific scenarios or cases",
-                "Other facts that are related to your main insight or issue"
-            ]
-        ],
-        "fields": [
-            {
-                "name": "user_support",
-                "title": "Supporting Insight",
-                "type": "textarea",
-                "placeholder": "Write your supporting finding here",
-                "info": "What finding from the data or relevant fact do you want to include?"
-            },
-            {
-                "name": "user_connection",
-                "title": "Connection",
-                "type": "textarea",
-                "placeholder": "Write how this supports your main insight and campaign",
-                "info": "How will this particular finding or fact help support your campaign story or main insight?"
             }
         ]
     },

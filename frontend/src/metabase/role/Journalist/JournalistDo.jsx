@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import {connect} from "react-redux";
 import { getUser } from "metabase/selectors/user";
 import "./JournalistDo.css";
-import Radio from "metabase/components/Radio";
 import withToast from "metabase/hoc/Toast";
 import storyData from "./story-elements.json";
 import StoryElement from "./StoryElement";
@@ -47,7 +46,7 @@ class JournalistDo extends Component {
 
     const {containerWidth, containerHeight} = this.state;
 
-    const {width, height, filepath} = storyOutline[1]
+    const {width, height, filepath} = storyOutline[2]
 
     const scale = (containerWidth / width) - .05;
 

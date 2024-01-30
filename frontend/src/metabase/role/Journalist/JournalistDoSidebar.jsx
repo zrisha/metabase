@@ -8,7 +8,7 @@ import QuestionViewer from '../Artist/QuestionViewer';
 
 const JournalistDoSidebar = (props) => {
     return <>
-    <SidebarLayout top={<StoryElementSidebar />} bottom = {<QuestionViewer role="journalist" favoriteCards={props.favoriteCards} />} heights={[60,40]}/>
+    <SidebarLayout top={<StoryElementSidebar />} bottom = {<QuestionViewer role="journalist" favoriteCards={props.favoriteCards} />} heights={[45,55]}/>
     </>
 }
 
