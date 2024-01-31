@@ -46,7 +46,7 @@ class JournalistDo extends Component {
 
     const {containerWidth, containerHeight} = this.state;
 
-    const {width, height, filepath} = storyOutline[2]
+    const {width, height, filepath} = storyOutline[3]
 
     const scale = (containerWidth / width) - .05;
 
@@ -58,16 +58,18 @@ class JournalistDo extends Component {
         {containerWidth && Object.entries(storyElements).map(([storyId, ele]) => {
           const id = parseInt(storyId)
           const {type, ...data} = ele;
-          return <StoryElement {...storyData[ele.type]} 
-            storyId={id != NaN ? id : storyId}
-            key={storyId} 
-            type={type} 
-            data={data} 
-            selectStoryElement={this.props.selectStoryElement} 
-            updateStoryElementPos={this.props.updateStoryElementPos} 
-            scale={scale}
-            groupId={this.props.groupId}
-            dims={{containerWidth, containerHeight}}/>
+          if(storyData[ele.type]){
+            return <StoryElement {...storyData[ele.type]} 
+              storyId={id != NaN ? id : storyId}
+              key={storyId} 
+              type={type} 
+              data={data} 
+              selectStoryElement={this.props.selectStoryElement} 
+              updateStoryElementPos={this.props.updateStoryElementPos} 
+              scale={scale}
+              groupId={this.props.groupId}
+              dims={{containerWidth, containerHeight}}/>
+          }
         })}
       </div>}
     </div>

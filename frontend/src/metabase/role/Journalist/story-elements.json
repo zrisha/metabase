@@ -1,110 +1,69 @@
 {
-    "audience": {
-        "type": "audience",
-        "name": "Audience",
-        "icon": "group",
-        "definition": "Knowing your intended audience will help you customize your message. Your audiences existing beliefs, habits, and experiences can all impact the story you tell.",
-        "tooltip": "Who is the intended target of your story?",
-        "example": "Our audience is adults over the age of 18 who can vote and support legislation to combat gender pay gap. Our audience may think that the gender pay gap has already been resolved and is no longer a major issue. Similatly, some of our audience may subscribe to cultural gender role of the past. Many of our audience believe in equality and fairness and can relate to being lied to, uncompensated, or unappreciated.",
-        "description": [
-            " Consider the following:",
-            [
-                "Who might listen and also be able to create change?",
-                "What are some alternative stances your audience might hold?",
-                "What experiences or beliefs might your audience relate to?"
-            ]
-        ],
-        "fields": [
-            {
-                "name": "user_audience",
-                "title": "Audience",
-                "type": "textarea",
-                "placeholder": "Write who your intended audience is here",
-                "info": "Whose is the specific target of your message. What are there characteristics? "
-            },
-            {
-                "name": "user_change",
-                "title": "Change",
-                "type": "textarea",
-                "placeholder": "Write why this audience can create change",
-                "info": "Why are you targeitng this particular group? What power do they have to create change?"
-            },
-            {
-                "name": "user_beliefs",
-                "title": "Beliefs",
-                "type": "textarea",
-                "placeholder": "Write your audiences existing beliefs",
-                "info": "What existing beliefs might your audience hold that relate to your story and issue?"
-            }
-        ]
-    },
-    "personal_story": {
-        "type": "personal_story",
-        "name": "Personal Story",
+    "self": {
+        "type": "self",
+        "name": "Self",
         "icon": "person",
-        "definition": "Personal stories about individuals affected by your issue can help audiences visualize the problem. Stories help elicit powerful emotions that resonate with audiences and motivate them to pay attention and act.",
+        "definition": "Your own story about why this issue matters. Stories help elicit powerful emotions that resonate with audiences and motivate them to pay attention and act.",
         "description": [
-            "Consider the following for a personal story:",
-            ["Humanizes the issue and adds additional details",
-            "Elicits emotional reactions such as sympathy or outrage",
-            "Brief but with a powerful message",
-            "Story or quotes of real people"
+            "Consider the following for your own story:",
+            ["Creates emotional reactions such as sympathy or outrage",
+            "Brief but with a powerful message"
         ]
         ],
-        "example": "Vivianne Castillo described how many women don’t know they are being discriminated against. A manager said her position in the company couldn’t receive a type of pay. She later found her white colleages in the same position were receiving the payment.",
-        "tooltip": "A compelling story about specific individuals affected by this issue to motivate audiences",
+        "example": "Vivianne Castillo described how many women don’t know they are being discriminated against. A manager said her position in the company couldn’t receive a type of pay. She later found her white colleagues in the same position were receiving the payment.",
+        "tooltip": "A compelling story about how this issue affected you or someone close to you.",
         "fields": [
             {
-                "name": "user_individual",
-                "title": "Individual",
+                "name": "user_consequence",
+                "title": "Consequence",
                 "type": "textarea",
-                "placeholder": "Whose story is this?",
-                "info": "Write about the individual whose story you want to tell"
+                "placeholder": "How does this issue affect me?",
+                "info": "Write about how this issue personally affected you or someone close to you."
             },
             {
-                "name": "user_story",
-                "title": "Story",
+                "name": "user_event",
+                "title": "Event",
                 "type": "textarea",
-                "placeholder": "What happened to this individual?",
-                "info": "Write about the event related to your issue and how it impacted the individual"
+                "placeholder": "When did you learn to care about this issue?",
+                "info": "Write about a specific event that led you to care about this issue."
             }
         ]
     },
-    "main_insights": {
-        "type": "main_insights",
-        "name": "Main Insights",
-        "icon": "lightbulb",
-        "tooltip": "Your main insight is the top finding from the data to highlight.",
-        "definition": "The top finding in the data from your team that you wish to highlight. Similar to the climax, it is the height of your story.",
+    "us": {
+        "type": "us",
+        "name": "Us",
+        "icon": "lineandbar",
+        "tooltip": "How does this issue affect others and/or your community?",
+        "definition": "Connect to the data. Use insights from data to explain how this issue affects other people.",
         "description": [
-            "Main insights often have the following characteristics:",
+            "Insights from data often have the following characteristics:",
             ["Shocking or Interesting", 
              "Clear and Direct",
              "Inspires Action"]
         ],
-        "example": "36% of students in the county are ethnic minorities but only 5% of teachers in the county are ethnic minorities.",
+        "example": "Students in our entire county have to deal with underrepresentation in the classroom. 36% of students in the county are ethnic minorities but only 5% of teachers in the county are ethnic minorities.",
         "fields": [
             {
-            "name": "user_insight",
-            "title": "Insight",
+            "name": "user_consequence",
+            "title": "Consequence",
             "type": "textarea",
-            "placeholder": "Write your top finding here",
-            "info": "The top finding in the data you want to highlight"
+            "placeholder": "How does this issue affect US/others?",
+            "info": "The consequences and impact this issue is having on others and/or your community."
             },
             {
-            "name": "user_explanation",
-            "title": "Explanation",
+            "name": "user_data",
+            "title": "Data Finding",
             "type": "textarea",
-            "placeholder": "Write why you chose this to highlight",
-            "info": "Why you are highlighting this finding"
+            "placeholder": "What does the data tell us?",
+            "info": "What findings from the data explain this issue?"
             } 
         ]
     },
-    "call_to_action": {
-        "type": "call_to_action",
-        "name": "Call to Action",
+    "now": {
+        "type": "now",
+        "name": "Now",
         "icon": "hand_fist",
-        "definition": "The goal of an advocacy campaign is to enact real change! To do that, you want to motivate your audience to act. This is your chance to call upon those listening to create change.",
+        "definition": "Tell people what to do and why they need to act now",
         "description": [
             "Consider the following suggestions:",
             ["Be specific, make it clear how to help",
@@ -118,15 +77,47 @@
                 "name": "user_action",
                 "title": "Action",
                 "type": "textarea",
-                "placeholder": "Write the desired action here",
+                "placeholder": "What do we need to do about this?",
                 "info": "What action do you want your audience to take? Be specific!"
             },
             {
-                "name": "user_explanation",
-                "title": "Explanation",
+                "name": "user_importance",
+                "title": "Importance",
                 "type": "textarea",
-                "placeholder": "Write how this action will help",
-                "info": "How will this particular action help improve/solve your issue?"
+                "placeholder": "Why is this urgent?",
+                "info": "Why is this issue urgent and important that your audience should take action?"
+            }
+        ]
+    },
+    "audience": {
+        "type": "audience",
+        "name": "Audience",
+        "icon": "group",
+        "definition": "Knowing your intended audience will help you customize your message. Your audience's existing beliefs, habits, and experiences can all impact the story you tell.",
+        "tooltip": "Who is the intended target of your story?",
+        "example": "Our audience is adults over the age of 18 who can vote and support legislation to combat the gender pay gap. Our audience may think that the gender pay gap has already been resolved and is no longer a major issue. Many of our audience believe in equality and fairness and can relate to being lied to, uncompensated, or unappreciated.",
+        "description": [
+            " Consider the following:",
+            [
+                "Who might listen and also be able to create change?",
+                "What are some alternative stances your audience might hold?",
+                "What experiences or beliefs might your audience relate to?"
+            ]
+        ],
+        "fields": [
+            {
+                "name": "user_audience",
+                "title": "Audience",
+                "type": "textarea",
+                "placeholder": "Write who your intended audience is",
+                "info": "Who is the specific target of your message? What are their characteristics? "
+            },
+            {
+                "name": "user_change",
+                "title": "Change",
+                "type": "textarea",
+                "placeholder": "Write why this audience can create change",
+                "info": "Why are you targeting this particular group? What power do they have to create change?"
             }
         ]
     }

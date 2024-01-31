@@ -60,7 +60,7 @@ class RoleDoc {
     });
 
     //Add user values to element fields
-    return sortedUserData.map((eleData) => {
+    return sortedUserData.filter(eleData => storyElements[eleData.type]).map((eleData) => {
       const elementInfo = storyElements[eleData.type];
       elementInfo.user_title = eleData.data.user_title;
       elementInfo.fields = elementInfo.fields.map((field) => {
@@ -190,7 +190,6 @@ class RoleDoc {
       var img = Buffer.from(viz.blob.substr(22), 'base64');
       var dimensions = sizeOf(img);
       const ar = dimensions.width / dimensions.height;
-
       children.push(
         this.createHeading(`Viz ${i+1}`)
       );

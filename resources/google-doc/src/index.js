@@ -112,7 +112,7 @@ async function workDoc(groupId){
     const doc = new RoleDoc({
         artData, storyData, noteData, vizData, groupId,
         hash: md5(JSON.stringify(allData)),
-        filename: `${process.env.DOC_PATH}/Role Work (GID${groupId})`
+        filename: `Role Work (GID${groupId})`
     });
 
     const id = await doc.createAndUpload();
