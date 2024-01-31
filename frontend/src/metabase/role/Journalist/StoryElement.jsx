@@ -40,7 +40,7 @@ function StoryElement(props) {
     >
     <div className="story-element">
     <div className="drag cursor-grab flex align-center justify-center py1">
-      <Icon  name="drag"/>
+      <Icon size="28" name="drag"/>
     </div>
     <div style={{position: 'relative'}}>
       <Absolute top={10} right={10}>
