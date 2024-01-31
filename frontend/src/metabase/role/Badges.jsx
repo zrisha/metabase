@@ -17,9 +17,9 @@ const Badge = (props) => {
   const icon = badges[props.data].icon;
   const name = badges[props.data].text;
   return(
-    <div className="text-centered py2">
+    <div className="text-centered my2">
       {name && <h4>{name}</h4>}
-      <div className="relative">
+      <div className="relative py1">
         <Icon name="shield" size={100} style={{paddingLeft: '10px'}}/>
         <div style={{left: "43px", top: "40%"}} className="absolute text-brand-light">
           {icon && <Icon size={24} name={icon} />}

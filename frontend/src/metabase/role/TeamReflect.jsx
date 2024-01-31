@@ -15,16 +15,30 @@ const columns = [
     field_ref: "nil",
   },
   {
-    base_type: "type/Number",
+    base_type: "type/Decimal",
     display_name: "Driving",
     name: "driving",
-    field_ref: "nil",
+    field_ref: [
+      "aggregation",
+      0
+    ],
+    source: "aggregation",
+    semantic_type: "type/Share",
+    effective_type: "type/Decimal",
+    settings: {suffix: "%"}
   },
   {
     base_type: "type/Number",
     display_name: "Navigating",
     name: "navigating",
-    field_ref: "nil",
+    field_ref: [
+      "aggregation",
+      0
+    ],
+    source: "aggregation",
+    semantic_type: "type/Share",
+    effective_type: "type/Decimal",
+    settings: {suffix: "%"}
   },
 ]
 
@@ -42,9 +56,18 @@ const formatData = (data) => {
       return acc
     }, []);
 
-    payload[row.role] = totalTime.map(time => Math.round(time/60 * 10) / 10);
+    payload[row.role] = totalTime;
   })
-  return Object.entries(payload).map(([k,v]) => [k, ...v])
+
+  const allTime = Object.values(payload).reduce((acc, value) => {
+    acc += value[0]
+    acc += value[1]
+    return acc
+  }, 0);
+
+  return Object.entries(payload).map(([k,v]) => {
+    return [k, ...v.map(duration => ((duration/allTime) * 100).toFixed(2))]
+  })
 }
 
 const TeamAnalytics = (props) => {
@@ -75,12 +98,12 @@ const TeamAnalytics = (props) => {
 
   return (
     <Flex justifyContent="center">
-      <Box m={[ 1, 2]} p={1} width={[1 / 3, 1 / 4]}>
-        <h3>Activity from today</h3>
+      <Box m={[ 1, 2]} p={1} width={[1 / 2, 1 / 2, 1/4]}>
+        <h3> Team Activity From Today</h3>
         {data && <VizCard data={data} width={props.width}/>}
       </Box>
-      <Box m={[ 1, 2]}  p={1} width={[2 / 5, 1 / 3]}>
-        <h3>Badges earned today</h3>
+      <Box m={[ 1, 2]}  p={1} width={[1 / 2, 2 / 5, 2/5]}>
+        <h3>Team Badges Earned Today</h3>
         <Badges data={props.badges}/>
       </Box>
     </Flex>
@@ -92,7 +115,7 @@ const TeamAnalytics = (props) => {
 class VizCard extends React.Component {
   render(){
     return(
-      <Card style={{height: '300px'}}>
+      <Card className="my2" style={{height: '300px'}}>
         {this.props.width && <Visualization
           showTitle
           rawSeries={this.props.data}
