@@ -35,7 +35,7 @@
 (api/defendpoint GET "/blob/:group-id"
   "Grab all card blobs based on group ID"
   [group-id]
-  (db/query {:select [:cfav.id :cfav.group_id, :blob]
+  (db/query {:select [:cfav.id :cfav.group_id :data :blob]
            :from   [[:report_cardfavorite_grp :cfav]]
            :left-join [[:report_cardblob :cblob] [:= :cfav.id :cblob.id]]
            :where  [:= :group_id group-id]}))

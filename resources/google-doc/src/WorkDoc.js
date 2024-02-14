@@ -46,6 +46,17 @@ class RoleDoc {
     });
   }
 
+  parseJson(jsonString){
+    if(typeof jsonString !== 'string'){
+      return null
+    }
+    try{
+      return JSON.parse(jsonString)
+    }catch(e){
+      return null
+    }
+  }
+
   //Sorts user data and provides labels for story elements
   formatstoryData() {
     //Get order for story elements to appear
@@ -190,9 +201,23 @@ class RoleDoc {
       var img = Buffer.from(viz.blob.substr(22), 'base64');
       var dimensions = sizeOf(img);
       const ar = dimensions.width / dimensions.height;
+
+      const data = viz.data ? this.parseJson(viz.data) : null;
+
+      const heading = data && data.name ? data.name : `Viz ${i+1}`;
       children.push(
-        this.createHeading(`Viz ${i+1}`)
+        this.createHeading(heading)
       );
+
+      if(data && data.filterQuery){
+        const filter = JSON.stringify(data.filterQuery);
+        if(filter !== '{}'){
+          children.push(
+            this.createSubHeading(filter)
+          );
+        }
+      }
+
       children.push(
         new Paragraph({
           children: [
