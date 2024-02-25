@@ -42,19 +42,20 @@ class RoleLayout extends React.Component{
 
     //Set group or default to demo
     const currentGroup = groupId ? groupId : 1
-
     this.props.setGroup({groupId: currentGroup});
-    this.role = this.props.location.pathname.split("/")[2];
+    const role = this.props.location.pathname.split("/")[2];
 
     //Skip websocket for demo group
     if(currentGroup == 1 || !currentGroup){
+      this.setState({role})
       return
     }
 
-    this.roomID = currentGroup ? this.role + groupId : this.role;
-    this.socket = io("http://localhost:4987", {reconnectionAttempts: 5, auth: {user: this.props.user, roomID :this.roomID, groupId, role: this.role}})
+    this.roomID = currentGroup ? role + groupId : role;
+    this.socket = io(window.location.host, {reconnectionAttempts: 5, auth: {user: this.props.user, roomID :this.roomID, groupId, role}})
+
     this.socket.on("connect", () => {
-      this.setState({socketRendered: true});
+      this.setState({socketRendered: true, role});
       //Update room with new user
       this.socket.emit("new-user");
     });
@@ -68,15 +69,15 @@ class RoleLayout extends React.Component{
 
     //State updates for changes in room
     this.socket.on("user-join", (roomState) => {
-      this.props.joinRoom({role: this.role, room: roomState, group: this.group})
+      this.props.joinRoom({role, room: roomState, group: this.group})
     });
 
     this.socket.on("user-leave", (roomState) => {
-      this.props.leaveRoom({role: this.role, room: roomState, group: this.group})
+      this.props.leaveRoom({role, room: roomState, group: this.group})
     });
 
     this.socket.on("change-driver", (roomState) => {
-      this.props.changeDriver({role: this.role, room: roomState, group: this.group})
+      this.props.changeDriver({role, room: roomState, group: this.group})
     });
 
   }
@@ -88,7 +89,7 @@ class RoleLayout extends React.Component{
   }
 
   render(){
-    const widths = this.roleWidths[this.role] ? this.roleWidths[this.role] : {left: '25%', right: '75%'};
+    const widths = this.roleWidths[this.state.role] ? this.roleWidths[this.state.role] : {left: '25%', right: '75%'};
 
     if(this.props.groupId == false){
       return <></>
@@ -115,7 +116,7 @@ class RoleLayout extends React.Component{
           <Layout sidebar = {this.props.sidebar} main={this.props.main} widths = { widths}/>
         </IsDriver>
      }else{
-      return <RPlayer role={this.role} room={this.props.room} user={this.props.user} roomID={this.roomID} socket={this.socket}/>
+      return <RPlayer role={this.state.role} room={this.props.room} user={this.props.user} roomID={this.roomID} socket={this.socket}/>
      }
   }
 }

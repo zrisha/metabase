@@ -31,6 +31,8 @@
    ;; Jetty Settings. Full list of options is available here: https://github.com/ring-clojure/ring/blob/master/ring-jetty-adapter/src/ring/adapter/jetty.clj
    :mb-jetty-port          "3000"
    :mb-jetty-join          "true"
+   ;; WS Settings. 
+   :mb-ws-port             "4987"
    ;; other application settings
    :mb-password-complexity "normal"
    :mb-version-info-url    "http://static.metabase.com/version-info.json"
