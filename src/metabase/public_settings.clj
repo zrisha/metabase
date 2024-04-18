@@ -495,3 +495,11 @@
                     (not (db/exists? 'Database :is_sample false, :initial_sync_status "complete"))
                     ;; frontend should set this value to `true` after the modal has been shown once
                     v))))
+
+(defsetting socket-url
+  (deferred-tru "The URL of the Snowplow collector to send analytics events to.")
+  :default    (if config/is-prod?
+                nil
+                ;; See the iglu-schema-registry repo for instructions on how to run Snowplow Micro locally for development
+                (str "http://localhost:" (config/config-str :mb-ws-port)))
+  :visibility :public)

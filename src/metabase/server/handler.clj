@@ -36,7 +36,7 @@
    #'wrap-keyword-params                     ; converts string keys in :params to keyword keys
    #'wrap-params                             ; parses GET and POST params as :query-params/:form-params and both as :params
    #'mw.misc/maybe-set-site-url              ; set the value of `site-url` if it hasn't been set yet
-   #'mw.proxy/proxy-ws                       ; proxy to node server if matches url
+   ;; #'mw.proxy/proxy-ws                    ; proxy to node server to socket if matches url (currently connection upgrade not working)
    #'mw.session/bind-current-user            ; Binds *current-user* and *current-user-id* if :metabase-user-id is non-nil
    #'mw.session/wrap-current-user-info       ; looks for :metabase-session-id and sets :metabase-user-id and other info if Session ID is valid
    #'mw.session/wrap-session-id              ; looks for a Metabase Session ID and assoc as :metabase-session-id

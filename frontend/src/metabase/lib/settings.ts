@@ -79,6 +79,7 @@ export type SettingName =
   | "search-typeahead-enabled"
   | "setup-token"
   | "site-url"
+  | "socket-url"
   | "types"
   | "version-info-last-checked"
   | "version-info"
@@ -194,6 +195,10 @@ class Settings {
 
   snowplowUrl() {
     return this.get("snowplow-url");
+  }
+
+  socketUrl() {
+    return this.get("socket-url");
   }
 
   deprecationNoticeVersion() {

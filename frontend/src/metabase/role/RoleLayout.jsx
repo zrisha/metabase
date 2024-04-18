@@ -12,6 +12,7 @@ import RPlayer from "./RPlayer";
 import './animation.css';
 import IsDriver from "./IsDriver";
 import { GenericError } from "metabase/containers/ErrorPages";
+import MetabaseSettings from "metabase/lib/settings";
 
 export const Layout = fitViewport(({ main, sidebar, widths}) => {
   return (
@@ -51,8 +52,10 @@ class RoleLayout extends React.Component{
       return
     }
 
+    const socketUrl = MetabaseSettings.socketUrl()  ? MetabaseSettings.socketUrl() : window.location.host;
     this.roomID = currentGroup ? role + groupId : role;
-    this.socket = io(window.location.host, {reconnectionAttempts: 5, auth: {user: this.props.user, roomID :this.roomID, groupId, role}})
+
+    this.socket = io(socketUrl, {reconnectionAttempts: 5, auth: {user: this.props.user, roomID :this.roomID, groupId, role}})
 
     this.socket.on("connect", () => {
       this.setState({socketRendered: true, role});
