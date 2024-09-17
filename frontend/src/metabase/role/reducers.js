@@ -161,7 +161,7 @@ const room = handleActions(
 const home = handleActions(
   {
     [GET_PLAN_DOC]: (state, { payload }) => ({...state, planDoc: payload.id}),
-    [GET_WORK_DOC]: (state, { payload }) => ({...state, workDoc: payload.id}),
+    [GET_WORK_DOC]: (state, { payload }) => ({...state, workDoc: payload.id ? payload.id : null}),
     [GET_ROLE_ACTIVITY]: (state, { payload }) => ({...state, roleActivity: payload.roleActivity}),
     [GET_BADGES]: (state, { payload }) => ({...state, badges: payload.badges})
   },

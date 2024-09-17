@@ -28,6 +28,7 @@
             [metabase.util :as u]
             [metabase.util.i18n :as i18n :refer [trs tru]]
             [metabase.util.schema :as su]
+            [environ.core :as env]
             [schema.core :as s]
             [toucan.db :as db]
             [toucan.models :as t.models])
@@ -57,6 +58,19 @@
                       (t.models/post-insert (Session (str session-id))))]
       ;; return user ID, session ID, and the Session object itself
       {:session-id session-id, :user-id user-id, :session session})))
+
+(defn setup-create-api-user! []
+  (if (and (get env/env :mb-api-username) (get env/env :mb-api-password))
+    (let [new-user   (db/insert! User
+                                :email        (get env/env :mb-api-username)
+                                :first_name   "API"
+                                :last_name    "USER"
+                                :password     (str (UUID/randomUUID)))
+          user-id    (u/the-id new-user)]
+      ;; this results in a second db call, but it avoids redundant password code so figure it's worth it
+      (user/set-password! user-id (get env/env :mb-api-password))
+      (println (format "\nAPI User %s created" (get new-user :email))))
+      (log/warn (u/format-color 'red "WARNING: METABASE_API_USERNAME or  WARNING: METABASE_API_PASSWORD is unset. Please set it and try again."))))
 
 (defn- setup-maybe-create-and-invite-user! [{:keys [email first_name last_name] :as user}, invitor]
   (when email
@@ -151,6 +165,10 @@
       (events/publish-event! :database-create database)
       (events/publish-event! :user-login {:user_id user-id, :session_id session-id, :first_login true})
       (snowplow/track-event! ::snowplow/new-user-created user-id)
+      ;;create api user if exists
+      (try
+        (setup-create-api-user!)
+        (catch AssertionError e (println (str "Failed to create api user: " (.getMessage e)))))
       (when database (snowplow/track-event! ::snowplow/database-connection-successful
                                             user-id
                                             {:database engine, :database-id (u/the-id database), :source :setup}))

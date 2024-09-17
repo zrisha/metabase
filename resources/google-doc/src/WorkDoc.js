@@ -14,6 +14,7 @@ const styles = fs.readFileSync("./styles.xml", "utf-8");
 const { GoogleAuth } = require("google-auth-library");
 const { google } = require("googleapis");
 const sizeOf = require('image-size')
+const {getEnvVar} = require('./util.js')
 require("dotenv").config();
 
 class RoleDoc {
@@ -27,7 +28,7 @@ class RoleDoc {
     this.hash = hash;
 
     this.auth = new GoogleAuth({
-      keyFilename: process.env.GOOGLE_CREDENTIALS,
+      keyFilename: getEnvVar('GOOGLE_CREDENTIALS'),
       scopes: "https://www.googleapis.com/auth/drive",
     });
   }
@@ -286,7 +287,7 @@ class RoleDoc {
     const fileMetadata = {
       name: `${this.filename}`,
       mimeType: "application/vnd.google-apps.document",
-      parents: [process.env.FOLDER_ID],
+      parents: [getEnvVar('WORK_FOLDER_ID')],
       includePermissionsForView: true,
       properties: {groupId: this.groupId, hash: this.hash}
     };
@@ -315,7 +316,7 @@ class RoleDoc {
 
     try {
       const res = await service.files.list({
-        q: `'${process.env.FOLDER_ID}' in parents and trashed = false and properties has { key='groupId' and value='${this.groupId}' }`,
+        q: `'${getEnvVar('WORK_FOLDER_ID')}' in parents and trashed = false and properties has { key='groupId' and value='${this.groupId}' }`,
         fields: 'files(id, name, properties)'
       });
 

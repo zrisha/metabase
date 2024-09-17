@@ -9,7 +9,7 @@ const array = () => [];
 export const PLUGIN_APP_INIT_FUCTIONS = [];
 
 // function to determine the landing page
-export const PLUGIN_LANDING_PAGE = [];
+export const PLUGIN_LANDING_PAGE = [() => '/role/home'];
 
 // override for LogoIcon
 export const PLUGIN_LOGO_ICON_COMPONENTS = [];

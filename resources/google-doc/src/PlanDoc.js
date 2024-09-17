@@ -1,17 +1,18 @@
 require("dotenv").config();
 const { GoogleAuth } = require("google-auth-library");
 const { google } = require("googleapis");
+const {getEnvVar} = require('./util.js')
 
 class PlanDoc {
     constructor({filename, groupId}){   
-        this.template = process.env.PLAN_TEMPLATE_ID
-        this.folderId = process.env.PLAN_FOLDER_ID;
+        this.template = getEnvVar('PLAN_TEMPLATE_ID');
+        this.folderId = getEnvVar('PLAN_FOLDER_ID');
         this.filename = filename;
         this.groupId = groupId;
         this.service = google.drive({ 
           version: "v3", 
           auth: new GoogleAuth({
-            keyFilename: process.env.GOOGLE_CREDENTIALS,
+            keyFilename: getEnvVar('GOOGLE_CREDENTIALS'),
             scopes: "https://www.googleapis.com/auth/drive",
           }) 
         });

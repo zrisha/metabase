@@ -4,6 +4,7 @@
             [clojure.tools.logging :as log]
             [clojure.tools.trace :as trace]
             [clojure.java.io :as io]
+            [metabase.api.setup :as api-setup]
             [metabase.config :as config]
             [metabase.core.initialization-status :as init-status]
             [metabase.db :as mdb]
@@ -95,18 +96,11 @@
   (mdb/setup-db!)
   (init-status/set-progress! 0.5)
 
-  ;; check for api environ variables
-  (or (get env/env :mb-api-username)
-    (log/warn (u/format-color 'red "WARNING: %s is unset. Please set it and try again."
-                                (str/upper-case (str/replace (name :mb-api-user) #"-" "_")))))
-  
-    ;; check for api environ variables
-  (or (get env/env :mb-api-password)
-    (log/warn (u/format-color 'red "WARNING: %s is unset. Please set it and try again."
-                                (str/upper-case (str/replace (name :mb-api-user) #"-" "_")))))
-
   (println "Creating a directory")
   (files/create-dir-if-not-exists! (files/get-path "ext"))
+
+  (assert (some? (io/resource "websocket/dist/main.js")) "Websocket service not found, did you run yarn build?")
+
   (println "Copying file")
   (files/with-open-path-to-resource [nodePath "websocket/dist/main.js"]
         (files/copy-file! nodePath (files/get-path "ext/socket.js")))
@@ -118,10 +112,13 @@
   (files/create-dir-if-not-exists! (files/get-path "ext/google-doc/credentials"))
   (files/create-dir-if-not-exists! (files/get-path "ext/google-doc/docs"))
   (println "Copying folder")
+
+  (assert (some? (io/resource "google-doc/dist")) "Doc service not found, did you run yarn build?")
   (files/with-open-path-to-resource [docPath "google-doc/dist"]
       (files/copy-regular-files! docPath (files/get-path "ext/google-doc")))
   (println "Copying creds")
   ;; for credential files
+  (assert (some? (io/resource "google-doc/dist/credentials")) "No credentials found, please add to resources/google-doc/dist/credentials")
   (files/with-open-path-to-resource [credPath "google-doc/dist/credentials"]
         (files/copy-files! credPath (files/get-path "ext/google-doc/credentials")))
 
@@ -152,7 +149,15 @@
       ;; add the sample database DB for fresh installs
       (sample-data/add-sample-database!)
       ;; otherwise update if appropriate
-      (sample-data/update-sample-database-if-needed!)))
+      (sample-data/update-sample-database-if-needed!))
+    
+    ;; add api user if doesn't exist
+    (if (and (not new-install?) (not (db/exists? User :email (get env/env :mb-api-username))))
+      (try
+        (api-setup/setup-create-api-user!)
+        (catch AssertionError e (println (str "Failed to create api user: " (.getMessage e)))))
+    ))
+  
 
   (init-status/set-complete!)
   (log/info (trs "Metabase Initialization COMPLETE")))

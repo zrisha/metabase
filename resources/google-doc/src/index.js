@@ -1,6 +1,7 @@
 process.chdir(__dirname);
 const RoleDoc = require('./WorkDoc');
 const PlanDoc = require('./PlanDoc');
+const {getEnvVar} = require('./util.js')
 const axios = require('axios');
 const md5 = require('md5');
 require('dotenv').config()
@@ -9,11 +10,13 @@ const fs = require('fs/promises');
 
 
 async function updateCredentials(){
+    const username = getEnvVar('MB_API_USERNAME')
+    const password = getEnvVar('MB_API_PASSWORD')
     try{
         const res = await axios.post(
-            `${process.env.SITE_URL}/api/session`, {
-                username: process.env.MB_API_USERNAME,
-                password: process.env.MB_API_PASSWORD
+            `${getEnvVar('SITE_URL')}/api/session`, {
+                username,
+                password,
             });
         if(res.status == 200 || res.data.id){
             const payload = {
@@ -31,12 +34,14 @@ async function updateCredentials(){
 }
 
 async function getCredentials(){
+    const credential_path = getEnvVar('CREDENTIAL_PATH')
+    const session_age = getEnvVar('MB_SESSION_AGE')
     try{
         //read in prior credentials from file
-        const file = await fs.readFile(process.env.CREDENTIAL_PATH)
+        const file = await fs.readFile(credential_path)
         let creds = JSON.parse(file);
 
-        const totalDuration = process.env.MB_SESSION_AGE * 60 * 1000,
+        const totalDuration = session_age * 60 * 1000,
               age = Date.now() - creds.created_at,
               timeLeft = (totalDuration - age);
         
@@ -63,7 +68,7 @@ async function getCredentials(){
 async function testCredentials(creds){
     const headers = { "X-Metabase-Session": creds.id}
     try{
-        const currentUser = await axios.get(`${process.env.SITE_URL}/api/user/current`, { headers });
+        const currentUser = await axios.get(`${getEnvVar('SITE_URL')}/api/user/current`, { headers });
         return currentUser.status
     }catch(e){
         return e.response.status
@@ -74,13 +79,14 @@ async function fetchData(groupId){
     const creds = await getCredentials();
 
     const headers = { "X-Metabase-Session": creds.id}
+    const site_url = getEnvVar('SITE_URL')
 
     try{
-        const art = await axios.get(`${process.env.SITE_URL}/api/art/blob/${groupId}`, { headers });
-        const story = await axios.get(`${process.env.SITE_URL}/api/story-element/${groupId}`, { headers });
-        const note = await axios.get(`${process.env.SITE_URL}/api/note/${groupId}`, { headers });
+        const art = await axios.get(`${site_url}/api/art/blob/${groupId}`, { headers });
+        const story = await axios.get(`${site_url}/api/story-element/${groupId}`, { headers });
+        const note = await axios.get(`${site_url}/api/note/${groupId}`, { headers });
 
-        const viz = await axios.get(`${process.env.SITE_URL}/api/card-favorite-grp/blob/${groupId}`, { headers });
+        const viz = await axios.get(`${site_url}/api/card-favorite-grp/blob/${groupId}`, { headers });
 
         return {
             artData: art.data,
@@ -128,12 +134,12 @@ async function main(){
     const args = process.argv.slice(2);
 
     if(!args[0] || (Object.keys(argFunctions).includes(args[0]) == false)){
-        console.log({error: 'Invalid argument for google doc function'})
+        console.log(JSON.stringify({error: 'Invalid argument for google doc function'}))
         return
     }
 
     if(!args[1] || isNaN(parseInt(args[1]))){
-        console.log({error: 'group id not provided or is invalid'})
+        console.log(JSON.stringify({error: 'group id not provided or is invalid'}))
         return
     }
     

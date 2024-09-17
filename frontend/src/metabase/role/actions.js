@@ -431,9 +431,13 @@ export const getWorkDoc = createAction(
         if(!res){
           return {error: 'no document found'}
         }
-        return JSON.parse(res.out);
+        if(res.err){
+          return {error: res.err}
+        }else{
+          return JSON.parse(res.out);
+        }
       }catch(error){
-        console.log(error);
+        console.log({error});
         return {error}
       }
     }else{
@@ -451,7 +455,11 @@ export const getPlanDoc = createAction(
         if(!res){
           return {error: 'no document found'}
         }
-        return JSON.parse(res.out);
+        if(res.err){
+          return {error: res.err}
+        }else{
+          return JSON.parse(res.out);
+        }
       }catch(error){
         console.log(error);
         return {error}

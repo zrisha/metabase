@@ -51,6 +51,18 @@ export default class ProfileLink extends Component {
         link: "/admin",
         event: `Navbar;Profile Dropdown;Enter Admin`,
       },
+      admin && {
+        title: t`Collections`,
+        icon: null,
+        link: "/collection/root",
+        event: `Navbar;Profile Dropdown;Visit Collections`,
+      },
+      admin && {
+        title: t`Data`,
+        icon: null,
+        link: "/browse",
+        event: `Navbar;Profile Dropdown;Browse Data`,
+      },
       {
         title: t`Sign out`,
         icon: null,
