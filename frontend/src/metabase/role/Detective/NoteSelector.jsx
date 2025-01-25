@@ -30,10 +30,10 @@ const RemoveButton = ({deleteNote, noteId, noteHeader, groupId}) => {
 
 const getHeader = (value) => {
   var div = document.createElement("div");
-  div.innerHTML = value
+  div.innerHTML = value;
 
   if(!div.innerText){
-    return strInputCode.replace(/<\/?[^>]+(>|$)/g, "");
+    return value.replace(/<\/?[^>]+(>|$)/g, "");
   }else{
     return div.innerText
   }
