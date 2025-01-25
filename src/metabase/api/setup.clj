@@ -70,7 +70,7 @@
       ;; this results in a second db call, but it avoids redundant password code so figure it's worth it
       (user/set-password! user-id (get env/env :mb-api-password))
       (println (format "\nAPI User %s created" (get new-user :email))))
-      (log/warn (u/format-color 'red "WARNING: METABASE_API_USERNAME or  WARNING: METABASE_API_PASSWORD is unset. Please set it and try again."))))
+      (log/warn (u/format-color 'red "WARNING: MB_API_USERNAME or  WARNING: MB_API_PASSWORD is unset. Please set it and try again."))))
 
 (defn- setup-maybe-create-and-invite-user! [{:keys [email first_name last_name] :as user}, invitor]
   (when email
