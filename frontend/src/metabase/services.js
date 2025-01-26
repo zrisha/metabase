@@ -390,6 +390,10 @@ export const PermissionsApi = {
   deleteGroup: DELETE("/api/permissions/group/:id"),
 };
 
+export const TeamApi = {
+  create: POST("/api/team")
+}
+
 export const SetupApi = {
   create: POST("/api/setup"),
   validate_db: POST("/api/setup/validate"),

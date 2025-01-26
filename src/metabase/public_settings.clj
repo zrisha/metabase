@@ -497,9 +497,9 @@
                     v))))
 
 (defsetting socket-url
-  (deferred-tru "The URL of the Snowplow collector to send analytics events to.")
+  (deferred-tru "The URL of the dev websocket server.")
   :default    (if config/is-prod?
                 nil
-                ;; See the iglu-schema-registry repo for instructions on how to run Snowplow Micro locally for development
+                ;; only assign a value for dev, otherwise uses host
                 (str "http://localhost:" (config/config-str :mb-ws-port)))
   :visibility :public)

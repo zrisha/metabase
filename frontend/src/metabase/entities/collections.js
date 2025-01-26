@@ -150,19 +150,22 @@ export function getCollectionIcon(collection, { tooltip = "default" } = {}) {
   if (isPersonalCollection(collection)) {
     return { name: "person" };
   }
-  if(collection.name.toLowerCase().includes('team')){
+
+  if(collection.group_owner_id){
     return { name: "group", color: PLUGIN_COLLECTIONS.teamColor ? color(PLUGIN_COLLECTIONS.teamColor): null}
   }
+
   
   const authorityLevel =
     PLUGIN_COLLECTIONS.AUTHORITY_LEVEL[collection.authority_level];
+
   return authorityLevel
     ? {
         name: authorityLevel.icon,
-        color: color(authorityLevel.color),
+        color: !color(authorityLevel.color) && collection ?  collection.color : color(authorityLevel.color),
         tooltip: authorityLevel.tooltips?.[tooltip],
       }
-    : { name: "folder" };
+    : { name: "folder", color: collection.color ? collection.color : null};
 }
 
 export function normalizedCollection(collection) {

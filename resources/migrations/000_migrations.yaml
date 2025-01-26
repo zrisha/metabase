@@ -10500,6 +10500,24 @@ databaseChangeLog:
             referencedColumnNames: id
             constraintName: fk_blob_cardfavoritegrp
             onDelete: CASCADE
+  - changeSet:
+      id: v42.41-015
+      author: zrisha
+      changes:
+        - addColumn:
+            tableName: collection
+            columns:
+              - column:
+                  name: group_owner_id
+                  type: int
+                  remarks: 'If set, this Collection is a group Collection, for exclusive use of the group with this ID.'
+        - addForeignKeyConstraint:
+            baseTableName: collection
+            baseColumnNames: group_owner_id
+            referencedTableName: permissions_group
+            referencedColumnNames: id
+            constraintName: fk_collection_group_owner_id
+            onDelete: CASCADE
 
 # >>>>>>>>>> DO NOT ADD NEW MIGRATIONS BELOW THIS LINE! ADD THEM ABOVE <<<<<<<<<<
 

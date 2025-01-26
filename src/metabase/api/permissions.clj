@@ -84,12 +84,32 @@
     (for [group groups]
       (assoc group :member_count (get group-id->num-members (u/the-id group) 0)))))
 
+(defn- group-id->collection
+  "Return a map of `PermissionsGroup` ID -> number of members in the group. (This doesn't include entries for empty
+  groups.)"
+  []
+  (let [results (db/query
+                  {:select    [[:pg.id :group_id] [:collection.id :collection_id]]
+                   :from      [[:permissions_group :pg]]
+                   :left-join [:collection [:= :pg.id :collection.group_owner_id]]})]
+    (zipmap
+      (map :group_id results)
+      (map :collection_id results))))
+
+(defn add-collection_id
+  "Add team collection_id to PermissionGroups."
+  {:batched-hydrate :collection_id}
+  [groups]
+  (let [group-id->collection (group-id->collection)]
+    (for [group groups]
+      (assoc group :collection_id (get group-id->collection (u/the-id group) nil)))))
+
 (api/defendpoint GET "/group"
   "Fetch all `PermissionsGroups`, including a count of the number of `:members` in that group."
   []
   (api/check-superuser)
   (-> (ordered-groups offset-paging/*limit* offset-paging/*offset*)
-      (hydrate :member_count)))
+      (hydrate :member_count :collection_id)))
 
 (api/defendpoint GET "/group/:id"
   "Fetch the details for a certain permissions group."

@@ -23,7 +23,11 @@ class DetectiveDo extends Component {
 
     async componentDidMount(){
         if(this.props.groupId != 1){
-            this.collection = this.props.collections.find(col => col.name.toLowerCase().includes(`team ${this.props.groupId}`));
+            this.collection = this.props.collections.find(col => col.group_owner_id == this.props.groupId);
+            // For compatability with previous method, can be removed for new databases
+            if(!this.collection){
+                this.collection = this.props.collections.find(col => col.name.toLowerCase().includes(`team ${this.props.groupId}`));
+            }
         }else{
             this.collection = this.props.collections.find(col => col.name.toLowerCase().includes('example'));
         }

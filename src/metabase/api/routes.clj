@@ -43,6 +43,7 @@
             [metabase.api.table :as table]
             [metabase.api.task :as task]
             [metabase.api.testing :as testing]
+            [metabase.api.team :as team]
             [metabase.api.tiles :as tiles]
             [metabase.api.transform :as transform]
             [metabase.api.user :as user]
@@ -108,6 +109,7 @@
   (context "/story-element"        [] (+auth story-element/routes))
   (context "/table"                [] (+auth table/routes))
   (context "/task"                 [] (+auth task/routes))
+  (context "/team"                 [] (+auth team/routes))
   (context "/testing"              [] (if (or (not config/is-prod?)
                                               (config/config-bool :mb-enable-test-endpoints))
                                         testing/routes
